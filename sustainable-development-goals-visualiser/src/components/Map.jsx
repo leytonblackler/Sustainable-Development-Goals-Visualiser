@@ -11,8 +11,8 @@ import PinchToZoom from "react-pinch-and-zoom";
 const wrapperStyles = {
   width: "100%",
   height: "calc(100% - 5px)",
-  margin: "0 auto",
-  backgroundColor: "orange"
+  margin: "0 auto"
+  //   backgroundColor: "orange"
 };
 
 export default class Map extends Component {
@@ -47,8 +47,8 @@ export default class Map extends Component {
             height={700}
             style={{
               width: "100vw",
-              height: "100vh",
-              backgroundColor: "lime"
+              height: "100vh"
+              //   backgroundColor: "lime"
             }}
           >
             <Geographies geography="/data/world-50m.json">
