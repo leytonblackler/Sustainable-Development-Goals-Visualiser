@@ -8159,6 +8159,11 @@ react-map-interaction@^1.3.2:
   resolved "https://registry.yarnpkg.com/react-map-interaction/-/react-map-interaction-1.3.2.tgz#8857446a287f5ac9446beb59956d4fe54ac8b698"
   integrity sha512-CGy/Vd28tdvHTnm/Vq/wrOTQX+LAScsQTrlO38OFlo4uK7DwenLjaHqrnsZZBy0IzzxbJxJrUj4g151OvHCrvQ==
 
+react-pinch-and-zoom@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/react-pinch-and-zoom/-/react-pinch-and-zoom-1.2.4.tgz#d63bdc4e7eb3b236a442780758af3f01728a34b2"
+  integrity sha512-b7a8T3gXstrACnMo2GbQ4UfDxj6IxD6pb2O5U0UrEiQQIC4fqBcDqBAZC2jjYVfuOflb0sQEp+j+8B/84SgQGg==
+
 react-scripts@3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/react-scripts/-/react-scripts-3.1.1.tgz#1796bc92447f3a2d3072c3b71ca99f88d099c48d"
