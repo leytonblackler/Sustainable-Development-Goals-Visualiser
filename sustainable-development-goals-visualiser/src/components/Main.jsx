@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import Map from './Map'
 
 export default class Main extends Component {
 
     render() {
-        return <RootContainer>make all components children of this</RootContainer>
+        return <RootContainer><Map /></RootContainer>
     }
 
 }
