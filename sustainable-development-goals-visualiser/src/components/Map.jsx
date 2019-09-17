@@ -46,7 +46,7 @@ export default class Map extends Component {
             width={980}
             height={700}
             style={{
-              width: "100%",
+              width: "100vw",
               height: "100vh",
               backgroundColor: "lime"
             }}
