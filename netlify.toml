@@ -1,6 +1,6 @@
 [build]
-base = "/sustainable-development-goals-visualiser/"
-publish = "/build/"
+base = "sustainable-development-goals-visualiser/"
+publish = "sustainable-development-goals-visualiser/build/"
 command = "yarn build"
 
 [[redirects]]
