@@ -1,9 +1,0 @@
-[build]
-base = "/sustainable-development-goals-visualiser/"
-publish = "/build/"
-command = "yarn build"
-
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
