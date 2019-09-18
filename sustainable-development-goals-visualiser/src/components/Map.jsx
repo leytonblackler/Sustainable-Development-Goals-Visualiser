@@ -18,8 +18,15 @@ const wrapperStyles = {
 export default class Map extends Component {
   constructor(props) {
     super(props);
-    this.state = { width: 0, height: 0 };
+    this.state = { width: 0, height: 0, zoom: 1 };
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+
+    // const increaseZoom = () => {
+    //   console.log("zooming: " + this.state.zoom);
+    //   // this.setState({ zoom: this.state.zoom + 0.01 });
+    // };
+
+    // setInterval(increaseZoom, 1000);
   }
 
   componentDidMount() {
@@ -36,21 +43,24 @@ export default class Map extends Component {
   }
 
   render() {
+    console.log("rendering...", this.state.zoom);
     return (
       <div style={wrapperStyles}>
-        <PinchToZoom style={{ width: "100%" }}>
-          <ComposableMap
-            projectionConfig={{
-              scale: 205
-            }}
-            width={980}
-            height={700}
-            style={{
-              width: "100vw",
-              height: "100vh"
-              //   backgroundColor: "lime"
-            }}
-          >
+        <ComposableMap
+          projectionConfig={{
+            scale: 205, //default: 205
+            xOffset: 0,
+            yOffset: 0,
+            rotation: [0, 0, 0],
+            precision: 0.1
+          }}
+          style={{
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "lime"
+          }}
+        >
+          <ZoomableGroup center={[0, 20]} zoom={this.state.zoom} disablePanning>
             <Geographies geography="/data/world-50m.json">
               {(geographies, projection) =>
                 geographies.map(
@@ -85,9 +95,17 @@ export default class Map extends Component {
                 )
               }
             </Geographies>
-          </ComposableMap>
-        </PinchToZoom>
+          </ZoomableGroup>
+        </ComposableMap>
       </div>
     );
   }
 }
+
+// <PinchToZoom
+//           minZoomScale={2}
+//           maxZoomScale={8}
+//           // style={{ width: "100%" }}
+//         ></PinchToZoom>
+
+//         </PinchToZoom>
