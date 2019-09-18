@@ -6,7 +6,8 @@ import Map from "./Map";
 const hammerjsOptions = {
   touchAction: "compute",
   recognizers: {
-    pinch: { enable: true }
+    pinch: { enable: true },
+    rotate: { enable: true }
   }
 };
 
