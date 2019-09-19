@@ -19,7 +19,6 @@ export default class Map extends Component {
   constructor(props) {
     super(props);
     this.state = { width: 0, height: 0, zoom: 1 };
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 
     // const increaseZoom = () => {
     //   console.log("zooming: " + this.state.zoom);
@@ -29,21 +28,8 @@ export default class Map extends Component {
     // setInterval(increaseZoom, 1000);
   }
 
-  componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener("resize", this.updateWindowDimensions);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateWindowDimensions);
-  }
-
-  updateWindowDimensions() {
-    this.setState({ width: window.innerWidth, height: window.innerHeight });
-  }
-
   render() {
-    console.log("rendering...", this.state.zoom);
+    console.log("rendering map, current state: ", this.props.state);
     return (
       <div style={wrapperStyles}>
         <ComposableMap
@@ -60,7 +46,11 @@ export default class Map extends Component {
             backgroundColor: "lime"
           }}
         >
-          <ZoomableGroup center={[0, 20]} zoom={this.state.zoom} disablePanning>
+          <ZoomableGroup
+            center={[0, 20]}
+            zoom={this.props.state.scale}
+            disablePanning
+          >
             <Geographies geography="/data/world-50m.json">
               {(geographies, projection) =>
                 geographies.map(
