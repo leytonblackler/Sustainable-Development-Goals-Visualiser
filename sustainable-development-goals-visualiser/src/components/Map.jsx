@@ -29,7 +29,7 @@ export default class Map extends Component {
   }
 
   render() {
-    console.log("rendering map, current state: ", this.props.state);
+    // console.log("rendering map, current state: ", this.props.state);
     return (
       <div style={wrapperStyles}>
         <ComposableMap

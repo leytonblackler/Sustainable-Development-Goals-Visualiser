@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import Hammer from "react-hammerjs";
 import Map from "./Map";
+import SpeechHandler from "./SpeechHandler";
 
 const MAX_SCALE = 5;
 
@@ -185,7 +186,7 @@ export default class Main extends Component {
   };
 
   render() {
-    console.log("state: ", this.state);
+    // console.log("state: ", this.state);
     return (
       <Hammer
         options={hammerjsOptions}
@@ -211,12 +212,14 @@ export default class Main extends Component {
         onSwipe={this.onSwipe}
       >
         <RootContainer>
-          <Map state={this.state.map} />
+          <SpeechHandler />
         </RootContainer>
       </Hammer>
     );
   }
 }
+
+// <Map state={this.state.map} />
 
 const RootContainer = styled.div`
   height: 100%;
