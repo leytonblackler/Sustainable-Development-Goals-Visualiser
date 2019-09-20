@@ -15,9 +15,9 @@ class SpeechHandler extends Component {
     navigator.permissions.query({ name: "microphone" }).then(function(result) {
       console.log("mic request result: ", result);
     });
-  }
 
-  // setInterval(this.checkTranscript.bind(this), 1000);
+    setInterval(this.checkTranscript.bind(this), 1000);
+  }
 
   checkTranscript = () => {
     console.log("supported: ", this.props.browserSupportsSpeechRecognition);
