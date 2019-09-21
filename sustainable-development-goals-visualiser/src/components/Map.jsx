@@ -3,9 +3,7 @@ import {
   ComposableMap,
   ZoomableGroup,
   Geographies,
-  Geography,
-  Markers,
-  Marker
+  Geography
 } from "react-simple-maps";
 import { Motion, spring } from "react-motion";
 
@@ -17,85 +15,89 @@ const wrapperStyles = {
 };
 
 export default class Map extends Component {
-  constructor(props) {
-    super(props);
-
-    console.log("country data: ", props.countryData);
-
-    this.state = { width: 0, height: 0, zoom: 1 };
-
-    // const increaseZoom = () => {
-    //   console.log("zooming: " + this.state.zoom);
-    //   // this.setState({ zoom: this.state.zoom + 0.01 });
-    // };
-
-    // setInterval(increaseZoom, 1000);
+  getCurrentMapConfiguration() {
+    const { focusedCountry } = this.props;
+    return this.props.focusedCountry
+      ? {
+          zoom: 4,
+          center: [
+            Number(focusedCountry.longitude),
+            Number(focusedCountry.latitude)
+          ]
+        }
+      : {
+          zoom: 1,
+          center: [0, 20]
+        };
   }
 
   render() {
-    // console.log("rendering map, current state: ", this.props.state);
+    const configuration = this.getCurrentMapConfiguration();
     return (
       <div style={wrapperStyles}>
-        <ComposableMap
-          projectionConfig={{
-            scale: 205, //default: 205
-            xOffset: 0,
-            yOffset: 0,
-            rotation: [0, 0, 0],
-            precision: 0.1
+        <Motion
+          defaultStyle={{
+            zoom: 1,
+            x: 0,
+            y: 20
           }}
           style={{
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "cyan"
+            zoom: spring(configuration.zoom, { stiffness: 210, damping: 20 }),
+            x: spring(configuration.center[0], { stiffness: 210, damping: 20 }),
+            y: spring(configuration.center[1], { stiffness: 210, damping: 20 })
           }}
         >
-          <ZoomableGroup center={[0, 20]} zoom={1} disablePanning>
-            <Geographies geography="/data/world-50m.json">
-              {(geographies, projection) =>
-                geographies.map(
-                  (geography, i) =>
-                    geography.id !== "ATA" && (
-                      <Geography
-                        key={i}
-                        geography={geography}
-                        projection={projection}
-                        style={{
-                          default: {
-                            fill: "#ECEFF1",
-                            stroke: "#607D8B",
-                            strokeWidth: 0.75,
-                            outline: "none"
-                          },
-                          hover: {
-                            fill: "#607D8B",
-                            stroke: "#607D8B",
-                            strokeWidth: 0.75,
-                            outline: "none"
-                          },
-                          pressed: {
-                            fill: "#FF5722",
-                            stroke: "#607D8B",
-                            strokeWidth: 0.75,
-                            outline: "none"
-                          }
-                        }}
-                      />
+          {({ zoom, x, y }) => (
+            <ComposableMap
+              projectionConfig={{ scale: 205 }}
+              width={980}
+              height={551}
+              style={{
+                width: "100vw",
+                height: "100vh",
+                backgroundColor: "cyan"
+              }}
+            >
+              <ZoomableGroup center={[x, y]} zoom={zoom} disablePanning>
+                <Geographies geography="/data/world-110m.json">
+                  {(geographies, projection) =>
+                    geographies.map(
+                      (geography, i) =>
+                        geography.id !== "010" && (
+                          <Geography
+                            key={i}
+                            geography={geography}
+                            projection={projection}
+                            style={{
+                              default: {
+                                fill: "#ECEFF1",
+                                stroke: "#607D8B",
+                                strokeWidth: 0.75,
+                                outline: "none"
+                              },
+                              hover: {
+                                fill: "#CFD8DC",
+                                stroke: "#607D8B",
+                                strokeWidth: 0.75,
+                                outline: "none"
+                              },
+                              pressed: {
+                                fill: "#FF5722",
+                                stroke: "#607D8B",
+                                strokeWidth: 0.75,
+                                outline: "none"
+                              }
+                            }}
+                          />
+                        )
                     )
-                )
-              }
-            </Geographies>
-          </ZoomableGroup>
-        </ComposableMap>
+                  }
+                </Geographies>
+              </ZoomableGroup>
+            </ComposableMap>
+          )}
+        </Motion>
       </div>
     );
   }
 }
-
-// <PinchToZoom
-//           minZoomScale={2}
-//           maxZoomScale={8}
-//           // style={{ width: "100%" }}
-//         ></PinchToZoom>
-
-//         </PinchToZoom>

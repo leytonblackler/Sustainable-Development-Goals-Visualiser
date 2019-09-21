@@ -25,7 +25,8 @@ export default class Main extends Component {
       selectedCountries: {
         first: null,
         second: null
-      }
+      },
+      focusedCountry: null
     };
   }
   //in constructor:
@@ -112,10 +113,11 @@ export default class Main extends Component {
     console.log("onSwipe");
   };
 
-  countrySelected = country => {
-    this.setState({
+  countrySelected = (newState, country) => {
+    newState = {
+      ...newState,
       selectedCountries: { ...this.state.selectedCountries, ...country }
-    });
+    };
     const countryType = Object.keys(country)[0];
 
     if (!countryType || (countryType !== "first" && countryType !== "second")) {
@@ -124,34 +126,27 @@ export default class Main extends Component {
     }
 
     if (countryType === "first") {
-      console.log("Selected first country: " + country.first.name);
+      newState = { ...newState, focusedCountry: country.first };
     } else if (countryType === "second") {
-      console.log("Selected second country: " + country.second.name);
+      const resetFocus = () => {
+        this.setState({
+          focusedCountry: null
+        });
+      };
+      setTimeout(resetFocus.bind(this), 2000);
+      newState = { ...newState, focusedCountry: country.second };
     }
+
+    this.setState(newState);
   };
 
-  speechStatusChanged = status => {
-    this.setState({ speechStatus: status });
-    // let newState = { ...this.state, speechStatus: status };
-    // if (status === Status.WAITING_FOR_TRIGGER) {
-    //   newState = {
-    //     ...newState,
-    //     message: null,
-    //     selectedCountries: { first: null, second: null }
-    //   };
-    // } else if (status === Status.WAITING_FOR_FIRST_COUNTRY) {
-    //   newState = {
-    //     ...newState,
-    //     message: "What is the first country you would like to select?",
-    //     selectedCountries: { first: null, second: null }
-    //   };
-    // } else if (status === Status.WAITING_FOR_SECOND_COUNTRY) {
-    //   newState = {
-    //     ...newState,
-    //     message: "What is the first country you would like to select?",
-    //     selectedCountries: { first: null, second: null }
-    //   };
-    // }
+  speechStatusChanged = (status, countrySelection) => {
+    const newState = { speechStatus: status };
+    if (countrySelection) {
+      this.countrySelected(newState, countrySelection);
+    } else {
+      this.setState(newState);
+    }
   };
 
   incompatibleBrowserDetected = () => {
@@ -162,7 +157,7 @@ export default class Main extends Component {
   renderLoadingCSV = () => <div>Loading country data...</div>;
 
   renderMainContent = () => (
-    <Hammer {...this}>
+    <Hammer {...hammerjsOptions} {...this}>
       <RootContainer>
         <div>
           {Object.keys(Status).find(
@@ -172,18 +167,18 @@ export default class Main extends Component {
         <SpeechHandler
           status={this.state.speechStatus}
           countryData={this.state.countryData}
-          countrySelected={this.countrySelected}
           speechStatusChanged={this.speechStatusChanged}
           incompatibleBrowserDetected={this.incompatibleBrowserDetected}
         />
-        <Map countryData={this.state.countryData} />
+        <Map
+          countryData={this.state.countryData}
+          focusedCountry={this.state.focusedCountry}
+        />
       </RootContainer>
     </Hammer>
   );
 
   render() {
-    console.log("state: ", this.state);
-
     const { countryData, incompatibleBrowser } = this.state;
 
     if (incompatibleBrowser) {

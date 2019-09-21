@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import SpeechRecognition from "react-speech-recognition";
 
 const TRIGGER_WORD = "compare";
@@ -6,7 +6,8 @@ const TRIGGER_WORD = "compare";
 export const Status = {
   WAITING_FOR_TRIGGER: 1,
   WAITING_FOR_FIRST_COUNTRY: 2,
-  WAITING_FOR_SECOND_COUNTRY: 3
+  WAITING_FOR_SECOND_COUNTRY: 3,
+  IDLE: 4
 };
 
 class SpeechHandler extends Component {
@@ -31,8 +32,7 @@ class SpeechHandler extends Component {
       status,
       interimTranscript,
       finalTranscript,
-      speechStatusChanged,
-      countrySelected
+      speechStatusChanged
     } = this.props;
     const transcript = (interimTranscript + finalTranscript).toLowerCase();
 
@@ -42,44 +42,31 @@ class SpeechHandler extends Component {
       status === Status.WAITING_FOR_FIRST_COUNTRY ||
       status === Status.WAITING_FOR_SECOND_COUNTRY
     ) {
-      this.checkForCountry(
-        transcript,
-        status,
-        speechStatusChanged,
-        countrySelected
-      );
+      this.checkForCountry(transcript, status, speechStatusChanged);
     }
   };
 
-  checkForTrigger = (transcript, speechStatusChanged, countrySelected) => {
+  checkForTrigger = (transcript, speechStatusChanged) => {
     if (transcript.includes(TRIGGER_WORD.toLowerCase())) {
       this.props.resetTranscript();
       speechStatusChanged(Status.WAITING_FOR_FIRST_COUNTRY);
-      // console.log("Comparing two countries...");
-      // console.log("What is the first country you would like to select?");
     }
   };
 
-  checkForCountry = (
-    transcript,
-    status,
-    speechStatusChanged,
-    countrySelected
-  ) => {
+  checkForCountry = (transcript, status, speechStatusChanged) => {
     const foundCountry = this.props.countryData.find(country => {
       return transcript.includes(country.name.toLowerCase());
     });
     if (foundCountry) {
       this.props.resetTranscript();
-      // console.log("You chose " + foundCountry.name + ".");
       if (status === Status.WAITING_FOR_FIRST_COUNTRY) {
-        countrySelected({ first: foundCountry });
-        speechStatusChanged(Status.WAITING_FOR_SECOND_COUNTRY);
-        // console.log("What is the second country you would like to select?");
+        speechStatusChanged(Status.WAITING_FOR_SECOND_COUNTRY, {
+          first: foundCountry
+        });
       } else if (status === Status.WAITING_FOR_SECOND_COUNTRY) {
-        countrySelected({ second: foundCountry });
-        speechStatusChanged(Status.WAITING_FOR_TRIGGER);
-        // console.log("Both countries successfully selected!");
+        speechStatusChanged(Status.IDLE, {
+          second: foundCountry
+        });
       }
       this.props.resetTranscript();
     }
