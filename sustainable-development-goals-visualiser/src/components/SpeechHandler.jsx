@@ -11,6 +11,10 @@ class SpeechHandler extends Component {
     // console.log(`Current permissions:`, currentPermissions);
 
     // console.log("nav:", navigator);
+    if (!props.browserSupportsSpeechRecognition) {
+      props.incompatibleBrowserDetected();
+      return;
+    }
 
     navigator.permissions.query({ name: "microphone" }).then(function(result) {
       console.log("mic request result: ", result);
@@ -22,7 +26,7 @@ class SpeechHandler extends Component {
   }
 
   checkTranscript = () => {
-    const transcript = this.props.finalTranscript.toLowerCase();
+    const transcript = this.props.interimTranscript.toLowerCase();
     // console.log("current transcript:", transcript);
     const found = this.props.countryData.find(country => {
       return transcript.includes(country.name.toLowerCase());

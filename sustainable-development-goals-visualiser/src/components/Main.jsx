@@ -107,21 +107,41 @@ export default class Main extends Component {
     console.log("onSwipe");
   };
 
+  incompatibleBrowserDetected = () => {
+    console.log("Detected an incompatible browser!");
+    this.setState({ incompatibleBrowser: true });
+  };
+
   renderLoadingCSV = () => <div>Loading country data...</div>;
+
+  renderBrowserIncompatible = () => (
+    <div>Your browser is not compatible with this application.</div>
+  );
+
+  renderMainContent = () => (
+    <Hammer {...this}>
+      <RootContainer>
+        <SpeechHandler
+          countryData={this.state.countryData}
+          incompatibleBrowserDetected={this.incompatibleBrowserDetected}
+        />
+        <Map countryData={this.state.countryData} />
+      </RootContainer>
+    </Hammer>
+  );
 
   render() {
     console.log("state: ", this.state);
 
-    return this.state.countryData ? (
-      <Hammer {...this}>
-        <RootContainer>
-          <SpeechHandler countryData={this.state.countryData} />
-          <Map countryData={this.state.countryData} />
-        </RootContainer>
-      </Hammer>
-    ) : (
-      this.renderLoadingCSV()
-    );
+    const { countryData, incompatibleBrowser } = this.state;
+
+    if (incompatibleBrowser) {
+      return this.renderBrowserIncompatible();
+    } else if (!countryData) {
+      return this.renderLoadingCSV();
+    } else {
+      return this.renderMainContent();
+    }
   }
 }
 
