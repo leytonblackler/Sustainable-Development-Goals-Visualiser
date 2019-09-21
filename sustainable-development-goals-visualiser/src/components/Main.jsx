@@ -6,7 +6,7 @@ import * as CSVParser from "papaparse";
 import countriesCSV from "../static-data/countries.csv";
 
 import Map from "./Map";
-import SpeechHandler from "./SpeechHandler";
+import SpeechHandler, { Status } from "./SpeechHandler";
 
 const hammerjsOptions = {
   touchAction: "compute",
@@ -20,7 +20,12 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      countryData: null
+      countryData: null,
+      speechStatus: Status.WAITING_FOR_TRIGGER,
+      selectedCountries: {
+        first: null,
+        second: null
+      }
     };
   }
   //in constructor:
@@ -107,22 +112,68 @@ export default class Main extends Component {
     console.log("onSwipe");
   };
 
+  countrySelected = country => {
+    this.setState({
+      selectedCountries: { ...this.state.selectedCountries, ...country }
+    });
+    const countryType = Object.keys(country)[0];
+
+    if (!countryType || (countryType !== "first" && countryType !== "second")) {
+      console.error("Unknown country type selected.");
+      return;
+    }
+
+    if (countryType === "first") {
+      console.log("Selected first country: " + country.first.name);
+    } else if (countryType === "second") {
+      console.log("Selected second country: " + country.second.name);
+    }
+  };
+
+  speechStatusChanged = status => {
+    this.setState({ speechStatus: status });
+    // let newState = { ...this.state, speechStatus: status };
+    // if (status === Status.WAITING_FOR_TRIGGER) {
+    //   newState = {
+    //     ...newState,
+    //     message: null,
+    //     selectedCountries: { first: null, second: null }
+    //   };
+    // } else if (status === Status.WAITING_FOR_FIRST_COUNTRY) {
+    //   newState = {
+    //     ...newState,
+    //     message: "What is the first country you would like to select?",
+    //     selectedCountries: { first: null, second: null }
+    //   };
+    // } else if (status === Status.WAITING_FOR_SECOND_COUNTRY) {
+    //   newState = {
+    //     ...newState,
+    //     message: "What is the first country you would like to select?",
+    //     selectedCountries: { first: null, second: null }
+    //   };
+    // }
+  };
+
   incompatibleBrowserDetected = () => {
-    console.log("Detected an incompatible browser!");
+    window.location = "https://www.google.com/chrome/";
     this.setState({ incompatibleBrowser: true });
   };
 
   renderLoadingCSV = () => <div>Loading country data...</div>;
 
-  renderBrowserIncompatible = () => (
-    <div>Your browser is not compatible with this application.</div>
-  );
-
   renderMainContent = () => (
     <Hammer {...this}>
       <RootContainer>
+        <div>
+          {Object.keys(Status).find(
+            key => Status[key] === this.state.speechStatus
+          )}
+        </div>
         <SpeechHandler
+          status={this.state.speechStatus}
           countryData={this.state.countryData}
+          countrySelected={this.countrySelected}
+          speechStatusChanged={this.speechStatusChanged}
           incompatibleBrowserDetected={this.incompatibleBrowserDetected}
         />
         <Map countryData={this.state.countryData} />
@@ -136,7 +187,7 @@ export default class Main extends Component {
     const { countryData, incompatibleBrowser } = this.state;
 
     if (incompatibleBrowser) {
-      return this.renderBrowserIncompatible();
+      return null;
     } else if (!countryData) {
       return this.renderLoadingCSV();
     } else {

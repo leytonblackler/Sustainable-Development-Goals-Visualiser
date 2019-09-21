@@ -47,7 +47,7 @@ export default class Map extends Component {
           style={{
             width: "100vw",
             height: "100vh",
-            backgroundColor: "lime"
+            backgroundColor: "cyan"
           }}
         >
           <ZoomableGroup center={[0, 20]} zoom={1} disablePanning>
