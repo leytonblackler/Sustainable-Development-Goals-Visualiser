@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import SpeechRecognition from "react-speech-recognition";
-import countries from "../static-data/country-names";
 
 class SpeechHandler extends Component {
   constructor(props) {
@@ -11,13 +10,13 @@ class SpeechHandler extends Component {
     // .then((currentPermissions) => {
     // console.log(`Current permissions:`, currentPermissions);
 
-    console.log("nav:", navigator);
+    // console.log("nav:", navigator);
 
     navigator.permissions.query({ name: "microphone" }).then(function(result) {
       console.log("mic request result: ", result);
     });
 
-    console.log(countries);
+    // console.log(countries);
 
     setInterval(this.checkTranscript.bind(this), 1000);
   }
@@ -25,11 +24,11 @@ class SpeechHandler extends Component {
   checkTranscript = () => {
     const transcript = this.props.finalTranscript.toLowerCase();
     // console.log("current transcript:", transcript);
-    const found = countries.find(country => {
-      return transcript.includes(country.toLowerCase());
+    const found = this.props.countryData.find(country => {
+      return transcript.includes(country.name.toLowerCase());
     });
     if (found) {
-      console.log("Detected country: " + found);
+      console.log("Detected country: ", found);
       this.props.resetTranscript();
     }
 
@@ -41,7 +40,7 @@ class SpeechHandler extends Component {
     // console.log("supported: ", this.props.browserSupportsSpeechRecognition);
   };
 
-  render = () => <div>hello</div>;
+  render = () => null;
 }
 
 const options = {

@@ -3,21 +3,25 @@ import {
   ComposableMap,
   ZoomableGroup,
   Geographies,
-  Geography
+  Geography,
+  Markers,
+  Marker
 } from "react-simple-maps";
-
-import PinchToZoom from "react-pinch-and-zoom";
+import { Motion, spring } from "react-motion";
 
 const wrapperStyles = {
   width: "100%",
   height: "calc(100% - 5px)",
-  margin: "0 auto"
-  //   backgroundColor: "orange"
+  margin: "0 auto",
+  backgroundColor: "orange"
 };
 
 export default class Map extends Component {
   constructor(props) {
     super(props);
+
+    console.log("country data: ", props.countryData);
+
     this.state = { width: 0, height: 0, zoom: 1 };
 
     // const increaseZoom = () => {
@@ -46,11 +50,7 @@ export default class Map extends Component {
             backgroundColor: "lime"
           }}
         >
-          <ZoomableGroup
-            center={[0, 20]}
-            zoom={this.props.state.scale}
-            disablePanning
-          >
+          <ZoomableGroup center={[0, 20]} zoom={1} disablePanning>
             <Geographies geography="/data/world-50m.json">
               {(geographies, projection) =>
                 geographies.map(
