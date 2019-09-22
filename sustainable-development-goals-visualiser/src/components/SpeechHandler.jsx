@@ -7,7 +7,7 @@ export const Status = {
   WAITING_FOR_TRIGGER: 1,
   WAITING_FOR_FIRST_COUNTRY: 2,
   WAITING_FOR_SECOND_COUNTRY: 3,
-  IDLE: 4
+  INACTIVE: 4
 };
 
 class SpeechHandler extends Component {
@@ -20,9 +20,9 @@ class SpeechHandler extends Component {
     }
 
     // Request microphone permissions.
-    // navigator.permissions.query({ name: "microphone" }).then(function(result) {
-    //   console.log("mic request result: ", result);
-    // });
+    navigator.permissions.query({ name: "microphone" }).then(function(result) {
+      console.log("mic request result: ", result);
+    });
 
     setInterval(this.checkTranscript.bind(this), 1000);
   }
@@ -64,7 +64,7 @@ class SpeechHandler extends Component {
           first: foundCountry
         });
       } else if (status === Status.WAITING_FOR_SECOND_COUNTRY) {
-        speechStatusChanged(Status.IDLE, {
+        speechStatusChanged(Status.INACTIVE, {
           second: foundCountry
         });
       }
@@ -72,12 +72,12 @@ class SpeechHandler extends Component {
     }
   };
 
-  render = () => null;
+  render = () => this.props.children;
 }
 
 const options = {
-  autoStart: true,
-  continuous: true
+  autoStart: false,
+  continuous: false
 };
 
 export default SpeechRecognition(options)(SpeechHandler);

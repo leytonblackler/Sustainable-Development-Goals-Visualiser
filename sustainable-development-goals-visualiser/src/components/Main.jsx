@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import Hammer from "react-hammerjs";
-
 import * as CSVParser from "papaparse";
 import countriesCSV from "../static-data/countries.csv";
-
+import ShakeHandler from "../util/ShakeHandler";
 import Map from "./Map";
 import SpeechHandler, { Status } from "./SpeechHandler";
 
@@ -21,7 +20,7 @@ export default class Main extends Component {
     super(props);
     this.state = {
       countryData: null,
-      speechStatus: Status.WAITING_FOR_TRIGGER,
+      speechStatus: Status.INACTIVE,
       selectedCountries: {
         first: null,
         second: null
@@ -47,6 +46,7 @@ export default class Main extends Component {
   //   });
   // }
   componentDidMount() {
+    // Parse the CSV containing country name and coordinate data for all countries.
     CSVParser.parse(countriesCSV, {
       header: true,
       download: true,
@@ -56,7 +56,13 @@ export default class Main extends Component {
         this.setState({ countryData: csv.data });
       }
     });
+    // Initialise handling for shake events.
+    ShakeHandler(this.onShake.bind(this));
   }
+
+  onShake = event => {
+    console.log("onShake");
+  };
 
   onTap = event => {
     console.log("onTap");
@@ -157,25 +163,49 @@ export default class Main extends Component {
   renderLoadingCSV = () => <div>Loading country data...</div>;
 
   renderMainContent = () => (
-    <Hammer {...hammerjsOptions} {...this}>
-      <RootContainer>
-        <div>
-          {Object.keys(Status).find(
-            key => Status[key] === this.state.speechStatus
-          )}
-        </div>
-        <SpeechHandler
-          status={this.state.speechStatus}
-          countryData={this.state.countryData}
-          speechStatusChanged={this.speechStatusChanged}
-          incompatibleBrowserDetected={this.incompatibleBrowserDetected}
-        />
-        <Map
-          countryData={this.state.countryData}
-          focusedCountry={this.state.focusedCountry}
-        />
-      </RootContainer>
-    </Hammer>
+    <SpeechHandler
+      status={this.state.speechStatus}
+      countryData={this.state.countryData}
+      speechStatusChanged={this.speechStatusChanged}
+      incompatibleBrowserDetected={this.incompatibleBrowserDetected}
+    >
+      <Hammer
+        {...hammerjsOptions}
+        onTap={this.onTap}
+        onDoubleTap={this.onDoubleTap}
+        onPan={this.onPan}
+        onPanCancel={this.onPanCancel}
+        onPanEnd={this.onPanEnd}
+        onPanStart={this.onPanStart}
+        onPinch={this.onPinch}
+        onPinchCancel={this.onPinchCancel}
+        onPinchEnd={this.onPinchEnd}
+        onPinchIn={this.onPinchIn}
+        onPinchOut={this.onPinchOut}
+        onPinchStart={this.onPinchStart}
+        onPress={this.onPress}
+        onPressUp={this.onPressUp}
+        onRotate={this.onRotate}
+        onRotateCancel={this.onRotateCancel}
+        onRotateEnd={this.onRotateEnd}
+        onRotateMove={this.onRotateMove}
+        onRotateStart={this.onRotateStart}
+        onSwipe={this.onSwipe}
+      >
+        <RootContainer>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <button onClick={this.onShake}>Simulate Shake</button>
+            {Object.keys(Status).find(
+              key => Status[key] === this.state.speechStatus
+            )}
+          </div>
+          <Map
+            countryData={this.state.countryData}
+            focusedCountry={this.state.focusedCountry}
+          />
+        </RootContainer>
+      </Hammer>
+    </SpeechHandler>
   );
 
   render() {
