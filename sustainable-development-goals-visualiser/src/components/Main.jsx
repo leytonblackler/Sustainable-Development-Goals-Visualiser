@@ -317,7 +317,6 @@ export default class Main extends Component {
                 : "Microphone is active!"}
             </span>
           </div>
-          {console.log("Focusing: ", this.currentlyFocusedCountry())}
           <Map
             countryData={this.state.countryData}
             focusedCountry={this.currentlyFocusedCountry()}
