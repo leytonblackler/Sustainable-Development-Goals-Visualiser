@@ -5,7 +5,19 @@ import * as CSVParser from "papaparse";
 import countriesCSV from "../static-data/countries.csv";
 import ShakeHandler from "../util/ShakeHandler";
 import Map from "./Map";
-import SpeechHandler, { Status } from "./SpeechHandler";
+import SpeechHandler, { SpeechStatus } from "./SpeechHandler";
+
+const GeneralStatus = {
+  DEFAULT: 1, // Normal zoomed out view of map with no compare/single country info.
+  COMPARING: 2, // Zoomed out, info visible comparing two countries.
+  SHOWING_FOCUSED_COUNTRY: 3, // Zoomed in on a single country with no info visible.
+  SHOWING_SINGLE_COUNTRY_INFO: 4, // Zoomed in on a single country with info visible.
+  WAITING_FOR_SPEECH_ACTION: 5,
+  WAITING_FOR_FIRST_COUNTRY_COMPARE: 6,
+  WAITING_FOR_SECOND_COUNTRY_COMPARE: 7,
+  WAITING_FOR_SINGLE_COUNTRY_INFO: 8,
+  WAITING_FOR_FOCUS_COUNTRY: 9
+};
 
 const hammerjsOptions = {
   touchAction: "compute",
@@ -20,31 +32,12 @@ export default class Main extends Component {
     super(props);
     this.state = {
       countryData: null,
-      speechStatus: Status.INACTIVE,
-      selectedCountries: {
-        first: null,
-        second: null
-      },
-      focusedCountry: null
+      generalStatus: GeneralStatus.DEFAULT,
+      speechStatus: SpeechStatus.INACTIVE,
+      currentCountries: []
     };
   }
-  //in constructor:
-  // this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 
-  // componentDidMount() {
-  //   this.updateWindowDimensions();
-  //   window.addEventListener("resize", this.updateWindowDimensions);
-  // }
-
-  // componentWillUnmount() {
-  //   window.removeEventListener("resize", this.updateWindowDimensions);
-  // }
-
-  // updateWindowDimensions() {
-  //   this.setState({
-  //     windowSize: { width: window.innerWidth, height: window.innerHeight }
-  //   });
-  // }
   componentDidMount() {
     // Parse the CSV containing country name and coordinate data for all countries.
     CSVParser.parse(countriesCSV, {
@@ -62,6 +55,11 @@ export default class Main extends Component {
 
   onShake = event => {
     console.log("onShake");
+    this.setState({
+      currentCountries: [],
+      generalStatus: GeneralStatus.WAITING_FOR_SPEECH_ACTION,
+      speechStatus: SpeechStatus.WAITING_FOR_ACTION
+    });
   };
 
   onTap = event => {
@@ -119,31 +117,96 @@ export default class Main extends Component {
     console.log("onSwipe");
   };
 
-  countrySelected = (newState, country) => {
-    newState = {
-      ...newState,
-      selectedCountries: { ...this.state.selectedCountries, ...country }
-    };
-    const countryType = Object.keys(country)[0];
+  // onResetTriggerSpoken = () => {
+  //   console.log("onResetMap");
+  //   this.setState({
+  //     currentCountries: [],
+  //     generalStatus: GeneralStatus.DEFAULT,
+  //     speechStatus: SpeechStatus.INACTIVE
+  //   });
+  // };
 
-    if (!countryType || (countryType !== "first" && countryType !== "second")) {
-      console.error("Unknown country type selected.");
-      return;
-    }
+  onCancelTriggerSpoken = () => {
+    console.log("onSpeechCancel");
+    this.setState({
+      speechStatus: SpeechStatus.INACTIVE
+    });
+  };
 
-    if (countryType === "first") {
-      newState = { ...newState, focusedCountry: country.first };
-    } else if (countryType === "second") {
-      const resetFocus = () => {
+  onCompareTriggerSpoken = () => {
+    console.log("onCompare");
+    this.setState({
+      currentCountries: [],
+      generalStatus: GeneralStatus.WAITING_FOR_FIRST_COUNTRY_COMPARE,
+      speechStatus: SpeechStatus.WAITING_FOR_COUNTRY
+    });
+  };
+
+  onInfoTriggerSpoken = () => {
+    console.log("onInfo");
+    this.setState({
+      currentCountries: [],
+      generalStatus: GeneralStatus.WAITING_FOR_SINGLE_COUNTRY_INFO,
+      speechStatus: SpeechStatus.WAITING_FOR_COUNTRY
+    });
+  };
+
+  onFocusTriggerSpoken = () => {
+    console.log("onFocus");
+    this.setState({
+      currentCountries: [],
+      generalStatus: GeneralStatus.WAITING_FOR_FOCUS_COUNTRY,
+      speechStatus: SpeechStatus.WAITING_FOR_COUNTRY
+    });
+  };
+
+  onSpeechTimeout = () => {
+    console.log("onSpeechTimeout");
+    this.setState({
+      currentCountries: [],
+      generalStatus: GeneralStatus.DEFAULT,
+      speechStatus: SpeechStatus.INACTIVE
+    });
+  };
+
+  onSelectCountry = country => {
+    const { generalStatus, currentCountries } = this.state;
+    switch (generalStatus) {
+      case GeneralStatus.WAITING_FOR_FIRST_COUNTRY_COMPARE:
         this.setState({
-          focusedCountry: null
+          currentCountries: [country],
+          generalStatus: GeneralStatus.WAITING_FOR_SECOND_COUNTRY_COMPARE,
+          speechStatus: SpeechStatus.WAITING_FOR_COUNTRY
         });
-      };
-      setTimeout(resetFocus.bind(this), 2000);
-      newState = { ...newState, focusedCountry: country.second };
-    }
+        break;
 
-    this.setState(newState);
+      case GeneralStatus.WAITING_FOR_SECOND_COUNTRY_COMPARE:
+        this.setState({
+          currentCountries: [...currentCountries, country],
+          generalStatus: GeneralStatus.COMPARING,
+          speechStatus: SpeechStatus.INACTIVE
+        });
+        break;
+
+      case GeneralStatus.WAITING_FOR_SINGLE_COUNTRY_INFO:
+        this.setState({
+          currentCountries: [country],
+          generalStatus: GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO,
+          speechStatus: SpeechStatus.INACTIVE
+        });
+        break;
+
+      case GeneralStatus.WAITING_FOR_FOCUS_COUNTRY:
+        this.setState({
+          currentCountries: [country],
+          generalStatus: GeneralStatus.SHOWING_FOCUSED_COUNTRY,
+          speechStatus: SpeechStatus.INACTIVE
+        });
+        break;
+
+      default:
+        console.error("Invalid state.");
+    }
   };
 
   speechStatusChanged = (status, countrySelection) => {
@@ -166,7 +229,12 @@ export default class Main extends Component {
     <SpeechHandler
       status={this.state.speechStatus}
       countryData={this.state.countryData}
-      speechStatusChanged={this.speechStatusChanged}
+      onCancelTriggerSpoken={this.onCancelTriggerSpoken}
+      onCompareTriggerSpoken={this.onCompareTriggerSpoken}
+      onInfoTriggerSpoken={this.onInfoTriggerSpoken}
+      onFocusTriggerSpoken={this.onFocusTriggerSpoken}
+      onSelectCountry={this.onSelectCountry}
+      onSpeechTimeout={this.onSpeechTimeout}
       incompatibleBrowserDetected={this.incompatibleBrowserDetected}
     >
       <Hammer
@@ -193,11 +261,33 @@ export default class Main extends Component {
         onSwipe={this.onSwipe}
       >
         <RootContainer>
-          <div style={{ display: "flex", flexDirection: "row" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-evenly"
+            }}
+          >
             <button onClick={this.onShake}>Simulate Shake</button>
-            {Object.keys(Status).find(
-              key => Status[key] === this.state.speechStatus
-            )}
+            <span>
+              General Status:
+              {" " +
+                Object.keys(GeneralStatus).find(
+                  key => GeneralStatus[key] === this.state.generalStatus
+                )}
+            </span>
+            <span>
+              Speech Status:
+              {" " +
+                Object.keys(SpeechStatus).find(
+                  key => SpeechStatus[key] === this.state.speechStatus
+                )}
+            </span>
+            <span>
+              {this.state.speechStatus === SpeechStatus.INACTIVE
+                ? "Microphone is not active."
+                : "Microphone is active!"}
+            </span>
           </div>
           <Map
             countryData={this.state.countryData}

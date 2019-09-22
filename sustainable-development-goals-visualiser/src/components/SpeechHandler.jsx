@@ -1,18 +1,25 @@
 import { Component } from "react";
 import SpeechRecognition from "react-speech-recognition";
 
-const TRIGGER_WORD = "compare";
-
-export const Status = {
-  WAITING_FOR_TRIGGER: 1,
-  WAITING_FOR_FIRST_COUNTRY: 2,
-  WAITING_FOR_SECOND_COUNTRY: 3,
-  INACTIVE: 4
+export const SpeechStatus = {
+  INACTIVE: 1,
+  WAITING_FOR_ACTION: 2,
+  WAITING_FOR_COUNTRY: 3
 };
+
+let transcriptChecker;
+let activated = false;
 
 class SpeechHandler extends Component {
   constructor(props) {
     super(props);
+
+    this.ACTIONS = [
+      { trigger: "info", handler: props.onInfoTriggerSpoken },
+      { trigger: "focus", handler: props.onFocusTriggerSpoken },
+      { trigger: "compare", handler: props.onCompareTriggerSpoken },
+      { trigger: "cancel", handler: props.onCancelTriggerSpoken }
+    ];
 
     if (!props.browserSupportsSpeechRecognition) {
       props.incompatibleBrowserDetected();
@@ -23,52 +30,74 @@ class SpeechHandler extends Component {
     navigator.permissions.query({ name: "microphone" }).then(function(result) {
       console.log("mic request result: ", result);
     });
-
-    setInterval(this.checkTranscript.bind(this), 1000);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { status, listening, onSpeechTimeout } = this.props;
+
+    if (status !== SpeechStatus.INACTIVE) {
+      if (!listening) {
+        if (!activated) {
+          this.startSpeech();
+        } else {
+          // console.log("Speech timed out!");
+          onSpeechTimeout();
+        }
+      }
+    } else {
+      this.endSpeech();
+      // console.log("Speech is now inactive.");
+    }
+  }
+
+  startSpeech = () => {
+    this.endSpeech();
+    // console.log("Starting speech...");
+    this.props.startListening();
+    transcriptChecker = setInterval(this.checkTranscript.bind(this), 1000);
+    activated = true;
+    // console.log("Speech is active!");
+  };
+
+  endSpeech = () => {
+    // console.log("Ending speech...");
+    if (transcriptChecker) {
+      clearInterval(transcriptChecker);
+    }
+    activated = false;
+  };
+
   checkTranscript = () => {
-    const {
-      status,
-      interimTranscript,
-      finalTranscript,
-      speechStatusChanged
-    } = this.props;
+    const { status, interimTranscript, finalTranscript } = this.props;
     const transcript = (interimTranscript + finalTranscript).toLowerCase();
 
-    if (status === Status.WAITING_FOR_TRIGGER) {
-      this.checkForTrigger(transcript, speechStatusChanged);
-    } else if (
-      status === Status.WAITING_FOR_FIRST_COUNTRY ||
-      status === Status.WAITING_FOR_SECOND_COUNTRY
-    ) {
-      this.checkForCountry(transcript, status, speechStatusChanged);
+    // console.log("Checking transcript...", transcript);
+
+    if (status === SpeechStatus.WAITING_FOR_ACTION) {
+      this.checkForAction(transcript);
+    } else if (status === SpeechStatus.WAITING_FOR_COUNTRY) {
+      this.checkForCountry(transcript);
     }
   };
 
-  checkForTrigger = (transcript, speechStatusChanged) => {
-    if (transcript.includes(TRIGGER_WORD.toLowerCase())) {
-      this.props.resetTranscript();
-      speechStatusChanged(Status.WAITING_FOR_FIRST_COUNTRY);
+  checkForAction = transcript => {
+    const foundAction = this.ACTIONS.find(action =>
+      transcript.includes(action.trigger.toLowerCase())
+    );
+    if (foundAction) {
+      foundAction.handler();
+      this.endSpeech();
     }
   };
 
-  checkForCountry = (transcript, status, speechStatusChanged) => {
+  checkForCountry = transcript => {
+    const { onSelectCountry } = this.props;
     const foundCountry = this.props.countryData.find(country => {
       return transcript.includes(country.name.toLowerCase());
     });
     if (foundCountry) {
-      this.props.resetTranscript();
-      if (status === Status.WAITING_FOR_FIRST_COUNTRY) {
-        speechStatusChanged(Status.WAITING_FOR_SECOND_COUNTRY, {
-          first: foundCountry
-        });
-      } else if (status === Status.WAITING_FOR_SECOND_COUNTRY) {
-        speechStatusChanged(Status.INACTIVE, {
-          second: foundCountry
-        });
-      }
-      this.props.resetTranscript();
+      this.endSpeech();
+      onSelectCountry(foundCountry);
     }
   };
 
