@@ -12,11 +12,12 @@ const GeneralStatus = {
   COMPARING: 2, // Zoomed out, info visible comparing two countries.
   SHOWING_FOCUSED_COUNTRY: 3, // Zoomed in on a single country with no info visible.
   SHOWING_SINGLE_COUNTRY_INFO: 4, // Zoomed in on a single country with info visible.
-  WAITING_FOR_SPEECH_ACTION: 5,
-  WAITING_FOR_FIRST_COUNTRY_COMPARE: 6,
-  WAITING_FOR_SECOND_COUNTRY_COMPARE: 7,
-  WAITING_FOR_SINGLE_COUNTRY_INFO: 8,
-  WAITING_FOR_FOCUS_COUNTRY: 9
+  SHOWING_SECOND_COUNTRY_COMPARE: 5, // Used to temporarily focus on the second country when comparing, before zooming back out.
+  WAITING_FOR_SPEECH_ACTION: 6,
+  WAITING_FOR_FIRST_COUNTRY_COMPARE: 7,
+  WAITING_FOR_SECOND_COUNTRY_COMPARE: 8,
+  WAITING_FOR_SINGLE_COUNTRY_INFO: 9,
+  WAITING_FOR_FOCUS_COUNTRY: 10
 };
 
 const hammerjsOptions = {
@@ -126,13 +127,6 @@ export default class Main extends Component {
   //   });
   // };
 
-  onCancelTriggerSpoken = () => {
-    console.log("onSpeechCancel");
-    this.setState({
-      speechStatus: SpeechStatus.INACTIVE
-    });
-  };
-
   onCompareTriggerSpoken = () => {
     console.log("onCompare");
     this.setState({
@@ -162,6 +156,16 @@ export default class Main extends Component {
 
   onSpeechTimeout = () => {
     console.log("onSpeechTimeout");
+    this.onReset();
+  };
+
+  onCancelTriggerSpoken = () => {
+    console.log("onSpeechCancel");
+    this.onReset();
+  };
+
+  onReset = () => {
+    console.log("onReset");
     this.setState({
       currentCountries: [],
       generalStatus: GeneralStatus.DEFAULT,
@@ -183,9 +187,14 @@ export default class Main extends Component {
       case GeneralStatus.WAITING_FOR_SECOND_COUNTRY_COMPARE:
         this.setState({
           currentCountries: [...currentCountries, country],
-          generalStatus: GeneralStatus.COMPARING,
+          generalStatus: GeneralStatus.SHOWING_SECOND_COUNTRY_COMPARE,
           speechStatus: SpeechStatus.INACTIVE
         });
+        setTimeout(() => {
+          this.setState({
+            generalStatus: GeneralStatus.COMPARING
+          });
+        }, 2000);
         break;
 
       case GeneralStatus.WAITING_FOR_SINGLE_COUNTRY_INFO:
@@ -221,6 +230,24 @@ export default class Main extends Component {
   incompatibleBrowserDetected = () => {
     window.location = "https://www.google.com/chrome/";
     this.setState({ incompatibleBrowser: true });
+  };
+
+  currentlyFocusedCountry = () => {
+    const { generalStatus, currentCountries } = this.state;
+
+    switch (generalStatus) {
+      case GeneralStatus.DEFAULT:
+      case GeneralStatus.COMPARING:
+        return null;
+      case GeneralStatus.SHOWING_FOCUSED_COUNTRY:
+      case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
+      case GeneralStatus.WAITING_FOR_SECOND_COUNTRY_COMPARE:
+        return currentCountries[0];
+      case GeneralStatus.SHOWING_SECOND_COUNTRY_COMPARE:
+        return currentCountries[1];
+      default:
+        return null;
+    }
   };
 
   renderLoadingCSV = () => <div>Loading country data...</div>;
@@ -269,6 +296,7 @@ export default class Main extends Component {
             }}
           >
             <button onClick={this.onShake}>Simulate Shake</button>
+            <button onClick={this.onReset}>Simulate Reset/Clear</button>
             <span>
               General Status:
               {" " +
@@ -289,9 +317,10 @@ export default class Main extends Component {
                 : "Microphone is active!"}
             </span>
           </div>
+          {console.log("Focusing: ", this.currentlyFocusedCountry())}
           <Map
             countryData={this.state.countryData}
-            focusedCountry={this.state.focusedCountry}
+            focusedCountry={this.currentlyFocusedCountry()}
           />
         </RootContainer>
       </Hammer>

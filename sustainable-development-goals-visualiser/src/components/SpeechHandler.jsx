@@ -17,8 +17,7 @@ class SpeechHandler extends Component {
     this.ACTIONS = [
       { trigger: "info", handler: props.onInfoTriggerSpoken },
       { trigger: "focus", handler: props.onFocusTriggerSpoken },
-      { trigger: "compare", handler: props.onCompareTriggerSpoken },
-      { trigger: "cancel", handler: props.onCancelTriggerSpoken }
+      { trigger: "compare", handler: props.onCompareTriggerSpoken }
     ];
 
     if (!props.browserSupportsSpeechRecognition) {
@@ -28,7 +27,11 @@ class SpeechHandler extends Component {
 
     // Request microphone permissions.
     navigator.permissions.query({ name: "microphone" }).then(function(result) {
-      console.log("mic request result: ", result);
+      if (result.state === "granted") {
+        console.log("Microphone access granted.");
+      } else {
+        console.error("Microphone access was not granted.");
+      }
     });
   }
 
@@ -40,27 +43,22 @@ class SpeechHandler extends Component {
         if (!activated) {
           this.startSpeech();
         } else {
-          // console.log("Speech timed out!");
           onSpeechTimeout();
         }
       }
     } else {
       this.endSpeech();
-      // console.log("Speech is now inactive.");
     }
   }
 
   startSpeech = () => {
     this.endSpeech();
-    // console.log("Starting speech...");
     this.props.startListening();
     transcriptChecker = setInterval(this.checkTranscript.bind(this), 1000);
     activated = true;
-    // console.log("Speech is active!");
   };
 
   endSpeech = () => {
-    // console.log("Ending speech...");
     if (transcriptChecker) {
       clearInterval(transcriptChecker);
     }
@@ -70,13 +68,18 @@ class SpeechHandler extends Component {
   checkTranscript = () => {
     const { status, interimTranscript, finalTranscript } = this.props;
     const transcript = (interimTranscript + finalTranscript).toLowerCase();
-
-    // console.log("Checking transcript...", transcript);
-
+    this.checkForCancel(transcript);
     if (status === SpeechStatus.WAITING_FOR_ACTION) {
       this.checkForAction(transcript);
     } else if (status === SpeechStatus.WAITING_FOR_COUNTRY) {
       this.checkForCountry(transcript);
+    }
+  };
+
+  checkForCancel = transcript => {
+    const { onCancelTriggerSpoken } = this.props;
+    if (transcript.includes("cancel")) {
+      onCancelTriggerSpoken();
     }
   };
 
