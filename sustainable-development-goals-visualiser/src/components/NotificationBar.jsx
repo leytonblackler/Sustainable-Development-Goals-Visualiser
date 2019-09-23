@@ -8,7 +8,7 @@ const TRANSITION_DURATION = 100; //milliseconds
 
 const NotificationBar = props => {
   const { message } = props;
-  const style = { top: message ? 0 + PADDING : "-8vh" };
+  const style = { top: message ? 0 + PADDING : "calc(-8vh - 10px)" };
   return (
     <MainContainer style={style}>
       <NotificationContent>

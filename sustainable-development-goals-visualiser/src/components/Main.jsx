@@ -10,6 +10,8 @@ import SpeechHandler, { SpeechStatus } from "./SpeechHandler";
 import NotificationBar from "./NotificationBar";
 import Loading from "./Loading";
 
+const ENABLE_DEV_TOOLS = true;
+
 const GeneralStatus = {
   DEFAULT: 1, // Normal zoomed out view of map with no compare/single country info.
   COMPARING: 2, // Zoomed out, info visible comparing two countries.
@@ -277,7 +279,7 @@ export default class Main extends Component {
   renderMainContent = () => (
     <SpeechHandler
       status={this.state.speechStatus}
-      countryData={this.state.countryData}
+      countryGeolocationData={this.state.countryGeolocationData}
       onCancelTriggerSpoken={this.onCancelTriggerSpoken}
       onCompareTriggerSpoken={this.onCompareTriggerSpoken}
       onInfoTriggerSpoken={this.onInfoTriggerSpoken}
@@ -318,15 +320,19 @@ export default class Main extends Component {
               justifyContent: "space-evenly"
             }}
           >
-            <button onClick={this.onShake}>
-              Simulate Shake (Activate voice)
-            </button>
-            <button onClick={this.onReset}>
-              Simulate Multi-touch Swipe Down (Clear/Reset)
-            </button>
+            {ENABLE_DEV_TOOLS ? (
+              <div>
+                <button onClick={this.onShake}>
+                  Simulate Shake (Activate voice)
+                </button>
+                <button onClick={this.onReset}>
+                  Simulate Multi-touch Swipe Down (Clear/Reset)
+                </button>
+              </div>
+            ) : null}
           </div>
           <Map
-            countryData={this.state.countryData}
+            countryGeolocationData={this.state.countryGeolocationData}
             focusedCountry={this.currentlyFocusedCountry()}
           />
         </RootContainer>
@@ -335,8 +341,12 @@ export default class Main extends Component {
   );
 
   dataHasLoaded = () => {
-    const { countryData, unData, loaderShownForMinimumTime } = this.state;
-    return (!countryData && !unData) || !loaderShownForMinimumTime;
+    const {
+      countryGeolocationData,
+      unData,
+      loaderShownForMinimumTime
+    } = this.state;
+    return (!countryGeolocationData && !unData) || !loaderShownForMinimumTime;
   };
 
   render() {

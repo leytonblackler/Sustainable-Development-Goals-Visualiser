@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import styled, { keyframes } from "styled-components";
 import {
   ComposableMap,
   ZoomableGroup,
@@ -6,14 +7,6 @@ import {
   Geography
 } from "react-simple-maps";
 import { Motion, spring } from "react-motion";
-
-const wrapperStyles = {
-  width: "100%",
-  height: "calc(100% - 5px)",
-  margin: "0 auto",
-  backgroundColor: "background-color: #045de9",
-  backgroundImage: "linear-gradient(315deg, #045de9 0%, #09c6f9 74%)"
-};
 
 export default class Map extends Component {
   getCurrentMapConfiguration() {
@@ -34,8 +27,12 @@ export default class Map extends Component {
 
   render() {
     const configuration = this.getCurrentMapConfiguration();
+    const mapStyle = {
+      width: "100vw",
+      height: "100vh"
+    };
     return (
-      <div style={wrapperStyles}>
+      <MainContainer>
         <Motion
           defaultStyle={{
             zoom: 1,
@@ -49,14 +46,11 @@ export default class Map extends Component {
           }}
         >
           {({ zoom, x, y }) => (
-            <ComposableMap
+            <FadingMap
               projectionConfig={{ scale: 205 }}
               width={980}
               height={551}
-              style={{
-                width: "100vw",
-                height: "100vh"
-              }}
+              style={mapStyle}
             >
               <ZoomableGroup center={[x, y]} zoom={zoom} disablePanning>
                 <Geographies geography="/data/world-110m.json">
@@ -94,10 +88,31 @@ export default class Map extends Component {
                   }
                 </Geographies>
               </ZoomableGroup>
-            </ComposableMap>
+            </FadingMap>
           )}
         </Motion>
-      </div>
+      </MainContainer>
     );
   }
 }
+
+const MainContainer = styled.div`
+  width: 100%;
+  height: calc(100% - 5px);
+  margin: 0 auto;
+  background-color: #4884ee;
+  background-image: linear-gradient(315deg, #4884ee 0%, #06bcfb 74%);
+`;
+
+const fadeIn = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+const FadingMap = styled(ComposableMap)`
+  animation: ${fadeIn} 0.3s ease-in;
+`;

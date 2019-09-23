@@ -94,8 +94,8 @@ class SpeechHandler extends Component {
   };
 
   checkForCountry = transcript => {
-    const { onSelectCountry } = this.props;
-    const foundCountry = this.props.countryData.find(country => {
+    const { countryGeolocationData, onSelectCountry } = this.props;
+    const foundCountry = countryGeolocationData.find(country => {
       return transcript.includes(country.name.toLowerCase());
     });
     if (foundCountry) {
