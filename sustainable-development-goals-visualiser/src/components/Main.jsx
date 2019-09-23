@@ -6,6 +6,7 @@ import countriesCSV from "../static-data/countries.csv";
 import ShakeHandler from "../util/ShakeHandler";
 import Map from "./Map";
 import SpeechHandler, { SpeechStatus } from "./SpeechHandler";
+import NotificationBar from "./NotificationBar";
 
 const GeneralStatus = {
   DEFAULT: 1, // Normal zoomed out view of map with no compare/single country info.
@@ -236,15 +237,31 @@ export default class Main extends Component {
     const { generalStatus, currentCountries } = this.state;
 
     switch (generalStatus) {
-      case GeneralStatus.DEFAULT:
-      case GeneralStatus.COMPARING:
-        return null;
       case GeneralStatus.SHOWING_FOCUSED_COUNTRY:
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
       case GeneralStatus.WAITING_FOR_SECOND_COUNTRY_COMPARE:
         return currentCountries[0];
       case GeneralStatus.SHOWING_SECOND_COUNTRY_COMPARE:
         return currentCountries[1];
+      default:
+        return null;
+    }
+  };
+
+  currentNotificationBarMessage = () => {
+    const { generalStatus } = this.state;
+
+    switch (generalStatus) {
+      case GeneralStatus.WAITING_FOR_SPEECH_ACTION:
+        return "Which action would you like to perform?";
+      case GeneralStatus.WAITING_FOR_FIRST_COUNTRY_COMPARE:
+        return "What is the first country you would like to compare?";
+      case GeneralStatus.WAITING_FOR_SECOND_COUNTRY_COMPARE:
+        return "What is the second country you would like to compare?";
+      case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
+        return "Which country would you like info about?";
+      case GeneralStatus.WAITING_FOR_FOCUS_COUNTRY:
+        return "Which country would you like to focus on?";
       default:
         return null;
     }
@@ -288,6 +305,7 @@ export default class Main extends Component {
         onSwipe={this.onSwipe}
       >
         <RootContainer>
+          <NotificationBar message={this.currentNotificationBarMessage()} />
           <div
             style={{
               display: "flex",
