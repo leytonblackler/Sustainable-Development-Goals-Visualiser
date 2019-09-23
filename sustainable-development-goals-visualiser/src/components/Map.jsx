@@ -11,7 +11,8 @@ const wrapperStyles = {
   width: "100%",
   height: "calc(100% - 5px)",
   margin: "0 auto",
-  backgroundColor: "orange"
+  backgroundColor: "background-color: #045de9",
+  backgroundImage: "linear-gradient(315deg, #045de9 0%, #09c6f9 74%)"
 };
 
 export default class Map extends Component {
@@ -54,8 +55,7 @@ export default class Map extends Component {
               height={551}
               style={{
                 width: "100vw",
-                height: "100vh",
-                backgroundColor: "cyan"
+                height: "100vh"
               }}
             >
               <ZoomableGroup center={[x, y]} zoom={zoom} disablePanning>
