@@ -315,25 +315,6 @@ export default class Main extends Component {
           >
             <button onClick={this.onShake}>Simulate Shake</button>
             <button onClick={this.onReset}>Simulate Reset/Clear</button>
-            <span>
-              General Status:
-              {" " +
-                Object.keys(GeneralStatus).find(
-                  key => GeneralStatus[key] === this.state.generalStatus
-                )}
-            </span>
-            <span>
-              Speech Status:
-              {" " +
-                Object.keys(SpeechStatus).find(
-                  key => SpeechStatus[key] === this.state.speechStatus
-                )}
-            </span>
-            <span>
-              {this.state.speechStatus === SpeechStatus.INACTIVE
-                ? "Microphone is not active."
-                : "Microphone is active!"}
-            </span>
           </div>
           <Map
             countryData={this.state.countryData}
@@ -360,3 +341,23 @@ export default class Main extends Component {
 const RootContainer = styled.div`
   height: 100%;
 `;
+
+// <span>
+// {this.state.speechStatus === SpeechStatus.INACTIVE
+//   ? "Microphone is not active."
+//   : "Microphone is active!"}
+// </span>
+// <span>
+// General Status:
+// {" " +
+//   Object.keys(GeneralStatus).find(
+//     key => GeneralStatus[key] === this.state.generalStatus
+//   )}
+// </span>
+// <span>
+// Speech Status:
+// {" " +
+//   Object.keys(SpeechStatus).find(
+//     key => SpeechStatus[key] === this.state.speechStatus
+//   )}
+// </span>
