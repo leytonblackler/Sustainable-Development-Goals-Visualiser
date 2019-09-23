@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import Hammer from "react-hammerjs";
 import * as CSVParser from "papaparse";
-import countriesCSV from "../static-data/countries.csv";
+import countryGeolocationDataCSV from "../static-data/country-geolocations.csv";
+import unDataCSV from "../static-data/un-data.csv";
 import ShakeHandler from "../util/ShakeHandler";
 import Map from "./Map";
 import SpeechHandler, { SpeechStatus } from "./SpeechHandler";
 import NotificationBar from "./NotificationBar";
+import Loading from "./Loading";
 
 const GeneralStatus = {
   DEFAULT: 1, // Normal zoomed out view of map with no compare/single country info.
@@ -33,24 +35,38 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      countryData: null,
+      loaderShownForMinimumTime: false,
+      countryGeolocationData: null,
+      unData: null,
       generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: []
     };
+    setTimeout(() => this.setState({ loaderShownForMinimumTime: true }), 2000);
   }
 
   componentDidMount() {
     // Parse the CSV containing country name and coordinate data for all countries.
-    CSVParser.parse(countriesCSV, {
+    CSVParser.parse(countryGeolocationDataCSV, {
       header: true,
       download: true,
       skipEmptyLines: true,
       complete: csv => {
-        console.log("CSV file loaded!");
-        this.setState({ countryData: csv.data });
+        console.log("Country geolocations CSV file loaded!");
+        this.setState({ countryGeolocationData: csv.data });
       }
     });
+
+    CSVParser.parse(unDataCSV, {
+      header: true,
+      download: true,
+      skipEmptyLines: true,
+      complete: csv => {
+        console.log("UN SDGV CSV file loaded!");
+        this.setState({ unData: csv.data });
+      }
+    });
+
     // Initialise handling for shake events.
     ShakeHandler(this.onShake.bind(this));
   }
@@ -118,15 +134,6 @@ export default class Main extends Component {
   onSwipe = event => {
     console.log("onSwipe");
   };
-
-  // onResetTriggerSpoken = () => {
-  //   console.log("onResetMap");
-  //   this.setState({
-  //     currentCountries: [],
-  //     generalStatus: GeneralStatus.DEFAULT,
-  //     speechStatus: SpeechStatus.INACTIVE
-  //   });
-  // };
 
   onCompareTriggerSpoken = () => {
     console.log("onCompare");
@@ -267,8 +274,6 @@ export default class Main extends Component {
     }
   };
 
-  renderLoadingCSV = () => <div>Loading country data...</div>;
-
   renderMainContent = () => (
     <SpeechHandler
       status={this.state.speechStatus}
@@ -329,13 +334,18 @@ export default class Main extends Component {
     </SpeechHandler>
   );
 
+  dataHasLoaded = () => {
+    const { countryData, unData, loaderShownForMinimumTime } = this.state;
+    return (!countryData && !unData) || !loaderShownForMinimumTime;
+  };
+
   render() {
-    const { countryData, incompatibleBrowser } = this.state;
+    const { incompatibleBrowser } = this.state;
 
     if (incompatibleBrowser) {
       return null;
-    } else if (!countryData) {
-      return this.renderLoadingCSV();
+    } else if (this.dataHasLoaded()) {
+      return <Loading />;
     } else {
       return this.renderMainContent();
     }
