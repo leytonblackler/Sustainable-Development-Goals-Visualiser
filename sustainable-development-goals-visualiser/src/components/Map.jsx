@@ -76,13 +76,13 @@ export default class Map extends Component {
                                 outline: "none"
                               },
                               hover: {
-                                fill: "#CFD8DC",
+                                fill: "#ECEFF1",
                                 stroke: "#607D8B",
                                 strokeWidth: 0.75,
                                 outline: "none"
                               },
                               pressed: {
-                                fill: "#FF5722",
+                                fill: "#ECEFF1",
                                 stroke: "#607D8B",
                                 strokeWidth: 0.75,
                                 outline: "none"
