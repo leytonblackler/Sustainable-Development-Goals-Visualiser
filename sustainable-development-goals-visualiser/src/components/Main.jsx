@@ -313,8 +313,12 @@ export default class Main extends Component {
               justifyContent: "space-evenly"
             }}
           >
-            <button onClick={this.onShake}>Simulate Shake</button>
-            <button onClick={this.onReset}>Simulate Reset/Clear</button>
+            <button onClick={this.onShake}>
+              Simulate Shake (Activate voice)
+            </button>
+            <button onClick={this.onReset}>
+              Simulate Multi-touch Swipe Down (Clear/Reset)
+            </button>
           </div>
           <Map
             countryData={this.state.countryData}
