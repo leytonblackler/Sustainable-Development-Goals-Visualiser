@@ -258,7 +258,7 @@ export default class Main extends Component {
         return "What is the first country you would like to compare?";
       case GeneralStatus.WAITING_FOR_SECOND_COUNTRY_COMPARE:
         return "What is the second country you would like to compare?";
-      case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
+      case GeneralStatus.WAITING_FOR_SINGLE_COUNTRY_INFO:
         return "Which country would you like info about?";
       case GeneralStatus.WAITING_FOR_FOCUS_COUNTRY:
         return "Which country would you like to focus on?";
