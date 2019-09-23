@@ -1,5 +1,7 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+import Icon from "@mdi/react";
+import { mdiMicrophone } from "@mdi/js";
 
 const PADDING = 10; //pixels
 const TRANSITION_DURATION = 100; //milliseconds
@@ -9,7 +11,12 @@ const NotificationBar = props => {
   const style = { top: message ? 0 + PADDING : "-8vh" };
   return (
     <MainContainer style={style}>
-      <NotificationContent>{message}</NotificationContent>
+      <NotificationContent>
+        <MicrophoneIconContainer>
+          <PulsingMicrophone path={mdiMicrophone} size={20} color="red" />
+        </MicrophoneIconContainer>
+        {message}
+      </NotificationContent>
     </MainContainer>
   );
 };
@@ -32,11 +39,37 @@ const MainContainer = styled.div`
 
 const NotificationContent = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: calc(100% - ${2 * PADDING}px);
   height: calc(100% - ${2 * PADDING}px);
   margin: ${PADDING}px;
+`;
+
+const MicrophoneIconContainer = styled.div`
+  width: 20px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: ${PADDING / 2}px;
+  margin-right: ${PADDING}px;
+`;
+
+const pulse = keyframes`
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+const PulsingMicrophone = styled(Icon)`
+  animation: ${pulse} 2s linear infinite;
 `;
 
 export default NotificationBar;
