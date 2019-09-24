@@ -27,6 +27,7 @@ const containerStyle = css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  overflow: hidden;
 `;
 
 const modalStyle = css`
@@ -49,6 +50,7 @@ const ContentContainer = styled.div`
   margin-top: ${PADDING}px;
   width: calc(100% - ${2 * PADDING}px);
   height: calc(100% - ${2 * PADDING}px - ${5 * PADDING}px);
+  overflow: hidden;
 `;
 
 // const MainContainer = styled.div`
