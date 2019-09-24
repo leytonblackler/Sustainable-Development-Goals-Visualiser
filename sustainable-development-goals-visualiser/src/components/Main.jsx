@@ -11,7 +11,7 @@ import NotificationBar from "./NotificationBar";
 import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
 
-const ENABLE_DEV_TOOLS =
+const inDeveloperMode =
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
 
 const GeneralStatus = {
@@ -46,7 +46,10 @@ export default class Main extends Component {
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: []
     };
-    setTimeout(() => this.setState({ loaderShownForMinimumTime: true }), 0);
+    setTimeout(
+      () => this.setState({ loaderShownForMinimumTime: true }),
+      inDeveloperMode ? 0 : 2000
+    );
   }
 
   componentDidMount() {
@@ -344,7 +347,7 @@ export default class Main extends Component {
               justifyContent: "space-evenly"
             }}
           >
-            {ENABLE_DEV_TOOLS ? (
+            {inDeveloperMode ? (
               <div>
                 <button onClick={this.onShake}>
                   Simulate Shake (Activate voice)
