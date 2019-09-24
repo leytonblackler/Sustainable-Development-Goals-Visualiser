@@ -32,10 +32,10 @@ const containerStyle = css`
 
 const modalStyle = css`
   float: bottom;
-  height: 100%;
+  height: 90%;
   width: calc(100vw - ${2 * PADDING}px);
   border-radius: 10px;
-  margin-bottom: calc(-${PADDING}px - 20vh);
+  margin-bottom: calc(-${PADDING}px - 10%);
   overflow: hidden;
   display: flex;
   flex-direction: column;

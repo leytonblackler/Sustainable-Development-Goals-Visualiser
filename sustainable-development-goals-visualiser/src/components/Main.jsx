@@ -10,6 +10,7 @@ import SpeechHandler, { SpeechStatus } from "./SpeechHandler";
 import NotificationBar from "./NotificationBar";
 import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
+import CompareInfoPanel from "./CompareInfoPanel";
 
 const inDeveloperMode =
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
@@ -44,7 +45,8 @@ export default class Main extends Component {
       unData: null,
       generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE,
-      currentCountries: []
+      currentCountries: [],
+      category: ""
     };
     setTimeout(
       () => this.setState({ loaderShownForMinimumTime: true }),
@@ -61,6 +63,25 @@ export default class Main extends Component {
       complete: csv => {
         console.log("Country geolocations CSV file loaded!");
         this.setState({ countryGeolocationData: csv.data });
+        this.setState({
+          countryGeolocationData: csv.data,
+          generalStatus: GeneralStatus.COMPARING,
+          category: "Poverty",
+          currentCountries: [
+            {
+              country: "NZ",
+              latitude: "-40.900557",
+              longitude: "174.885971",
+              name: "New Zealand"
+            },
+            {
+              country: "IN",
+              latitude: "20.593684",
+              longitude: "78.96288",
+              name: "India"
+            }
+          ]
+        });
       }
     });
 
@@ -260,6 +281,7 @@ export default class Main extends Component {
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
       case GeneralStatus.WAITING_FOR_SECOND_COUNTRY_COMPARE:
         return currentCountries[0];
+      case GeneralStatus.COMPARING:
       case GeneralStatus.SHOWING_SECOND_COUNTRY_COMPARE:
         return currentCountries[1];
       default:
@@ -287,11 +309,17 @@ export default class Main extends Component {
   };
 
   currentDrawerContent = () => {
-    const { generalStatus } = this.state;
+    const { generalStatus, currentCountries, category } = this.state;
 
     switch (generalStatus) {
       case GeneralStatus.COMPARING:
-        return <div>"This is a drawer with country comparison info." </div>;
+        let firstCountry = currentCountries[0];
+        let secondCountry = currentCountries[1];
+        return <CompareInfoPanel
+          category={category}
+          firstCountry={firstCountry}
+          secondCountry={secondCountry}
+        />;
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
         return <div>"This is a drawer with info for a single country." </div>;
       default:
