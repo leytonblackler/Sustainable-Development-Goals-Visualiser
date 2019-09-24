@@ -25,6 +25,7 @@ const MainContainer = styled.div`
 `;
 
 const Text = styled.span`
+  opacity: 0.85;
   color: white;
   font-size: 16pt;
   margin-bottom: 20px;
