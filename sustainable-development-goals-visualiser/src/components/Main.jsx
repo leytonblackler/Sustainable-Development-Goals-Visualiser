@@ -10,9 +10,10 @@ import SpeechHandler, { SpeechStatus } from "./SpeechHandler";
 import NotificationBar from "./NotificationBar";
 import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
+import HeaderArea from "./HeaderArea";
 
 const inDeveloperMode =
-  !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+  !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
 
 const GeneralStatus = {
   DEFAULT: 1, // Normal zoomed out view of map with no compare/single country info.
@@ -286,6 +287,28 @@ export default class Main extends Component {
     }
   };
 
+  currentTitleText = () => {
+    const { generalStatus, currentCountries } = this.state;
+
+    switch (generalStatus) {
+      case GeneralStatus.DEFAULT:
+        return "Sustainable Development Goals Visualiser";
+      case GeneralStatus.COMPARING:
+        return (
+          "Comparing " +
+          currentCountries[0].name +
+          " and " +
+          currentCountries[1].name
+        );
+      case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
+        return "Showing info for " + currentCountries[0].name;
+      case GeneralStatus.SHOWING_FOCUSED_COUNTRY:
+        return currentCountries[0].name;
+      default:
+        return null;
+    }
+  };
+
   currentDrawerContent = () => {
     const { generalStatus } = this.state;
 
@@ -335,6 +358,7 @@ export default class Main extends Component {
         onSwipe={this.onSwipe}
       >
         <RootContainer>
+          <HeaderArea title={this.currentTitleText()} />
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <InfoDrawer
             content={this.currentDrawerContent()}
