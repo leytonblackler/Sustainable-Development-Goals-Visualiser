@@ -64,21 +64,24 @@ export default class Map extends Component {
                             projection={projection}
                             style={{
                               default: {
-                                fill: "#ECEFF1",
-                                stroke: "#607D8B",
-                                strokeWidth: 0.75,
+                                fill: "white",
+                                fillOpacity: 0.7,
+                                stroke: "white",
+                                strokeWidth: 0.5,
                                 outline: "none"
                               },
                               hover: {
-                                fill: "#ECEFF1",
-                                stroke: "#607D8B",
-                                strokeWidth: 0.75,
+                                fill: "white",
+                                fillOpacity: 0.7,
+                                stroke: "white",
+                                strokeWidth: 0.5,
                                 outline: "none"
                               },
                               pressed: {
-                                fill: "#ECEFF1",
-                                stroke: "#607D8B",
-                                strokeWidth: 0.75,
+                                fill: "white",
+                                fillOpacity: 0.7,
+                                stroke: "white",
+                                strokeWidth: 0.5,
                                 outline: "none"
                               }
                             }}
@@ -98,7 +101,7 @@ export default class Map extends Component {
 
 const MainContainer = styled.div`
   width: 100%;
-  height: calc(100% - 5px);
+  height: 100%;
   margin: 0 auto;
   background-color: #4884ee;
   background-image: linear-gradient(315deg, #4884ee 0%, #06bcfb 74%);

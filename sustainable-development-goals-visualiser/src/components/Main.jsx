@@ -46,7 +46,7 @@ export default class Main extends Component {
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: []
     };
-    setTimeout(() => this.setState({ loaderShownForMinimumTime: true }), 2000);
+    setTimeout(() => this.setState({ loaderShownForMinimumTime: true }), 0);
   }
 
   componentDidMount() {
@@ -278,6 +278,19 @@ export default class Main extends Component {
     }
   };
 
+  currentDrawerContent = () => {
+    const { generalStatus } = this.state;
+
+    switch (generalStatus) {
+      case GeneralStatus.COMPARING:
+        return <div>"This is a drawer with country comparison info." </div>;
+      case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
+        return <div>"This is a drawer with info for a single country." </div>;
+      default:
+        return null;
+    }
+  };
+
   renderMainContent = () => (
     <SpeechHandler
       status={this.state.speechStatus}
@@ -315,6 +328,7 @@ export default class Main extends Component {
       >
         <RootContainer>
           <NotificationBar message={this.currentNotificationBarMessage()} />
+          <InfoDrawer content={this.currentDrawerContent()} />
           <div
             style={{
               display: "flex",
@@ -329,6 +343,20 @@ export default class Main extends Component {
                 </button>
                 <button onClick={this.onReset}>
                   Simulate Multi-touch Swipe Down (Clear/Reset)
+                </button>
+                <button
+                  onClick={() => {
+                    this.setState({
+                      generalStatus: GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO,
+                      countries: [
+                        this.state.countryGeolocationData.find(
+                          item => item.name === "New Zealand"
+                        )
+                      ]
+                    });
+                  }}
+                >
+                  Info on New Zealand
                 </button>
               </div>
             ) : null}
