@@ -6,12 +6,12 @@ import { css } from "emotion";
 const PADDING = 10; //pixels
 
 const InfoDrawer = props => {
-  const { content } = props;
+  const { content, onClose } = props;
   return (
     <Drawer
       open={content ? true : false}
-      direction={"bottom"}
-      allowClose={true}
+      onRequestClose={onClose}
+      direction="bottom"
       modalElementClass={modalStyle}
       containerElementClass={containerStyle}
     >
@@ -23,8 +23,6 @@ const InfoDrawer = props => {
 const containerStyle = css`
   height: 100vh;
   width: 100vw;
-  border-radius: 0;
-  padding: 0px;
   background-color: rgba(0, 0, 0, 0) !important;
   display: flex;
   flex-direction: column;
@@ -33,10 +31,10 @@ const containerStyle = css`
 
 const modalStyle = css`
   float: bottom;
-  height: 70vh;
+  height: 100%;
   width: calc(100vw - ${2 * PADDING}px);
   border-radius: 10px;
-  margin-bottom: -${5 * PADDING}px;
+  margin-bottom: calc(-${PADDING}px - 20vh);
   overflow: hidden;
   display: flex;
   flex-direction: column;

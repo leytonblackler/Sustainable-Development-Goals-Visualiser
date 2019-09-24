@@ -176,6 +176,11 @@ export default class Main extends Component {
     this.onReset();
   };
 
+  onInfoDrawerClose = () => {
+    console.log("onInfoDrawerClose");
+    this.onReset();
+  };
+
   onReset = () => {
     console.log("onReset");
     this.setState({
@@ -328,7 +333,10 @@ export default class Main extends Component {
       >
         <RootContainer>
           <NotificationBar message={this.currentNotificationBarMessage()} />
-          <InfoDrawer content={this.currentDrawerContent()} />
+          <InfoDrawer
+            content={this.currentDrawerContent()}
+            onClose={this.onInfoDrawerClose}
+          />
           <div
             style={{
               display: "flex",
