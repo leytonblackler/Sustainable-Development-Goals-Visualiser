@@ -20,8 +20,8 @@ const MainContainer = styled.div`
   height: 100%;
   // background-color: #4884ee;
   // background-image: linear-gradient(315deg, #4884ee 0%, #06bcfb 74%);
-  background-color: #6d9ef2;
-  background-image: linear-gradient(315deg, #6d9ef2 0%, #43cafc 74%);
+  background-color: #34516e;
+  background-image: linear-gradient(315deg, #34516e 0%, #3498db 74%);
 `;
 
 const Text = styled.span`

@@ -65,21 +65,21 @@ export default class Map extends Component {
                             style={{
                               default: {
                                 fill: "white",
-                                fillOpacity: 1,
+                                fillOpacity: 0.85,
                                 stroke: "white",
                                 strokeWidth: 0.5,
                                 outline: "none"
                               },
                               hover: {
                                 fill: "white",
-                                fillOpacity: 1,
+                                fillOpacity: 0.85,
                                 stroke: "white",
                                 strokeWidth: 0.5,
                                 outline: "none"
                               },
                               pressed: {
                                 fill: "white",
-                                fillOpacity: 1,
+                                fillOpacity: 0.85,
                                 stroke: "white",
                                 strokeWidth: 0.5,
                                 outline: "none"
@@ -105,8 +105,8 @@ const MainContainer = styled.div`
   margin: 0 auto;
   // background-color: #4884ee;
   // background-image: linear-gradient(315deg, #4884ee 0%, #06bcfb 74%);
-  background-color: #6d9ef2;
-  background-image: linear-gradient(315deg, #6d9ef2 0%, #43cafc 74%);
+  background-color: #34516e;
+  background-image: linear-gradient(315deg, #34516e 0%, #3498db 74%);
 `;
 
 const fadeIn = keyframes`
