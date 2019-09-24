@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-drag-drawer": "^3.3.1",
+    "react-random-wheel": "^0.1.0"
+  }
+}

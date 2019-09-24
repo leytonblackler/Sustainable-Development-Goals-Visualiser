@@ -9,8 +9,10 @@ import Map from "./Map";
 import SpeechHandler, { SpeechStatus } from "./SpeechHandler";
 import NotificationBar from "./NotificationBar";
 import Loading from "./Loading";
+import InfoDrawer from "./InfoDrawer";
 
-const ENABLE_DEV_TOOLS = true;
+const ENABLE_DEV_TOOLS =
+  !process.env.NODE_ENV || process.env.NODE_ENV === "development";
 
 const GeneralStatus = {
   DEFAULT: 1, // Normal zoomed out view of map with no compare/single country info.
