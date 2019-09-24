@@ -4,25 +4,34 @@ import DoughnutChart from "./DoughnutChart"
 
 const CompareInfoPanel = props => {
   const { category, firstCountry, secondCountry } = props;
-  const countryOneData = [];
-  const countryTwoData = [];
+  // temporary data
+  const firstCountryData = [75, 25];
+  const secondCountryData = [50, 50];
 
   return (
     <MainContainer>
       <TitleContainer>
         <h2>{category}</h2>
       </TitleContainer>
-      <CountryContainer>
-        <h3>{firstCountry.name}</h3>
-        <DoughnutChart data={countryOneData} />
-      </CountryContainer>
-      <CountryContainer>
-        <h3>{secondCountry.name}</h3>
-        <DoughnutChart data={countryTwoData} />
-      </CountryContainer>
+      <CountryInfoPanel country={firstCountry} data={firstCountryData} />
+      <CountryInfoPanel country={secondCountry} data={secondCountryData} />
     </MainContainer>
   );
 };
+
+const CountryInfoPanel = props => {
+  const { country, data } = props;
+  return (
+    <CountryContainer>
+      <div>
+        <h3>{country.name}</h3>
+      </div>
+      <ChartContainer>
+        <DoughnutChart countryData={data} />
+      </ChartContainer>
+    </CountryContainer>
+  );
+}
 
 const MainContainer = styled.div`
   display: flex;
@@ -40,17 +49,23 @@ const TitleContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 10%;
-  background-color: red;
+  // background-color: red;
 `;
 
 const CountryContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
   height: 45%;
-  background-color: magenta;
+  // background-color: magenta;
+`;
+
+const ChartContainer = styled.div`
+  align-items: center;
+  width: 100%;
+  // background-color: orange;
 `;
 
 export default CompareInfoPanel;
