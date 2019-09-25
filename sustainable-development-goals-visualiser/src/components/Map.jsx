@@ -119,5 +119,5 @@ const fadeIn = keyframes`
 `;
 
 const FadingMap = styled(ComposableMap)`
-  animation: ${fadeIn} 0.3s ease-in;
+  animation: ${fadeIn} 0.5s ease-in;
 `;

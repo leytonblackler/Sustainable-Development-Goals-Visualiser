@@ -10,7 +10,7 @@ import SpeechHandler, { SpeechStatus } from "./SpeechHandler";
 import NotificationBar from "./NotificationBar";
 import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
-import HeaderArea from "./HeaderArea";
+import TitleArea from "./TitleArea";
 
 const inDeveloperMode =
   !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
@@ -51,6 +51,8 @@ export default class Main extends Component {
       () => this.setState({ loaderShownForMinimumTime: true }),
       inDeveloperMode ? 0 : 2000
     );
+
+    console.log(inDeveloperMode);
   }
 
   componentDidMount() {
@@ -358,7 +360,7 @@ export default class Main extends Component {
         onSwipe={this.onSwipe}
       >
         <RootContainer>
-          <HeaderArea title={this.currentTitleText()} />
+          <TitleArea title={this.currentTitleText()} />
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <InfoDrawer
             content={this.currentDrawerContent()}
