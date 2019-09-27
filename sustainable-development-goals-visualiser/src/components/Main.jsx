@@ -366,7 +366,7 @@ export default class Main extends Component {
         <RootContainer>
           <TitleArea title={this.currentTitleText()} />
           <NotificationBar message={this.currentNotificationBarMessage()} />
-          <SelectorWheel></SelectorWheel>
+          <SelectorWheel openModalHandler={event => this.onPress = event}></SelectorWheel>
           <InfoDrawer
             content={this.currentDrawerContent()}
             onClose={this.onInfoDrawerClose}

@@ -24,13 +24,17 @@ const data = {
 };
 
 export default class SelectorWheel extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       showModal: false
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.openModalHandler(this.handleOpenModal);
   }
 
   handleOpenModal() {
