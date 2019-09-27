@@ -12,7 +12,7 @@ import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
 import TitleArea from "./TitleArea";
 import ReactModal from 'react-modal';
-import Wheel from "./Wheel";
+import SelectorWheel from "./SelectorWheel";
 
 const inDeveloperMode = true;
 // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
@@ -364,9 +364,9 @@ export default class Main extends Component {
         onSwipe={this.onSwipe}
       >
         <RootContainer>
-          <Wheel></Wheel>
           <TitleArea title={this.currentTitleText()} />
           <NotificationBar message={this.currentNotificationBarMessage()} />
+          <SelectorWheel></SelectorWheel>
           <InfoDrawer
             content={this.currentDrawerContent()}
             onClose={this.onInfoDrawerClose}
