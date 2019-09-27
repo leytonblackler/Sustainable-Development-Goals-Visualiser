@@ -92,14 +92,6 @@ export default class Main extends Component {
     });
   };
 
-  onPress = event => {
-    console.log("onPress");
-  };
-
-  onPressUp = event => {
-    console.log("onPressUp");
-  };
-
   onTap = event => {
     console.log("onTap");
   };
@@ -129,6 +121,12 @@ export default class Main extends Component {
   };
   onPinchOut = event => {
     console.log("onPinchOut", event);
+  };
+  onPress = event => {
+    console.log("onPress");
+  };
+  onPressUp = event => {
+    console.log("onPressUp");
   };
   onRotate = event => {
     console.log("onRotate");
@@ -366,7 +364,10 @@ export default class Main extends Component {
         <RootContainer>
           <TitleArea title={this.currentTitleText()} />
           <NotificationBar message={this.currentNotificationBarMessage()} />
-          <SelectorWheel openModalHandler={event => this.onPress = event}></SelectorWheel>
+          <SelectorWheel
+            openModalHandler={event => this.onPress = event}
+            closeModalHandler={event => this.onPressUp = event}>
+          </SelectorWheel>
           <InfoDrawer
             content={this.currentDrawerContent()}
             onClose={this.onInfoDrawerClose}

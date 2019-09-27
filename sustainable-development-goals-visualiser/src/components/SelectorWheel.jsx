@@ -3,24 +3,30 @@ import ReactModal from 'react-modal';
 import { Doughnut } from 'react-chartjs-2';
 
 const data = {
-  labels: [
-    'Red',
-    'Green',
-    'Yellow'
-  ],
   datasets: [{
-    data: [300, 50, 100],
+    data: [1, 1, 1, 1, 1, 1, 1],
     backgroundColor: [
-      '#FF6384',
-      '#36A2EB',
-      '#FFCE56'
+      '#8e00f3',
+      '#cc10b7',
+      '#e73b8e',
+      '#f65e6e',
+      '#fe7d53',
+      '#ff9c35',
+      '#ffb800',
     ],
-    hoverBackgroundColor: [
-      '#FF6384',
-      '#36A2EB',
-      '#FFCE56'
-    ]
+
   }]
+};
+
+const doughnutOptions = {
+  animation: {
+    animateRotate: false,
+    animateScale: true,
+    duration: 300
+  },
+  tooltips: {
+    enabled: false
+  }
 };
 
 export default class SelectorWheel extends Component {
@@ -35,6 +41,7 @@ export default class SelectorWheel extends Component {
 
   componentDidMount() {
     this.props.openModalHandler(this.handleOpenModal);
+    this.props.closeModalHandler(this.handleCloseModal);
   }
 
   handleOpenModal() {
@@ -54,7 +61,12 @@ export default class SelectorWheel extends Component {
           contentLabel="Minimal Modal Example"
         >
           <button onClick={this.handleCloseModal}>Close Modal</button>
-          <Doughnut data={data} />
+          <Doughnut
+            data={data}
+            options={doughnutOptions}
+            legend={{ display: false }}
+
+          />
         </ReactModal>
       </div>
     );
