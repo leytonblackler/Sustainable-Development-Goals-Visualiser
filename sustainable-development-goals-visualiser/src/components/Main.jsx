@@ -92,6 +92,14 @@ export default class Main extends Component {
     });
   };
 
+  // onPress gets mapped to opening selector wheel 
+  // onPressUp gets mapped to closing selector wheel when no selection has been made
+  // onPanEnd generally means a selection has been made
+  onPanEnd = event => {
+    console.log("onPanEnd");
+    this.onPressUp();
+  };
+
   onTap = event => {
     console.log("onTap");
   };
@@ -103,9 +111,6 @@ export default class Main extends Component {
   };
   onPanCancel = event => {
     console.log("onPanCancel");
-  };
-  onPanEnd = event => {
-    console.log("onPanEnd");
   };
   onPanStart = event => {
     console.log("onPanStart");
@@ -121,12 +126,6 @@ export default class Main extends Component {
   };
   onPinchOut = event => {
     console.log("onPinchOut", event);
-  };
-  onPress = event => {
-    console.log("onPress");
-  };
-  onPressUp = event => {
-    console.log("onPressUp");
   };
   onRotate = event => {
     console.log("onRotate");

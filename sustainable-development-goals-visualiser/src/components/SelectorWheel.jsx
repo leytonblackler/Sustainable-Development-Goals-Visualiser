@@ -26,7 +26,9 @@ const doughnutOptions = {
   },
   tooltips: {
     enabled: false
-  }
+  },
+  maintainAspectRatio: false,
+  // hover: event => { console.log(event) }
 };
 
 export default class SelectorWheel extends Component {
@@ -58,14 +60,15 @@ export default class SelectorWheel extends Component {
         <button onClick={this.handleOpenModal}>Trigger Modal</button>
         <ReactModal
           isOpen={this.state.showModal}
-          contentLabel="Minimal Modal Example"
+          contentLabel="Selector Wheel"
+          // this doesn't work. leyton help
+          style={{ backgroundColor: "transparent" }}
         >
-          <button onClick={this.handleCloseModal}>Close Modal</button>
           <Doughnut
             data={data}
             options={doughnutOptions}
             legend={{ display: false }}
-
+            style={{ width: '100%', height: '100%' }}
           />
         </ReactModal>
       </div>
