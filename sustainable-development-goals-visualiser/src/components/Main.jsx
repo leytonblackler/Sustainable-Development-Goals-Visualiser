@@ -11,9 +11,11 @@ import NotificationBar from "./NotificationBar";
 import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
 import TitleArea from "./TitleArea";
+import ReactModal from 'react-modal';
+import Wheel from "./Wheel";
 
-const inDeveloperMode =
-  !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
+const inDeveloperMode = true;
+// !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
 
 const GeneralStatus = {
   DEFAULT: 1, // Normal zoomed out view of map with no compare/single country info.
@@ -51,7 +53,7 @@ export default class Main extends Component {
       () => this.setState({ loaderShownForMinimumTime: true }),
       inDeveloperMode ? 0 : 2000
     );
-
+    ReactModal.setAppElement('#root')
     console.log(inDeveloperMode);
   }
 
@@ -90,6 +92,14 @@ export default class Main extends Component {
     });
   };
 
+  onPress = event => {
+    console.log("onPress");
+  };
+
+  onPressUp = event => {
+    console.log("onPressUp");
+  };
+
   onTap = event => {
     console.log("onTap");
   };
@@ -119,12 +129,6 @@ export default class Main extends Component {
   };
   onPinchOut = event => {
     console.log("onPinchOut", event);
-  };
-  onPress = event => {
-    console.log("onPress");
-  };
-  onPressUp = event => {
-    console.log("onPressUp");
   };
   onRotate = event => {
     console.log("onRotate");
@@ -360,6 +364,7 @@ export default class Main extends Component {
         onSwipe={this.onSwipe}
       >
         <RootContainer>
+          <Wheel></Wheel>
           <TitleArea title={this.currentTitleText()} />
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <InfoDrawer
