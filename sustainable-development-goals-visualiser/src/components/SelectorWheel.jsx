@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactModal from 'react-modal';
 import { Doughnut } from 'react-chartjs-2';
+import './SelectorWheel.css'
 
 const data = {
   datasets: [{
@@ -61,8 +62,10 @@ export default class SelectorWheel extends Component {
         <ReactModal
           isOpen={this.state.showModal}
           contentLabel="Selector Wheel"
-          // this doesn't work. leyton help
-          style={{ backgroundColor: "transparent" }}
+          shouldCloseOnOverlayClick={true}
+          className="Modal"
+          overlayClassName="Overlay"
+          shouldFocusAfterRender={false}
         >
           <Doughnut
             data={data}
