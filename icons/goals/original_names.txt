@@ -1,0 +1,13 @@
+1_poverty = Fund (alternatives: Financing)
+
+2_zero_hunger = Food-Security (alternatives: Food)
+
+3_quality_education = Education
+
+4_clean_water = Water-source (alternatives: Water-Sanitation-and-Hygiene, Bottled-water, Potable-water, Potable-water-source)
+
+5_internet_access = Internet (alternatives: Computer, Smartphone)
+
+6_sustainable_cities = Urban (alternatives: Urban-rural)
+
+7_biodiversity = Environment
