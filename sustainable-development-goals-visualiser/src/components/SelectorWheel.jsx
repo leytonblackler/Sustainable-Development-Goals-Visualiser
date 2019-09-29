@@ -3,38 +3,30 @@ import ReactModal from 'react-modal';
 import { Chart, Doughnut } from 'react-chartjs-2';
 import './SelectorWheel.css'
 
-import no_poverty from '../icons/goals/1_no_poverty.svg'
-
-const iconPath = '../icons/goals/';
-const iconNames = [
-  '1_no_poverty',
-  '2_zero_hunger',
-  '3_quality_education',
-  '4_clean_water',
-  '5_internet_access',
-  '6_sustainable_cities',
-  '7_biodiversity'
+const iconFiles = [
+  require('../icons/goals/1_no_poverty.svg'),
+  require('../icons/goals/2_zero_hunger.svg'),
+  require('../icons/goals/3_quality_education.svg'),
+  require('../icons/goals/4_clean_water.svg'),
+  require('../icons/goals/5_internet_access.svg'),
+  require('../icons/goals/6_sustainable_cities.svg'),
+  require('../icons/goals/7_biodiversity.svg')
 ];
-const iconSuffix = '.svg';
+const iconElements = [];
+const iconScale = 0.12; // wheel width * iconScale = iconWidth
 
-iconNames.forEach((iconName) => {
-  var tooltipEl = document.createElement('img');
-  tooltipEl.className = 'wheel-icon';
-  tooltipEl.src = no_poverty;
-  document.body.appendChild(tooltipEl);
-  // }
-  // Set caret Position
-  tooltipEl.classList.remove('above', 'below', 'no-transform');
-  tooltipEl.classList.add('no-transform');
-  // Display, position, and set styles for font
-  tooltipEl.style.opacity = 1;
-  tooltipEl.style.position = 'absolute';
-  // tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX - 8 + 'px';
-  // tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY - 8 + 'px';
-  tooltipEl.style.pointerEvents = 'none';
-  tooltipEl.style.width = '16px';
-  tooltipEl.style.height = '16px';
-  tooltipEl.style.zIndex = 1000;
+iconFiles.forEach((iconName) => {
+  let icon = document.createElement('img');
+  icon.className = 'wheel-icon';
+  icon.src = iconName;
+  document.body.appendChild(icon);
+  icon.classList.remove('above', 'below', 'no-transform');
+  icon.classList.add('no-transform');
+  icon.style.opacity = 1;
+  icon.style.position = 'absolute';
+  icon.style.pointerEvents = 'none';
+  icon.style.zIndex = 1000;
+  iconElements.push(icon);
 })
 
 const data = {
@@ -63,19 +55,18 @@ const doughnutOptions = {
   // hover: event => { console.log(event) }
 };
 
-var originalDoughnutDraw = Chart.controllers.doughnut.prototype.draw;
+let originalDoughnutDraw = Chart.controllers.doughnut.prototype.draw;
 Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
   draw: function (ease) {
     // Call super method first
     originalDoughnutDraw.apply(this, arguments);
-    var chart = this.chart;
-    // console.log(chart);
-    // create an array of tooltips
-    // we can't use the chart tooltip because there is only one tooltip per chart
-    chart.pluginTooltips = [];
+    let chart = this.chart;
+    // icon positions are retrieved from an array of tooltips
+    // (because chart.js automatically places tooltips in the centre of segments)
+    chart.icons = [];
     chart.config.data.datasets.forEach(function (dataset, i) {
       chart.getDatasetMeta(i).data.forEach(function (sector, j) {
-        chart.pluginTooltips.push(new Chart.Tooltip({
+        chart.icons.push(new Chart.Tooltip({
           _chart: chart.chart,
           _chartInstance: chart,
           _data: chart.data,
@@ -84,23 +75,23 @@ Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
         }, chart));
       });
     });
-    Chart.helpers.each(chart.pluginTooltips, (tooltip) => {
-      // This line checks if the item is visible to display the tooltip
+    Chart.helpers.each(chart.icons, (tooltip) => {
       if (!tooltip._active[0].hidden) {
         tooltip.initialize();
         tooltip.update();
-        // we don't actually need this since we are not animating tooltips
-        tooltip.pivot();
-        //tooltip.transition(ease).draw();
       }
     });
     chart.options.tooltips.enabled = false;
     let icons = document.getElementsByClassName('wheel-icon');
-    let xOffset = this.chart.canvas.getBoundingClientRect().left + window.pageXOffset;
-    let yOffset = this.chart.canvas.getBoundingClientRect().top + window.pageYOffset;
+    let rect = chart.canvas.getBoundingClientRect();
+    let iconSize = parseInt(rect.width * iconScale); // so the icons scale with the window
+    let xOffset = rect.left + window.pageXOffset;
+    let yOffset = rect.top + window.pageYOffset;
     for (let i = 0; i < icons.length; i++) {
-      icons[i].style.left = xOffset + this.chart.pluginTooltips[i]._model.caretX - 8 + 'px';
-      icons[i].style.top = yOffset + this.chart.pluginTooltips[i]._model.caretY - 8 + 'px';
+      icons[i].style.width = iconSize + 'px';
+      icons[i].style.height = iconSize + 'px';
+      icons[i].style.left = xOffset + chart.icons[i]._model.caretX - (iconSize / 2) + 'px';
+      icons[i].style.top = yOffset + chart.icons[i]._model.caretY - (iconSize / 2) + 'px';
     }
   }
 });
@@ -115,7 +106,6 @@ export default class SelectorWheel extends Component {
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
-    this.print = this.print.bind(this);
   }
 
   componentDidMount() {
@@ -123,15 +113,17 @@ export default class SelectorWheel extends Component {
     this.props.closeModalHandler(this.handleCloseModal);
   }
 
-  print(chart) {
-    // console.log(chart.options);
-  }
-
   handleOpenModal() {
+    for (let i = 0; i < iconElements.length; i++) {
+      iconElements[i].style.display = 'block';
+    }
     this.setState({ showModal: true });
   }
 
   handleCloseModal() {
+    for (let i = 0; i < iconElements.length; i++) {
+      iconElements[i].style.display = 'none';
+    }
     this.setState({ showModal: false });
   }
 
