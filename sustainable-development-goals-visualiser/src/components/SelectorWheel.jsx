@@ -17,6 +17,26 @@ const iconNames = [
 ];
 const iconSuffix = '.svg';
 
+iconNames.forEach((iconName) => {
+  var tooltipEl = document.createElement('img');
+  tooltipEl.className = 'wheel-icon';
+  tooltipEl.src = no_poverty;
+  document.body.appendChild(tooltipEl);
+  // }
+  // Set caret Position
+  tooltipEl.classList.remove('above', 'below', 'no-transform');
+  tooltipEl.classList.add('no-transform');
+  // Display, position, and set styles for font
+  tooltipEl.style.opacity = 1;
+  tooltipEl.style.position = 'absolute';
+  // tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX - 8 + 'px';
+  // tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY - 8 + 'px';
+  tooltipEl.style.pointerEvents = 'none';
+  tooltipEl.style.width = '16px';
+  tooltipEl.style.height = '16px';
+  tooltipEl.style.zIndex = 1000;
+})
+
 const data = {
   datasets: [{
     data: [1, 1, 1, 1, 1, 1, 1],
@@ -34,18 +54,57 @@ const data = {
 };
 
 const doughnutOptions = {
-  showAllTooltips: true,
   animation: {
     animateRotate: false,
     animateScale: true,
     duration: 300
   },
-  tooltips: {
-
-  },
   maintainAspectRatio: false,
   // hover: event => { console.log(event) }
 };
+
+var originalDoughnutDraw = Chart.controllers.doughnut.prototype.draw;
+Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
+  draw: function (ease) {
+    // Call super method first
+    originalDoughnutDraw.apply(this, arguments);
+    var chart = this.chart;
+    // console.log(chart);
+    // create an array of tooltips
+    // we can't use the chart tooltip because there is only one tooltip per chart
+    chart.pluginTooltips = [];
+    chart.config.data.datasets.forEach(function (dataset, i) {
+      chart.getDatasetMeta(i).data.forEach(function (sector, j) {
+        chart.pluginTooltips.push(new Chart.Tooltip({
+          _chart: chart.chart,
+          _chartInstance: chart,
+          _data: chart.data,
+          _options: chart.options.tooltips,
+          _active: [sector]
+        }, chart));
+      });
+    });
+    Chart.helpers.each(chart.pluginTooltips, (tooltip) => {
+      // This line checks if the item is visible to display the tooltip
+      if (!tooltip._active[0].hidden) {
+        tooltip.initialize();
+        tooltip.update();
+        // we don't actually need this since we are not animating tooltips
+        tooltip.pivot();
+        //tooltip.transition(ease).draw();
+      }
+    });
+    chart.options.tooltips.enabled = false;
+    let icons = document.getElementsByClassName('wheel-icon');
+    let xOffset = this.chart.canvas.getBoundingClientRect().left + window.pageXOffset;
+    let yOffset = this.chart.canvas.getBoundingClientRect().top + window.pageYOffset;
+    for (let i = 0; i < icons.length; i++) {
+      icons[i].style.left = xOffset + this.chart.pluginTooltips[i]._model.caretX - 8 + 'px';
+      icons[i].style.top = yOffset + this.chart.pluginTooltips[i]._model.caretY - 8 + 'px';
+    }
+  }
+});
+
 
 export default class SelectorWheel extends Component {
   constructor(props) {
@@ -65,82 +124,7 @@ export default class SelectorWheel extends Component {
   }
 
   print(chart) {
-    console.log('yeet');
-    console.log(chart);
-  }
-
-  componentWillMount() {
-
-    var tooltipEl = document.createElement('img');
-    tooltipEl.id = 'chartjs-tooltip';
-    tooltipEl.src = no_poverty;
-    // document.body.appendChild(tooltipEl);
-    // }
-    // Set caret Position
-    tooltipEl.classList.remove('above', 'below', 'no-transform');
-    if (tooltipModel.yAlign) {
-      tooltipEl.classList.add(tooltipModel.yAlign);
-    } else {
-      tooltipEl.classList.add('no-transform');
-    }
-    // Display, position, and set styles for font
-    tooltipEl.style.opacity = 1;
-    tooltipEl.style.position = 'absolute';
-    // tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX - 8 + 'px';
-    // tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY - 8 + 'px';
-    tooltipEl.style.pointerEvents = 'none';
-    tooltipEl.style.width = '16px';
-    tooltipEl.style.height = '16px';
-    var tools = [tooltipEl, tooltipEl, tooltipEl, tooltipEl, tooltipEl, tooltipEl, tooltipEl];
-
-
-    Chart.plugins.register({
-      beforeRender: (chart) => {
-        if (chart.config.options.showAllTooltips) {
-          // create an array of tooltips
-          // we can't use the chart tooltip because there is only one tooltip per chart
-          chart.tools = tools;
-          chart.pluginTooltips = [];
-          chart.config.data.datasets.forEach(function (dataset, i) {
-            chart.getDatasetMeta(i).data.forEach(function (sector, j) {
-              chart.pluginTooltips.push(new Chart.Tooltip({
-                _chart: chart.chart,
-                _chartInstance: chart,
-                _data: chart.data,
-                _options: chart.options.tooltips,
-                _active: [sector]
-              }, chart));
-            });
-          });
-          // turn off normal tooltips
-          chart.options.tooltips.enabled = false;
-        }
-      },
-      afterDraw: (chart, easing) => {
-        if (chart.config.options.showAllTooltips) {
-          // we don't want the permanent tooltips to animate, so don't do anything till the animation runs atleast once
-          if (!chart.allTooltipsOnce) {
-            if (easing !== 1)
-              return;
-            chart.allTooltipsOnce = true;
-          }
-
-          // turn on tooltips
-          chart.options.tooltips.enabled = true;
-          Chart.helpers.each(chart.pluginTooltips, (tooltip) => {
-            // This line checks if the item is visible to display the tooltip
-            if (!tooltip._active[0].hidden) {
-              tooltip.initialize();
-              tooltip.update();
-              // we don't actually need this since we are not animating tooltips
-              tooltip.pivot();
-              tooltip.transition(easing).draw();
-            }
-          });
-          chart.options.tooltips.enabled = false;
-        }
-      }
-    })
+    // console.log(chart.options);
   }
 
   handleOpenModal() {
