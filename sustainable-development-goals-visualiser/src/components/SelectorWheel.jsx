@@ -62,6 +62,7 @@ export default class SelectorWheel extends Component {
         <ReactModal
           isOpen={this.state.showModal}
           contentLabel="Selector Wheel"
+          onRequestClose={this.handleCloseModal}
           shouldCloseOnOverlayClick={true}
           className="Modal"
           overlayClassName="Overlay"
@@ -71,7 +72,10 @@ export default class SelectorWheel extends Component {
             data={data}
             options={doughnutOptions}
             legend={{ display: false }}
-            style={{ width: '100%', height: '100%' }}
+            style={{
+              width: '100%',
+              height: '100%'
+            }}
           />
         </ReactModal>
       </div>
