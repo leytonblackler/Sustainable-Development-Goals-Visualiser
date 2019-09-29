@@ -31,8 +31,8 @@ iconFiles.forEach((iconName) => {
 
 const data = {
   datasets: [{
-    data: [1, 1, 1, 1, 1, 1, 1],
-    backgroundColor: [
+    data: new Array(iconFiles.length).fill(1),
+    backgroundColor: [ // this could be made dynamic with chromajs
       '#8e00f3',
       '#cc10b7',
       '#e73b8e',
