@@ -14,3 +14,9 @@
   bottom: 40px;
   background-color: transparent;
 }
+.wheel-icon {
+  position: absolute;
+  pointer-events: none;
+  width: 16px;
+  height: 16px;
+}
