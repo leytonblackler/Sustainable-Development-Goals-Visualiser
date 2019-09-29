@@ -1,4 +1,4 @@
-1_poverty = Fund (alternatives: Financing)
+1_no_poverty = Fund (alternatives: Financing)
 
 2_zero_hunger = Food-Security (alternatives: Food)
 
