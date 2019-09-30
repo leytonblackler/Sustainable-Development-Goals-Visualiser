@@ -63,25 +63,6 @@ export default class Main extends Component {
       complete: csv => {
         console.log("Country geolocations CSV file loaded!");
         this.setState({ countryGeolocationData: csv.data });
-        this.setState({
-          countryGeolocationData: csv.data,
-          generalStatus: GeneralStatus.COMPARING,
-          category: "Poverty",
-          currentCountries: [
-            {
-              country: "NZ",
-              latitude: "-40.900557",
-              longitude: "174.885971",
-              name: "New Zealand"
-            },
-            {
-              country: "IN",
-              latitude: "20.593684",
-              longitude: "78.96288",
-              name: "India"
-            }
-          ]
-        });
       }
     });
 
