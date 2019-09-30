@@ -2,3 +2,4 @@ sustain
 /node_modules
 /icons/humanitarian_icons
 .DS_Store
+/.idea
