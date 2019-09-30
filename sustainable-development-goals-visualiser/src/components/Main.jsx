@@ -12,8 +12,8 @@ import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
 import TitleArea from "./TitleArea";
 
-const inDeveloperMode =
-  !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
+const inDeveloperMode = true
+  // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
 
 const GeneralStatus = {
   DEFAULT: 1, // Normal zoomed out view of map with no compare/single country info.
