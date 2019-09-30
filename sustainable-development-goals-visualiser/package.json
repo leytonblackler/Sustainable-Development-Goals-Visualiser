@@ -8,6 +8,7 @@
     "@mdi/react": "^1.2.1",
     "chart.js": "^2.8.0",
     "circular-std": "^1.0.0",
+    "d3-scale": "^3.1.0",
     "papaparse": "^5.1.0",
     "react": "^16.9.0",
     "react-chartjs-2": "^2.8.0",

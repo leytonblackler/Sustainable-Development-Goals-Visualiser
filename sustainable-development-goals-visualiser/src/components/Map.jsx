@@ -7,8 +7,35 @@ import {
   Geography
 } from "react-simple-maps";
 import { Motion, spring } from "react-motion";
+import { scaleLinear } from "d3-scale"
+
+
+
+const popScale = scaleLinear()
+  .domain([0,1400000000])
+  .range(["#000000", "#00FF00"])
+
+const gdpScale = scaleLinear()
+  .domain([0, 400000])
+  .range(["#000000","#0000FF"])
+
+
 
 export default class Map extends Component {
+  // constructor(props) {
+  //   super(props)
+  //   data = fetch('..')
+  // }
+
+  computeFill(geography, metric){
+    console.log(geography)
+    if (metric ===  "gdp") {
+      return gdpScale(geography.properties.gdp_md_est)
+    } else {
+      return popScale(geography.properties.pop_est)
+    }
+  }
+
   getCurrentMapConfiguration() {
     const { focusedCountry } = this.props;
     return this.props.focusedCountry
@@ -31,6 +58,7 @@ export default class Map extends Component {
       width: "100vw",
       height: "100vh"
     };
+    const data = "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/examples/choropleth-map/static/world-50m-with-population.json" 
     return (
       <MainContainer>
         <Motion
@@ -53,7 +81,7 @@ export default class Map extends Component {
               style={mapStyle}
             >
               <ZoomableGroup center={[x, y]} zoom={zoom} disablePanning>
-                <Geographies geography="/data/world-110m.json">
+                <Geographies geography={data}>
                   {(geographies, projection) =>
                     geographies.map(
                       (geography, i) =>
@@ -64,7 +92,7 @@ export default class Map extends Component {
                             projection={projection}
                             style={{
                               default: {
-                                fill: "white",
+                                fill: this.computeFill(geography, "pop"),
                                 fillOpacity: 0.85,
                                 stroke: "white",
                                 strokeWidth: 0.5,
