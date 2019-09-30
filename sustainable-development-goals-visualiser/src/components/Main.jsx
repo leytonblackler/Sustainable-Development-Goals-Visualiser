@@ -11,6 +11,7 @@ import NotificationBar from "./NotificationBar";
 import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
 import CompareInfoPanel from "./CompareInfoPanel";
+import SingleInfoPanel from "./SingleInfoPanel";
 
 const inDeveloperMode =
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
@@ -301,7 +302,10 @@ export default class Main extends Component {
           secondCountry={secondCountry}
         />;
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
-        return <div>"This is a drawer with info for a single country." </div>;
+        return <SingleInfoPanel
+          country={currentCountries[0]}
+        />;
+        //return <div>"This is a drawer with info for a single country." </div>;
       default:
         return null;
     }
