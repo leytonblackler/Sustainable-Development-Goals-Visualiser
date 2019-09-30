@@ -12,9 +12,12 @@ import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
 import CompareInfoPanel from "./CompareInfoPanel";
 import SingleInfoPanel from "./SingleInfoPanel";
+import TitleArea from "./TitleArea";
+import ReactModal from 'react-modal';
+import SelectorWheel from "./SelectorWheel";
 
-const inDeveloperMode =
-  !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+const inDeveloperMode = true;
+// !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
 
 const GeneralStatus = {
   DEFAULT: 1, // Normal zoomed out view of map with no compare/single country info.
@@ -44,7 +47,7 @@ export default class Main extends Component {
       loaderShownForMinimumTime: false,
       countryGeolocationData: null,
       unData: null,
-      generalStatus: GeneralStatus.DEFAULT,
+      generalStatus: GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO,
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [],
       category: ""
@@ -53,6 +56,8 @@ export default class Main extends Component {
       () => this.setState({ loaderShownForMinimumTime: true }),
       inDeveloperMode ? 0 : 2000
     );
+    ReactModal.setAppElement('#root')
+    console.log(inDeveloperMode);
   }
 
   componentDidMount() {
@@ -90,6 +95,14 @@ export default class Main extends Component {
     });
   };
 
+  // onPress gets mapped to opening selector wheel 
+  // onPressUp gets mapped to closing selector wheel when no selection has been made
+  // onPanEnd generally means a selection has been made
+  onPanEnd = event => {
+    console.log("onPanEnd");
+    this.onPressUp();
+  };
+
   onTap = event => {
     console.log("onTap");
   };
@@ -101,9 +114,6 @@ export default class Main extends Component {
   };
   onPanCancel = event => {
     console.log("onPanCancel");
-  };
-  onPanEnd = event => {
-    console.log("onPanEnd");
   };
   onPanStart = event => {
     console.log("onPanStart");
@@ -119,12 +129,6 @@ export default class Main extends Component {
   };
   onPinchOut = event => {
     console.log("onPinchOut", event);
-  };
-  onPress = event => {
-    console.log("onPress");
-  };
-  onPressUp = event => {
-    console.log("onPressUp");
   };
   onRotate = event => {
     console.log("onRotate");
@@ -289,6 +293,28 @@ export default class Main extends Component {
     }
   };
 
+  currentTitleText = () => {
+    const { generalStatus, currentCountries } = this.state;
+
+    switch (generalStatus) {
+      case GeneralStatus.DEFAULT:
+        return "Sustainable Development Goals Visualiser";
+      case GeneralStatus.COMPARING:
+        return (
+          "Comparing " +
+          currentCountries[0].name +
+          " and " +
+          currentCountries[1].name
+        );
+      case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
+        return "Showing info for " + currentCountries[0].name;
+      case GeneralStatus.SHOWING_FOCUSED_COUNTRY:
+        return currentCountries[0].name;
+      default:
+        return null;
+    }
+  };
+
   currentDrawerContent = () => {
     const { generalStatus, currentCountries, category } = this.state;
 
@@ -305,7 +331,6 @@ export default class Main extends Component {
         return <SingleInfoPanel
           country={currentCountries[0]}
         />;
-        //return <div>"This is a drawer with info for a single country." </div>;
       default:
         return null;
     }
@@ -347,7 +372,12 @@ export default class Main extends Component {
         onSwipe={this.onSwipe}
       >
         <RootContainer>
+          <TitleArea title={this.currentTitleText()} />
           <NotificationBar message={this.currentNotificationBarMessage()} />
+          <SelectorWheel
+            openModalHandler={event => this.onPress = event}
+            closeModalHandler={event => this.onPressUp = event}>
+          </SelectorWheel>
           <InfoDrawer
             content={this.currentDrawerContent()}
             onClose={this.onInfoDrawerClose}

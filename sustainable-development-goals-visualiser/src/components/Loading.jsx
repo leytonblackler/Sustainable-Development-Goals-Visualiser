@@ -25,10 +25,12 @@ const MainContainer = styled.div`
 `;
 
 const Text = styled.span`
+  opacity: 0.85;
   color: white;
   font-size: 16pt;
   margin-bottom: 20px;
   font-weight: bold;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 `;
 
 export default Loading;
