@@ -3,22 +3,22 @@ import ReactModal from 'react-modal';
 import { Chart, Doughnut } from 'react-chartjs-2';
 import './SelectorWheel.css'
 
-const iconFiles = [
-  require('../icons/goals/1_no_poverty.svg'),
-  require('../icons/goals/2_zero_hunger.svg'),
-  require('../icons/goals/3_quality_education.svg'),
-  require('../icons/goals/4_clean_water.svg'),
-  require('../icons/goals/5_internet_access.svg'),
-  require('../icons/goals/6_sustainable_cities.svg'),
-  require('../icons/goals/7_biodiversity.svg')
-];
+// this probably needs to be stored somewhere that's accessible app-wide
+const categories = [
+  'no_poverty',
+  'zero_hunger',
+  'quality_education',
+  'clean_water',
+  'internet_access',
+  'sustainable_cities',
+  'biodiversity'
+]
+// build array of icon svg elements
 const iconElements = [];
-const iconScale = 0.12; // wheel width * iconScale = iconWidth
-
-iconFiles.forEach((iconName) => {
+for(let i = 0; i < categories.length; i++) {
   let icon = document.createElement('img');
   icon.className = 'wheel-icon';
-  icon.src = iconName;
+  icon.src = require('../icons/goals/'+ parseInt(i + 1) +'_' + categories[i] + '.svg')
   document.body.appendChild(icon);
   icon.classList.remove('above', 'below', 'no-transform');
   icon.classList.add('no-transform');
@@ -27,11 +27,11 @@ iconFiles.forEach((iconName) => {
   icon.style.pointerEvents = 'none';
   icon.style.zIndex = 1000;
   iconElements.push(icon);
-})
-
+}
+const iconScale = 0.12; // wheel width * iconScale = iconWidth
 const data = {
   datasets: [{
-    data: new Array(iconFiles.length).fill(1),
+    data: new Array(categories.length).fill(1),
     backgroundColor: [ // this could be made dynamic with chromajs
       '#8e00f3',
       '#cc10b7',
@@ -40,19 +40,27 @@ const data = {
       '#fe7d53',
       '#ff9c35',
       '#ffb800',
-    ],
-
+    ]
   }]
 };
-
+// chartjs options object
 const doughnutOptions = {
   animation: {
     animateRotate: false,
     animateScale: true,
     duration: 300
   },
+  tooltips: {
+    enabled: false,
+    // this calls a function and passes the highlighted segment
+    // will be used to change category
+    custom: event => {
+      if(event.dataPoints) {
+        console.log(categories[event.dataPoints[0].index]) 
+      }
+    }
+  },
   maintainAspectRatio: false,
-  // hover: event => { console.log(event) }
 };
 
 let originalDoughnutDraw = Chart.controllers.doughnut.prototype.draw;
@@ -81,7 +89,7 @@ Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
         tooltip.update();
       }
     });
-    chart.options.tooltips.enabled = false;
+    // chart.options.tooltips.enabled = false;
     let icons = document.getElementsByClassName('wheel-icon');
     let rect = chart.canvas.getBoundingClientRect();
     let iconSize = parseInt(rect.width * iconScale); // so the icons scale with the window
@@ -102,7 +110,6 @@ export default class SelectorWheel extends Component {
     super(props);
     this.state = {
       showModal: false,
-      icons: []
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
