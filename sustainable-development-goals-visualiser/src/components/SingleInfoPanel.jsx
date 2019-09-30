@@ -4,9 +4,7 @@ import styled from "styled-components";
 import DoughnutChart from "./DoughnutChart"
 
 const SingleInfoPanel = props => {
-  const { country } = props;
-  // temporary data
-  const countryData = [75, 25];
+  const { country, categories } = props;
 
   return (
     <MainContainer>
