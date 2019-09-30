@@ -3,3 +3,4 @@ sustain
 /icons/humanitarian_icons
 .DS_Store
 /.idea
+/package-lock.json
