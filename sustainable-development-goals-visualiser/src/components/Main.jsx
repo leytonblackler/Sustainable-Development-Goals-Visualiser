@@ -11,9 +11,11 @@ import NotificationBar from "./NotificationBar";
 import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
 import TitleArea from "./TitleArea";
+import ReactModal from 'react-modal';
+import SelectorWheel from "./SelectorWheel";
 
-const inDeveloperMode = true
-  // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
+const inDeveloperMode = true;
+// !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
 
 const GeneralStatus = {
   DEFAULT: 1, // Normal zoomed out view of map with no compare/single country info.
@@ -52,7 +54,7 @@ export default class Main extends Component {
       () => this.setState({ loaderShownForMinimumTime: true }),
       inDeveloperMode ? 0 : 2000
     );
-
+    ReactModal.setAppElement('#root')
     console.log(inDeveloperMode);
   }
 
@@ -91,6 +93,14 @@ export default class Main extends Component {
     });
   };
 
+  // onPress gets mapped to opening selector wheel 
+  // onPressUp gets mapped to closing selector wheel when no selection has been made
+  // onPanEnd generally means a selection has been made
+  onPanEnd = event => {
+    console.log("onPanEnd");
+    this.onPressUp();
+  };
+
   onTap = event => {
     console.log("onTap");
   };
@@ -102,9 +112,6 @@ export default class Main extends Component {
   };
   onPanCancel = event => {
     console.log("onPanCancel");
-  };
-  onPanEnd = event => {
-    console.log("onPanEnd");
   };
   onPanStart = event => {
     console.log("onPanStart");
@@ -120,12 +127,6 @@ export default class Main extends Component {
   };
   onPinchOut = event => {
     console.log("onPinchOut", event);
-  };
-  onPress = event => {
-    console.log("onPress");
-  };
-  onPressUp = event => {
-    console.log("onPressUp");
   };
   onRotate = event => {
     console.log("onRotate");
@@ -363,6 +364,10 @@ export default class Main extends Component {
         <RootContainer>
           <TitleArea title={this.currentTitleText()} />
           <NotificationBar message={this.currentNotificationBarMessage()} />
+          <SelectorWheel
+            openModalHandler={event => this.onPress = event}
+            closeModalHandler={event => this.onPressUp = event}>
+          </SelectorWheel>
           <InfoDrawer
             content={this.currentDrawerContent()}
             onClose={this.onInfoDrawerClose}
