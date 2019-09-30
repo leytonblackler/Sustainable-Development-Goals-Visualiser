@@ -281,7 +281,6 @@ export default class Main extends Component {
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
       case GeneralStatus.WAITING_FOR_SECOND_COUNTRY_COMPARE:
         return currentCountries[0];
-      case GeneralStatus.COMPARING:
       case GeneralStatus.SHOWING_SECOND_COUNTRY_COMPARE:
         return currentCountries[1];
       default:
