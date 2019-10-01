@@ -26,8 +26,6 @@ const gdpScale = scaleLinear()
 class BasicMap extends Component {
 
   computeFill(geography, metric){
-    // return gdpScale(geography.properties.gdp_md_est)
-    console.log(metric)
     if (metric ===  "gdp") {
       return gdpScale(geography.properties.gdp_md_est)
     } else {
@@ -50,7 +48,7 @@ class BasicMap extends Component {
         }}
         >
         <ZoomableGroup center={[0,20]}>
-          <Geographies geography={ "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/examples/choropleth-map/static/world-50m-with-population.json" }>
+          <Geographies disableOptimization geography={ "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/examples/choropleth-map/static/world-50m-with-population.json" }>
             {(geographies, projection) => geographies.map((geography, i) => (
               <Geography
                 key={ i }
@@ -87,7 +85,7 @@ class BasicMap extends Component {
 
 
   render() {
-    // console.log(this.props.metric)
+    console.log(`render`)
     return (
       <div style={wrapperStyles}>
         {this.renderMap()}

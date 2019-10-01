@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Drawer from "react-drag-drawer";
 import { css } from "emotion";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const PADDING = 10; //pixels
 
@@ -15,6 +16,9 @@ const InfoDrawer = props => {
       modalElementClass={modalStyle}
       containerElementClass={containerStyle}
     >
+      <ExpandMoreIconContainer>
+        <ExpandMoreIcon fontSize="large" />
+      </ExpandMoreIconContainer>
       <ContentContainer>{content}</ContentContainer>
     </Drawer>
   );
@@ -32,10 +36,10 @@ const containerStyle = css`
 
 const modalStyle = css`
   float: bottom;
-  height: 100%;
+  height: 90%;
   width: calc(100vw - ${2 * PADDING}px);
   border-radius: 10px;
-  margin-bottom: calc(-${PADDING}px - 20vh);
+  margin-bottom: calc(-${PADDING}px - 10%);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -53,22 +57,9 @@ const ContentContainer = styled.div`
   overflow: hidden;
 `;
 
-// const MainContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-//   width: 100%;
-//   height: 100%;
-//   background-color: #4884ee;
-//   background-image: linear-gradient(315deg, #4884ee 0%, #06bcfb 74%);
-// `;
+const ExpandMoreIconContainer = styled.div`
+  color: grey
+`;
 
-// const Text = styled.span`
-//   color: white;
-//   font-size: 16pt;
-//   margin-bottom: 20px;
-//   font-weight: bold;
-// `;
 
 export default InfoDrawer;
