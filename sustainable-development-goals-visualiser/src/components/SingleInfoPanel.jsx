@@ -8,9 +8,6 @@ const SingleInfoPanel = props => {
 
   return (
     <MainContainer>
-      <TitleContainer>
-        <h2>{country.name}</h2>
-      </TitleContainer>
     </MainContainer>
   );
 };
@@ -19,9 +16,6 @@ const CountryInfoPanel = props => {
   const { country, data } = props;
   return (
     <CountryContainer>
-      <div>
-        <h3>{country.name}</h3>
-      </div>
       <ChartContainer>
         <DoughnutChart countryData={data} />
       </ChartContainer>

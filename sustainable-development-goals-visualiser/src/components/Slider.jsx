@@ -34,7 +34,6 @@ const Slider = props => {
 
 export default Slider;
 
-// const
 const SliderContainer = styled.div`
     width: 80%; 
     color: '#52af77';
@@ -75,7 +74,6 @@ const PrettoSlider = withStyles({
     backgroundColor: 'cyan',
     height: 10,
     width: 1,
-    marginTop: -4,
   },
   // markActive: {
   //   opacity: 1,
