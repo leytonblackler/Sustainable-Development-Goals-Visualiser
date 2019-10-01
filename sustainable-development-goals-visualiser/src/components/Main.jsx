@@ -340,24 +340,33 @@ export default class Main extends Component {
     }
   };
 
-  currentDrawerContent = () => {
+  currentDrawerData = () => {
     const { generalStatus, currentCountries, category } = this.state;
 
     switch (generalStatus) {
       case GeneralStatus.COMPARING:
         let firstCountry = currentCountries[0];
         let secondCountry = currentCountries[1];
-        return (
-          <CompareInfoPanel
-            category={category}
-            firstCountry={firstCountry}
-            secondCountry={secondCountry}
-          />
-        );
+        return {
+          title: "Comparing Countries",
+          content: (
+            <CompareInfoPanel
+              category={category}
+              firstCountry={firstCountry}
+              secondCountry={secondCountry}
+            />
+          )
+        };
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
-        return <SingleInfoPanel country={currentCountries[0]} />;
+        return {
+          title: "Info for " + currentCountries[0].name,
+          content: <SingleInfoPanel country={currentCountries[0]} />
+        };
       case GeneralStatus.SHOWING_HELP:
-        return <HelpContent />;
+        return {
+          title: "Interacting with the Visualisation",
+          content: <HelpContent />
+        };
       default:
         return null;
     }
@@ -418,7 +427,7 @@ export default class Main extends Component {
             setSelectedSegment={this.setSelectedCategory}
           ></SelectorWheel>
           <InfoDrawer
-            content={this.currentDrawerContent()}
+            data={this.currentDrawerData()}
             onClose={this.onInfoDrawerClose}
           />
           <div
@@ -517,23 +526,3 @@ const SliderContainer = styled.div`
   left: 60px;
   top: 700px;
 `;
-
-// <span>
-// {this.state.speechStatus === SpeechStatus.INACTIVE
-//   ? "Microphone is not active."
-//   : "Microphone is active!"}
-// </span>
-// <span>
-// General Status:
-// {" " +
-//   Object.keys(GeneralStatus).find(
-//     key => GeneralStatus[key] === this.state.generalStatus
-//   )}
-// </span>
-// <span>
-// Speech Status:
-// {" " +
-//   Object.keys(SpeechStatus).find(
-//     key => SpeechStatus[key] === this.state.speechStatus
-//   )}
-// </span>

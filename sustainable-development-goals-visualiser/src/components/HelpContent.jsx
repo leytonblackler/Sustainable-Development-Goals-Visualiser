@@ -70,7 +70,7 @@ const MainContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: calc(100% - ${PADDING * 4}px);
+  height: 90%;
   background-color: magenta;
   overflow: hidden;
 `;
