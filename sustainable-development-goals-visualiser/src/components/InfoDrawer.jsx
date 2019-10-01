@@ -54,7 +54,7 @@ const modalStyle = css`
 const ContentContainer = styled.div`
   margin-bottom: ${PADDING}px;
   width: calc(100% - ${2 * PADDING}px);
-  height: calc(90vh - calc(${6 * PADDING}px + 30px + 50px));
+  height: calc(90vh - calc(${7 * PADDING}px + 30px + 50px));
   overflow: hidden;
   color: #37474f;
 `;
@@ -74,6 +74,8 @@ const Title = styled.div`
   font-size: 16pt;
   font-weight: bold;
   color: #37474f;
+  text-align: center;
+  margin-bottom: ${PADDING}px;
 `;
 
 export default InfoDrawer;

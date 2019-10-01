@@ -22,7 +22,7 @@ const fadeIn = keyframes`
 const MainContainer = styled.div`
   // background-color: #ff9800;
   position: fixed;
-  top: 30vh;
+  top: 15vh;
   width: 100vw;
   display: flex;
   flex-direction: row;

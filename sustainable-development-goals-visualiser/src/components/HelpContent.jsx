@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 
+import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+
 const PADDING = 10; //pixels
 
 const INFO_ITEMS = [
@@ -42,24 +46,32 @@ const INFO_ITEMS = [
   }
 ];
 
+const renderInfoCard = (infoItem, index) => {
+  const { title, steps } = infoItem;
+  return (
+    <Card key={infoItem.title}>
+      <Card.Header>
+        <Accordion.Toggle as={Toggle} eventKey={index}>
+          {title}
+        </Accordion.Toggle>
+      </Card.Header>
+      <Accordion.Collapse eventKey={index}>
+        <List>{steps.map(step => renderStep(step))}</List>
+      </Accordion.Collapse>
+    </Card>
+  );
+};
+
+const renderStep = step => {
+  return <li key={step}>{step}</li>;
+};
+
 export const HelpContent = () => {
   return (
     <MainContainer>
-      <MainTitle>How to Interact</MainTitle>
-      <InfoItems>
-        {INFO_ITEMS.map(item => (
-          <SubContainer key={item.title}>
-            <SubTitle>{item.title}</SubTitle>
-            <InfoContent>
-              <ul>
-                {item.steps.map(step => (
-                  <ListItem key={item.title + step}>{step}</ListItem>
-                ))}
-              </ul>
-            </InfoContent>
-          </SubContainer>
-        ))}
-      </InfoItems>
+      <StyledAccordion>
+        {INFO_ITEMS.map((infoItem, index) => renderInfoCard(infoItem, index))}
+      </StyledAccordion>
     </MainContainer>
   );
 };
@@ -70,42 +82,20 @@ const MainContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 90%;
-  background-color: magenta;
+  height: 100%;
   overflow: hidden;
 `;
 
-const InfoItems = styled.div`
-  width: calc(100% - ${PADDING * 4}px);
+const StyledAccordion = styled(Accordion)`
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
   overflow: hidden;
-  background-color: lime;
 `;
 
-const MainTitle = styled.div`
-  margin-top: ${PADDING * 2}px;
-  margin-bottom: ${PADDING * 2}px;
-  font-size: 18pt;
-  font-weight: bold;
-  color: #37474f;
-`;
+const Toggle = styled.div``;
 
-const SubTitle = styled.div`
-  font-size: 14pt;
-  font-weight: bold;
-  color: #37474f;
-`;
-
-const ListItem = styled.li`
-  margin-bottom: 5px;
-  color: #455a64;
-`;
-
-const SubContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-
-const InfoContent = styled.div`
-  width: 100%;
+const List = styled.ol`
+  margin-top: ${PADDING}px;
+  margin-bottom: ${PADDING}px;
 `;

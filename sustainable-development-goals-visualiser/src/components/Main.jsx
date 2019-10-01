@@ -30,7 +30,7 @@ const categories = [
   "biodiversity"
 ];
 
-const inDeveloperMode = true;
+const inDeveloperMode = false;
 // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
 
 const GeneralStatus = {
@@ -377,8 +377,8 @@ export default class Main extends Component {
     console.log(this.state.selectedCategory);
   };
 
-  onCurrentYearChanged = value  => {
-    this.setState({ currentYear : value });
+  onCurrentYearChanged = value => {
+    this.setState({ currentYear: value });
   };
 
   renderMainContent = () => (
@@ -421,6 +421,7 @@ export default class Main extends Component {
           <TitleArea title={this.currentTitleText()} />
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <SelectorWheel
+            inDeveloperMode={inDeveloperMode}
             openModalHandler={event => (this.onPress = event)}
             closeModalHandler={event => (this.onPressUp = event)}
             setSelectedSegment={this.setSelectedCategory}
