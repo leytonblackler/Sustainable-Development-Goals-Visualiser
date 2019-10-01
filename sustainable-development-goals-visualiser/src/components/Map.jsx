@@ -8,32 +8,64 @@ import {
 } from "react-simple-maps";
 import { Motion, spring } from "react-motion";
 import { scaleLinear } from "d3-scale"
+import * as CSVParser from "papaparse";
+import water_data from "../static-data/processed/clean_water.csv";
+import internet_data from "../static-data/processed/internet_access.csv";
+import { SSL_OP_TLS_ROLLBACK_BUG } from "constants";
 
+const colorScale = scaleLinear()
+  .domain([0, 1])
+  .range(["#004400","#00FF00"])
 
-
-const popScale = scaleLinear()
-  .domain([0,1400000000])
-  .range(["#000000", "#00FF00"])
-
-const gdpScale = scaleLinear()
-  .domain([0, 400000])
-  .range(["#000000","#0000FF"])
-
-
+const NO_DATA_FOR_COUNTRY_COLOR = '#888888'
+const DATA_NOT_LOADED_COLOR = '#FF0000'
 
 export default class Map extends Component {
-  // constructor(props) {
-  //   super(props)
-  //   data = fetch('..')
-  // }
-
-  computeFill(geography, metric){
-    console.log(geography)
-    if (metric ===  "gdp") {
-      return gdpScale(geography.properties.gdp_md_est)
-    } else {
-      return popScale(geography.properties.pop_est)
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: null
     }
+  }
+  async getData(){
+    CSVParser.parse(water_data, {
+      header: true,
+      download: true,
+      skipEmptyLines: true,
+      complete: csv => {
+        this.setState({ waterData: csv.data });
+      }
+    });
+    CSVParser.parse(internet_data, {
+      header: true,
+      download: true,
+      skipEmptyLines: true,
+      complete: csv => {
+        this.setState({ internetData: csv.data });
+      }
+    });
+  }
+
+  computeFill(geography, metric){    
+    const countryName = geography.properties.admin
+    let data;
+    if (metric ===  "water") {
+      data = this.state.waterData
+    } else if (metric === "internet") {
+      data = this.state.internetData
+    }
+
+    if (data == null) {
+      return DATA_NOT_LOADED_COLOR
+    }
+    for (let index = 0; index < data.length; index++) {
+      const element = data[index];
+      if (element.GeoAreaName == countryName) {
+        return colorScale(element.values)
+      }
+    }
+    return NO_DATA_FOR_COUNTRY_COLOR
+    
   }
 
   getCurrentMapConfiguration() {
@@ -50,6 +82,10 @@ export default class Map extends Component {
           zoom: 1,
           center: [0, 20]
         };
+  }
+
+  componentWillMount() {
+    this.getData()
   }
 
   render() {
@@ -81,7 +117,7 @@ export default class Map extends Component {
               style={mapStyle}
             >
               <ZoomableGroup center={[x, y]} zoom={zoom} disablePanning>
-                <Geographies geography={data}>
+                <Geographies disableOptimization geography={data}>
                   {(geographies, projection) =>
                     geographies.map(
                       (geography, i) =>
@@ -92,7 +128,7 @@ export default class Map extends Component {
                             projection={projection}
                             style={{
                               default: {
-                                fill: this.computeFill(geography, "pop"),
+                                fill: this.computeFill(geography, this.props.metric),
                                 fillOpacity: 0.85,
                                 stroke: "white",
                                 strokeWidth: 0.5,

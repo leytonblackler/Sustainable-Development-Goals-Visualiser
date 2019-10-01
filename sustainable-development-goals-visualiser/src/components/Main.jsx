@@ -15,6 +15,18 @@ import SingleInfoPanel from "./SingleInfoPanel";
 import TitleArea from "./TitleArea";
 import ReactModal from 'react-modal';
 import SelectorWheel from "./SelectorWheel";
+import Slider from "./Slider";
+
+// TODO: this is duplicated in here and SelectorWheel
+const categories = [
+  'no_poverty',
+  'zero_hunger',
+  'quality_education',
+  'clean_water',
+  'internet_access',
+  'sustainable_cities',
+  'biodiversity'
+]
 
 const inDeveloperMode = true;
 // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
@@ -50,7 +62,9 @@ export default class Main extends Component {
       generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [],
-      category: ""
+      selectedCategory: -1,
+      currentYear: "2015",
+      metric: "water"
     };
     setTimeout(
       () => this.setState({ loaderShownForMinimumTime: true }),
@@ -336,6 +350,16 @@ export default class Main extends Component {
     }
   };
 
+  setSelectedCategory = (index) => {
+    this.setState({selectedCategory: categories[index]});
+    console.log(this.state.selectedCategory);
+  }
+
+  onCurrentYearChanged = value  => {
+    this.setState({ currentYear : value });
+    console.log(this.state.currentYear);
+  };
+
   renderMainContent = () => (
     <SpeechHandler
       status={this.state.speechStatus}
@@ -376,7 +400,8 @@ export default class Main extends Component {
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <SelectorWheel
             openModalHandler={event => this.onPress = event}
-            closeModalHandler={event => this.onPressUp = event}>
+            closeModalHandler={event => this.onPressUp = event}
+            setSelectedSegment={this.setSelectedCategory}>
           </SelectorWheel>
           <InfoDrawer
             content={this.currentDrawerContent()}
@@ -411,15 +436,31 @@ export default class Main extends Component {
                 >
                   Info on New Zealand
                 </button>
+                <button onClick={() => {this.setState({metric: "water"})}}>
+                  Water
+                </button>
+                <button onClick={() => {this.setState({metric: "internet"})}}>
+                  Internet
+                </button>
               </div>
             ) : null}
           </div>
           <Map
             countryGeolocationData={this.state.countryGeolocationData}
             focusedCountry={this.currentlyFocusedCountry()}
+            metric={this.state.metric}
           />
         </RootContainer>
       </Hammer>
+      <SliderContainer>
+            <Slider
+              label="Year"
+              min={2000}
+              max={2017}
+              value={this.state.currentYear}
+              onChange={this.onCurrentYearChanged}
+            />
+      </SliderContainer>
     </SpeechHandler>
   );
 
@@ -447,6 +488,12 @@ export default class Main extends Component {
 
 const RootContainer = styled.div`
   height: 100%;
+`;
+
+const SliderContainer = styled.div`
+  position:absolute; 
+  left:60px; 
+  top:700px;
 `;
 
 // <span>
