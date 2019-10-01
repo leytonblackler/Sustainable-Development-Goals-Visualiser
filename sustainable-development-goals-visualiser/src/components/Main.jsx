@@ -13,20 +13,22 @@ import InfoDrawer from "./InfoDrawer";
 import CompareInfoPanel from "./CompareInfoPanel";
 import SingleInfoPanel from "./SingleInfoPanel";
 import TitleArea from "./TitleArea";
-import ReactModal from 'react-modal';
+import ReactModal from "react-modal";
 import SelectorWheel from "./SelectorWheel";
 import Slider from "./Slider";
+import { HelpButton } from "./HelpButton";
+import { HelpContent } from "./HelpContent";
 
 // TODO: this is duplicated in here and SelectorWheel
 const categories = [
-  'no_poverty',
-  'zero_hunger',
-  'quality_education',
-  'clean_water',
-  'internet_access',
-  'sustainable_cities',
-  'biodiversity'
-]
+  "no_poverty",
+  "zero_hunger",
+  "quality_education",
+  "clean_water",
+  "internet_access",
+  "sustainable_cities",
+  "biodiversity"
+];
 
 const inDeveloperMode = true;
 // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
@@ -41,7 +43,8 @@ const GeneralStatus = {
   WAITING_FOR_FIRST_COUNTRY_COMPARE: 7,
   WAITING_FOR_SECOND_COUNTRY_COMPARE: 8,
   WAITING_FOR_SINGLE_COUNTRY_INFO: 9,
-  WAITING_FOR_FOCUS_COUNTRY: 10
+  WAITING_FOR_FOCUS_COUNTRY: 10,
+  SHOWING_HELP: 11
 };
 
 const hammerjsOptions = {
@@ -70,7 +73,7 @@ export default class Main extends Component {
       () => this.setState({ loaderShownForMinimumTime: true }),
       inDeveloperMode ? 0 : 2000
     );
-    ReactModal.setAppElement('#root')
+    ReactModal.setAppElement("#root");
     console.log(inDeveloperMode);
   }
 
@@ -109,7 +112,7 @@ export default class Main extends Component {
     });
   };
 
-  // onPress gets mapped to opening selector wheel 
+  // onPress gets mapped to opening selector wheel
   // onPressUp gets mapped to closing selector wheel when no selection has been made
   // onPanEnd generally means a selection has been made
   onPanEnd = event => {
@@ -211,6 +214,14 @@ export default class Main extends Component {
       currentCountries: [],
       generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE
+    });
+  };
+
+  onHelpButtonPressed = () => {
+    console.log("help button pressed");
+    this.onReset();
+    this.setState({
+      generalStatus: GeneralStatus.SHOWING_HELP
     });
   };
 
@@ -329,31 +340,42 @@ export default class Main extends Component {
     }
   };
 
-  currentDrawerContent = () => {
+  currentDrawerData = () => {
     const { generalStatus, currentCountries, category } = this.state;
 
     switch (generalStatus) {
       case GeneralStatus.COMPARING:
         let firstCountry = currentCountries[0];
         let secondCountry = currentCountries[1];
-        return <CompareInfoPanel
-          category={category}
-          firstCountry={firstCountry}
-          secondCountry={secondCountry}
-        />;
+        return {
+          title: "Comparing Countries",
+          content: (
+            <CompareInfoPanel
+              category={category}
+              firstCountry={firstCountry}
+              secondCountry={secondCountry}
+            />
+          )
+        };
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
-        return <SingleInfoPanel
-          country={currentCountries[0]}
-        />;
+        return {
+          title: "Info for " + currentCountries[0].name,
+          content: <SingleInfoPanel country={currentCountries[0]} />
+        };
+      case GeneralStatus.SHOWING_HELP:
+        return {
+          title: "Interacting with the Visualisation",
+          content: <HelpContent />
+        };
       default:
         return null;
     }
   };
 
-  setSelectedCategory = (index) => {
-    this.setState({selectedCategory: categories[index]});
+  setSelectedCategory = index => {
+    this.setState({ selectedCategory: categories[index] });
     console.log(this.state.selectedCategory);
-  }
+  };
 
   onCurrentYearChanged = value  => {
     this.setState({ currentYear : value });
@@ -395,15 +417,16 @@ export default class Main extends Component {
         onSwipe={this.onSwipe}
       >
         <RootContainer>
+          <HelpButton onClick={this.onHelpButtonPressed} />
           <TitleArea title={this.currentTitleText()} />
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <SelectorWheel
-            openModalHandler={event => this.onPress = event}
-            closeModalHandler={event => this.onPressUp = event}
-            setSelectedSegment={this.setSelectedCategory}>
-          </SelectorWheel>
+            openModalHandler={event => (this.onPress = event)}
+            closeModalHandler={event => (this.onPressUp = event)}
+            setSelectedSegment={this.setSelectedCategory}
+          ></SelectorWheel>
           <InfoDrawer
-            content={this.currentDrawerContent()}
+            data={this.currentDrawerData()}
             onClose={this.onInfoDrawerClose}
           />
           <div
@@ -435,10 +458,18 @@ export default class Main extends Component {
                 >
                   Info on New Zealand
                 </button>
-                <button onClick={() => {this.setState({metric: "water"})}}>
+                <button
+                  onClick={() => {
+                    this.setState({ metric: "water" });
+                  }}
+                >
                   Water
                 </button>
-                <button onClick={() => {this.setState({metric: "internet"})}}>
+                <button
+                  onClick={() => {
+                    this.setState({ metric: "internet" });
+                  }}
+                >
                   Internet
                 </button>
               </div>
@@ -452,13 +483,13 @@ export default class Main extends Component {
         </RootContainer>
       </Hammer>
       <SliderContainer>
-            <Slider
-              label="Year"
-              min={2000}
-              max={2017}
-              value={this.state.currentYear}
-              onChange={this.onCurrentYearChanged}
-            />
+        <Slider
+          label="Year"
+          min={2000}
+          max={2017}
+          value={this.state.currentYear}
+          onChange={this.onCurrentYearChanged}
+        />
       </SliderContainer>
     </SpeechHandler>
   );
@@ -494,23 +525,3 @@ const SliderContainer = styled.div`
   justify-content: center;
   width: 100%;
 `;
-
-// <span>
-// {this.state.speechStatus === SpeechStatus.INACTIVE
-//   ? "Microphone is not active."
-//   : "Microphone is active!"}
-// </span>
-// <span>
-// General Status:
-// {" " +
-//   Object.keys(GeneralStatus).find(
-//     key => GeneralStatus[key] === this.state.generalStatus
-//   )}
-// </span>
-// <span>
-// Speech Status:
-// {" " +
-//   Object.keys(SpeechStatus).find(
-//     key => SpeechStatus[key] === this.state.speechStatus
-//   )}
-// </span>
