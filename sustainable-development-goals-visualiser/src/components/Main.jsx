@@ -11,9 +11,13 @@ import NotificationBar from "./NotificationBar";
 import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
 import TitleArea from "./TitleArea";
+import { HelpButton } from "./HelpButton";
+import { HelpContent } from "./HelpContent";
 
-const inDeveloperMode =
-  !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
+// const inDeveloperMode =
+//   !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
+
+const inDeveloperMode = false;
 
 const GeneralStatus = {
   DEFAULT: 1, // Normal zoomed out view of map with no compare/single country info.
@@ -25,7 +29,8 @@ const GeneralStatus = {
   WAITING_FOR_FIRST_COUNTRY_COMPARE: 7,
   WAITING_FOR_SECOND_COUNTRY_COMPARE: 8,
   WAITING_FOR_SINGLE_COUNTRY_INFO: 9,
-  WAITING_FOR_FOCUS_COUNTRY: 10
+  WAITING_FOR_FOCUS_COUNTRY: 10,
+  SHOWING_HELP: 11
 };
 
 const hammerjsOptions = {
@@ -196,6 +201,14 @@ export default class Main extends Component {
     });
   };
 
+  onHelpButtonPressed = () => {
+    console.log("help button pressed");
+    this.onReset();
+    this.setState({
+      generalStatus: GeneralStatus.SHOWING_HELP
+    });
+  };
+
   onSelectCountry = country => {
     const { generalStatus, currentCountries } = this.state;
     switch (generalStatus) {
@@ -319,6 +332,8 @@ export default class Main extends Component {
         return <div>"This is a drawer with country comparison info." </div>;
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
         return <div>"This is a drawer with info for a single country." </div>;
+      case GeneralStatus.SHOWING_HELP:
+        return <HelpContent />;
       default:
         return null;
     }
@@ -360,6 +375,7 @@ export default class Main extends Component {
         onSwipe={this.onSwipe}
       >
         <RootContainer>
+          <HelpButton onClick={this.onHelpButtonPressed} />
           <TitleArea title={this.currentTitleText()} />
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <InfoDrawer

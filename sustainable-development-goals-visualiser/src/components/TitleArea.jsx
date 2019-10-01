@@ -1,8 +1,6 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
 
-const PADDING = 20; //pixels
-
 const TitleArea = props => {
   const { title } = props;
   return (
@@ -22,14 +20,10 @@ const fadeIn = keyframes`
 `;
 
 const MainContainer = styled.div`
-  background-color: rgba(0, 0, 0, 0);
+  // background-color: #ff9800;
   position: fixed;
-  top: 0;
-  width: calc(100vw - ${2 * PADDING}px);
-  min-height: 50px;
-  height: 14vh;
-  margin-top: ${PADDING}px;
-  margin-left: ${PADDING}px;
+  top: 30vh;
+  width: 100vw;
   display: flex;
   flex-direction: row;
   justify-content: center;
