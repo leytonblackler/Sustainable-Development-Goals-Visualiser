@@ -357,7 +357,6 @@ export default class Main extends Component {
 
   onCurrentYearChanged = value  => {
     this.setState({ currentYear : value });
-    console.log(this.state.currentYear);
   };
 
   renderMainContent = () => (
@@ -491,9 +490,9 @@ const RootContainer = styled.div`
 `;
 
 const SliderContainer = styled.div`
-  position:absolute; 
-  left:60px; 
-  top:700px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 `;
 
 // <span>
