@@ -923,7 +923,7 @@
     find-root "^1.1.0"
     source-map "^0.7.2"
 
-"@emotion/cache@^10.0.17":
+"@emotion/cache@^10.0.14", "@emotion/cache@^10.0.17":
   version "10.0.19"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.19.tgz#d258d94d9c707dcadaf1558def968b86bb87ad71"
   integrity sha512-BoiLlk4vEsGBg2dAqGSJu0vJl/PgVtCYLBFJaEO8RmQzPugXewQCXZJNXTDFaRlfCs0W+quesayav4fvaif5WQ==
@@ -1274,6 +1274,13 @@
     popper.js "^1.14.1"
     prop-types "^15.7.2"
     react-transition-group "^4.3.0"
+
+"@material-ui/icons@^4.4.3":
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/@material-ui/icons/-/icons-4.4.3.tgz#5d4346ddbb2673a1b57ebc78fd6d50bcd88711db"
+  integrity sha512-HVVvUyc/78kmaBd93LkfWyGkXMM+zOMKzUfulWXxaV/fFAZ3N0pD0oHjWUd94zrOoF3tZP9JC7EPlIpIcZSNow==
+  dependencies:
+    "@babel/runtime" "^7.4.4"
 
 "@material-ui/styles@^4.4.3":
   version "4.4.3"
@@ -2172,7 +2179,7 @@ babel-plugin-dynamic-import-node@2.3.0, babel-plugin-dynamic-import-node@^2.3.0:
   dependencies:
     object.assign "^4.1.0"
 
-babel-plugin-emotion@^10.0.14:
+babel-plugin-emotion@^10.0.14, babel-plugin-emotion@^10.0.17:
   version "10.0.19"
   resolved "https://registry.yarnpkg.com/babel-plugin-emotion/-/babel-plugin-emotion-10.0.19.tgz#67b9b213f7505c015f163a387a005c12c502b1de"
   integrity sha512-1pJb5uKN/gx6bi3gGr588Krj49sxARI9KmxhtMUa+NRJb6lR3OfC51mh3NlWRsOqdjWlT4cSjnZpnFq5K3T5ZA==
@@ -3139,6 +3146,16 @@ create-ecdh@^4.0.0:
     bn.js "^4.1.0"
     elliptic "^6.0.0"
 
+create-emotion@^10.0.14:
+  version "10.0.14"
+  resolved "https://registry.yarnpkg.com/create-emotion/-/create-emotion-10.0.14.tgz#4c140aaef6a9588ed47c926f9c4679e4719be43e"
+  integrity sha512-5G4naKMxokOur+94eDz7iPKBfwzy4wa/+0isnPhxXyosIQHBq7yvBy4jjdZw/nnRm7G3PM7P9Ug8mUmtoqcaHg==
+  dependencies:
+    "@emotion/cache" "^10.0.14"
+    "@emotion/serialize" "^0.11.8"
+    "@emotion/sheet" "0.9.3"
+    "@emotion/utils" "0.11.2"
+
 create-emotion@^9.1.3:
   version "9.2.12"
   resolved "https://registry.yarnpkg.com/create-emotion/-/create-emotion-9.2.12.tgz#0fc8e7f92c4f8bb924b0fef6781f66b1d07cb26f"
@@ -3931,6 +3948,14 @@ emojis-list@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
   integrity sha1-TapNnbAPmBmIDHn6RXrlsJof04k=
+
+emotion@^10.0.17:
+  version "10.0.17"
+  resolved "https://registry.yarnpkg.com/emotion/-/emotion-10.0.17.tgz#d71e99d2b01204dda109c13d069af4b191e70445"
+  integrity sha512-nShD/a7PKZ77hr517KfzKkHo1v26uPJBImRiYrl8IwIA4KRmI3vxVEA5pzw1TQTXD1iZl6YQtWhjOiiE+QPmTQ==
+  dependencies:
+    babel-plugin-emotion "^10.0.17"
+    create-emotion "^10.0.14"
 
 emotion@~9.1.2:
   version "9.1.3"

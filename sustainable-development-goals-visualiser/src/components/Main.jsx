@@ -10,6 +10,8 @@ import SpeechHandler, { SpeechStatus } from "./SpeechHandler";
 import NotificationBar from "./NotificationBar";
 import Loading from "./Loading";
 import InfoDrawer from "./InfoDrawer";
+import CompareInfoPanel from "./CompareInfoPanel";
+import SingleInfoPanel from "./SingleInfoPanel";
 import TitleArea from "./TitleArea";
 import ReactModal from 'react-modal';
 import SelectorWheel from "./SelectorWheel";
@@ -328,13 +330,21 @@ export default class Main extends Component {
   };
 
   currentDrawerContent = () => {
-    const { generalStatus } = this.state;
+    const { generalStatus, currentCountries, category } = this.state;
 
     switch (generalStatus) {
       case GeneralStatus.COMPARING:
-        return <div>"This is a drawer with country comparison info." </div>;
+        let firstCountry = currentCountries[0];
+        let secondCountry = currentCountries[1];
+        return <CompareInfoPanel
+          category={category}
+          firstCountry={firstCountry}
+          secondCountry={secondCountry}
+        />;
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
-        return <div>"This is a drawer with info for a single country." </div>;
+        return <SingleInfoPanel
+          country={currentCountries[0]}
+        />;
       default:
         return null;
     }
