@@ -13,6 +13,7 @@ import InfoDrawer from "./InfoDrawer";
 import TitleArea from "./TitleArea";
 import ReactModal from 'react-modal';
 import SelectorWheel from "./SelectorWheel";
+import Slider from "./Slider";
 
 // TODO: this is duplicated in here and SelectorWheel
 const categories = [
@@ -59,7 +60,8 @@ export default class Main extends Component {
       generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [],
-      selectedCategory: -1
+      selectedCategory: -1,
+      currentYear: "2015",
       metric: "water"
     };
     setTimeout(
@@ -343,6 +345,11 @@ export default class Main extends Component {
     console.log(this.state.selectedCategory);
   }
 
+  onCurrentYearChanged = value  => {
+    this.setState({ currentYear : value });
+    console.log(this.state.currentYear);
+  };
+
   renderMainContent = () => (
     <SpeechHandler
       status={this.state.speechStatus}
@@ -435,6 +442,15 @@ export default class Main extends Component {
           />
         </RootContainer>
       </Hammer>
+      <SliderContainer>
+            <Slider
+              label="Year"
+              min={2000}
+              max={2017}
+              value={this.state.currentYear}
+              onChange={this.onCurrentYearChanged}
+            />
+      </SliderContainer>
     </SpeechHandler>
   );
 
@@ -462,6 +478,12 @@ export default class Main extends Component {
 
 const RootContainer = styled.div`
   height: 100%;
+`;
+
+const SliderContainer = styled.div`
+  position:absolute; 
+  left:60px; 
+  top:700px;
 `;
 
 // <span>
