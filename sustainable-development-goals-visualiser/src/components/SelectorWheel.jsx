@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import ReactModal from 'react-modal';
 import { Chart, Doughnut } from 'react-chartjs-2';
-import './SelectorWheel.css'
-
+import './SelectorWheel.css';
+// import { categories } from "./Main.jsx";
 // this probably needs to be stored somewhere that's accessible app-wide
 const categories = [
   'no_poverty',
@@ -42,25 +42,6 @@ const data = {
       '#ffb800',
     ]
   }]
-};
-// chartjs options object
-const doughnutOptions = {
-  animation: {
-    animateRotate: false,
-    animateScale: true,
-    duration: 300
-  },
-  tooltips: {
-    enabled: false,
-    // this calls a function and passes the highlighted segment
-    // will be used to change category
-    custom: event => {
-      if(event.dataPoints) {
-        console.log(categories[event.dataPoints[0].index]) 
-      }
-    }
-  },
-  maintainAspectRatio: false,
 };
 
 let originalDoughnutDraw = Chart.controllers.doughnut.prototype.draw;
@@ -103,7 +84,6 @@ Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
     }
   }
 });
-
 
 export default class SelectorWheel extends Component {
   constructor(props) {
@@ -149,11 +129,22 @@ export default class SelectorWheel extends Component {
         >
           <Doughnut
             data={data}
-            options={doughnutOptions}
             legend={{ display: false }}
-            style={{
-              width: '100%',
-              height: '100%'
+            style={{ width: '100%', height: '100%' }}
+            options={{
+              animation: {
+                animateRotate: false,
+                animateScale: true,
+                duration: 300
+              },
+              tooltips: {
+                enabled: false,
+                // this calls a function and passes the highlighted segment
+                custom: event => {
+                  this.props.setSelectedSegment(event.dataPoints[0].index)
+                }
+              },
+              maintainAspectRatio: false,
             }}
           />
         </ReactModal>

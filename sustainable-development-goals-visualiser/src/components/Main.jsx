@@ -14,6 +14,17 @@ import TitleArea from "./TitleArea";
 import ReactModal from 'react-modal';
 import SelectorWheel from "./SelectorWheel";
 
+// TODO: this is duplicated in here and SelectorWheel
+const categories = [
+  'no_poverty',
+  'zero_hunger',
+  'quality_education',
+  'clean_water',
+  'internet_access',
+  'sustainable_cities',
+  'biodiversity'
+]
+
 const inDeveloperMode = true;
 // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
 
@@ -47,7 +58,8 @@ export default class Main extends Component {
       unData: null,
       generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE,
-      currentCountries: []
+      currentCountries: [],
+      selectedCategory: -1
     };
     setTimeout(
       () => this.setState({ loaderShownForMinimumTime: true }),
@@ -325,6 +337,11 @@ export default class Main extends Component {
     }
   };
 
+  setSelectedCategory = (index) => {
+    this.setState({selectedCategory: categories[index]});
+    console.log(this.state.selectedCategory);
+  }
+
   renderMainContent = () => (
     <SpeechHandler
       status={this.state.speechStatus}
@@ -365,7 +382,8 @@ export default class Main extends Component {
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <SelectorWheel
             openModalHandler={event => this.onPress = event}
-            closeModalHandler={event => this.onPressUp = event}>
+            closeModalHandler={event => this.onPressUp = event}
+            setSelectedSegment={this.setSelectedCategory}>
           </SelectorWheel>
           <InfoDrawer
             content={this.currentDrawerContent()}
