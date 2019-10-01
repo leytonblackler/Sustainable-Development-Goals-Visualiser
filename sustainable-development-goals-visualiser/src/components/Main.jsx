@@ -60,6 +60,7 @@ export default class Main extends Component {
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [],
       selectedCategory: -1
+      metric: "water"
     };
     setTimeout(
       () => this.setState({ loaderShownForMinimumTime: true }),
@@ -418,12 +419,19 @@ export default class Main extends Component {
                 >
                   Info on New Zealand
                 </button>
+                <button onClick={() => {this.setState({metric: "water"})}}>
+                  Water
+                </button>
+                <button onClick={() => {this.setState({metric: "internet"})}}>
+                  Internet
+                </button>
               </div>
             ) : null}
           </div>
           <Map
             countryGeolocationData={this.state.countryGeolocationData}
             focusedCountry={this.currentlyFocusedCountry()}
+            metric={this.state.metric}
           />
         </RootContainer>
       </Hammer>
