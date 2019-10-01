@@ -18,17 +18,17 @@ const Slider = props => {
 
   return (
     <SliderContainer>
-      <PrettoSlider
-        marks
-        valueLabelDisplay="auto"
-        step={1}
-        min={props.min}
-        max={props.max}
-        value={props.value}
-        onChange={(event, newValue) => props.onChange(newValue)}
-        valueLabelDisplay="on"
-      />
-    </SliderContainer>
+        <PrettoSlider
+                marks
+                valueLabelDisplay="auto"
+                step={1}
+                min={props.min}
+                max={props.max}
+                value={props.value}
+                onChangeCommitted={(event, newValue) => props.onChange(newValue)}
+                valueLabelDisplay="on"
+            />
+    </SliderContainer>  
   );
 };
 

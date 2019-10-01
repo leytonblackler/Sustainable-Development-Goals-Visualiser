@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Hammer from "react-hammerjs";
 import * as CSVParser from "papaparse";
 import countryGeolocationDataCSV from "../static-data/country-geolocations.csv";
-import unDataCSV from "../static-data/un-data.csv";
+import unDataCSV from "../static-data/all_countries.csv";
 import ShakeHandler from "../util/ShakeHandler";
 import Map from "./Map";
 import SpeechHandler, { SpeechStatus } from "./SpeechHandler";
@@ -65,9 +65,9 @@ export default class Main extends Component {
       generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [],
-      selectedCategory: -1,
-      currentYear: "2015",
-      metric: "water"
+      selectedCategory: categories[2],
+      selectedYear: "2015", 
+      currentData: null
     };
     setTimeout(
       () => this.setState({ loaderShownForMinimumTime: true }),
@@ -96,6 +96,7 @@ export default class Main extends Component {
       complete: csv => {
         console.log("UN SDGV CSV file loaded!");
         this.setState({ unData: csv.data });
+        this.processData()
       }
     });
 
@@ -372,13 +373,20 @@ export default class Main extends Component {
     }
   };
 
-  setSelectedCategory = index => {
-    this.setState({ selectedCategory: categories[index] });
-    console.log(this.state.selectedCategory);
-  };
+  processData = () => {
+    let selectedCategoryData = this.state.unData.filter(row => (row["SeriesCode"] === this.state.selectedCategory));
+    let selectedYearData = selectedCategoryData.filter(row => (row["TimePeriod"] === this.state.selectedYear.toString()));
+    this.setState({currentData: selectedYearData});
+  }
 
-  onCurrentYearChanged = value => {
-    this.setState({ currentYear: value });
+  setSelectedCategory = (index) => {
+    this.setState({selectedCategory: categories[index]});
+    this.processData()
+  }
+
+  onselectedYearChanged = value  => {
+    this.setState({ selectedYear : value });
+    this.processData()
   };
 
   renderMainContent = () => (
@@ -459,18 +467,10 @@ export default class Main extends Component {
                 >
                   Info on New Zealand
                 </button>
-                <button
-                  onClick={() => {
-                    this.setState({ metric: "water" });
-                  }}
-                >
+                <button onClick={() => {this.setState({metric: categories[4]})}}>
                   Water
                 </button>
-                <button
-                  onClick={() => {
-                    this.setState({ metric: "internet" });
-                  }}
-                >
+                <button onClick={() => {this.setState({metric: categories[5]})}}>
                   Internet
                 </button>
               </div>
@@ -480,17 +480,18 @@ export default class Main extends Component {
             countryGeolocationData={this.state.countryGeolocationData}
             focusedCountry={this.currentlyFocusedCountry()}
             metric={this.state.metric}
+            currentData={this.state.currentData}
           />
         </RootContainer>
       </Hammer>
       <SliderContainer>
-        <Slider
-          label="Year"
-          min={2000}
-          max={2017}
-          value={this.state.currentYear}
-          onChange={this.onCurrentYearChanged}
-        />
+            <Slider
+              label="Year"
+              min={2000}
+              max={2017}
+              value={this.state.selectedYear}
+              onChangeCommitted={this.onselectedYearChanged}
+            />
       </SliderContainer>
     </SpeechHandler>
   );

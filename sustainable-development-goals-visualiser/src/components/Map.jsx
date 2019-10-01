@@ -8,9 +8,6 @@ import {
 } from "react-simple-maps";
 import { Motion, spring } from "react-motion";
 import { scaleLinear } from "d3-scale"
-import * as CSVParser from "papaparse";
-import water_data from "../static-data/processed/clean_water.csv";
-import internet_data from "../static-data/processed/internet_access.csv";
 import { SSL_OP_TLS_ROLLBACK_BUG } from "constants";
 
 const colorScale = scaleLinear()
@@ -27,39 +24,17 @@ export default class Map extends Component {
       data: null
     }
   }
-  async getData(){
-    CSVParser.parse(water_data, {
-      header: true,
-      download: true,
-      skipEmptyLines: true,
-      complete: csv => {
-        this.setState({ waterData: csv.data });
-      }
-    });
-    CSVParser.parse(internet_data, {
-      header: true,
-      download: true,
-      skipEmptyLines: true,
-      complete: csv => {
-        this.setState({ internetData: csv.data });
-      }
-    });
-  }
 
-  computeFill(geography, metric){    
+  computeFill(geography, metric){  
     const countryName = geography.properties.admin
-    let data;
-    if (metric ===  "water") {
-      data = this.state.waterData
-    } else if (metric === "internet") {
-      data = this.state.internetData
-    }
 
-    if (data == null) {
+    //console.log(this.props.currentData)
+
+    if (this.props.currentData == null) {
       return DATA_NOT_LOADED_COLOR
     }
-    for (let index = 0; index < data.length; index++) {
-      const element = data[index];
+    for (let index = 0; index < this.props.currentData.length; index++) {
+      const element = this.props.currentData[index];
       if (element.GeoAreaName == countryName) {
         return colorScale(element.values)
       }
@@ -84,17 +59,13 @@ export default class Map extends Component {
         };
   }
 
-  componentWillMount() {
-    this.getData()
-  }
-
   render() {
     const configuration = this.getCurrentMapConfiguration();
     const mapStyle = {
       width: "100vw",
       height: "100vh"
     };
-    const data = "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/examples/choropleth-map/static/world-50m-with-population.json" 
+    const data = "/data/world-50m-with-population.json" 
     return (
       <MainContainer>
         <Motion
