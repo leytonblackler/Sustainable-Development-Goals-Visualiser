@@ -25,7 +25,7 @@ const Slider = props => {
                 min={props.min}
                 max={props.max}
                 value={props.value}
-                onChangeCommitted={(event, newValue) => props.onChange(newValue)}
+                onChangeCommitted={(event, newValue) => props.onChangeCommitted(newValue)}
                 valueLabelDisplay="on"
             />
     </SliderContainer>  
