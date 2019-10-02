@@ -66,7 +66,7 @@ export default class Main extends Component {
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [],
       selectedCategory: categories[2],
-      selectedYear: "2015", 
+      selectedYear: "2015",
       currentData: null
     };
     setTimeout(
@@ -96,7 +96,7 @@ export default class Main extends Component {
       complete: csv => {
         console.log("UN SDGV CSV file loaded!");
         this.setState({ unData: csv.data });
-        this.processData()
+        this.processData();
       }
     });
 
@@ -374,19 +374,23 @@ export default class Main extends Component {
   };
 
   processData = () => {
-    let selectedCategoryData = this.state.unData.filter(row => (row["SeriesCode"] === this.state.selectedCategory));
-    let selectedYearData = selectedCategoryData.filter(row => (row["TimePeriod"] === this.state.selectedYear.toString()));
-    this.setState({currentData: selectedYearData});
-  }
+    let selectedCategoryData = this.state.unData.filter(
+      row => row["SeriesCode"] === this.state.selectedCategory
+    );
+    let selectedYearData = selectedCategoryData.filter(
+      row => row["TimePeriod"] === this.state.selectedYear.toString()
+    );
+    this.setState({ currentData: selectedYearData });
+  };
 
-  setSelectedCategory = (index) => {
-    this.setState({selectedCategory: categories[index]});
-    this.processData()
-  }
+  setSelectedCategory = index => {
+    this.setState({ selectedCategory: categories[index] });
+    this.processData();
+  };
 
-  onselectedYearChanged = value  => {
-    this.setState({ selectedYear : value });
-    this.processData()
+  onSelectedYearChanged = value => {
+    this.setState({ selectedYear: value });
+    this.processData();
   };
 
   renderMainContent = () => (
@@ -467,10 +471,18 @@ export default class Main extends Component {
                 >
                   Info on New Zealand
                 </button>
-                <button onClick={() => {this.setState({metric: categories[4]})}}>
+                <button
+                  onClick={() => {
+                    this.setState({ metric: categories[4] });
+                  }}
+                >
                   Water
                 </button>
-                <button onClick={() => {this.setState({metric: categories[5]})}}>
+                <button
+                  onClick={() => {
+                    this.setState({ metric: categories[5] });
+                  }}
+                >
                   Internet
                 </button>
               </div>
@@ -485,13 +497,13 @@ export default class Main extends Component {
         </RootContainer>
       </Hammer>
       <SliderContainer>
-            <Slider
-              label="Year"
-              min={2000}
-              max={2017}
-              value={this.state.selectedYear}
-              onChangeCommitted={this.onselectedYearChanged}
-            />
+        <Slider
+          label="Year"
+          min={2000}
+          max={2017}
+          value={this.state.selectedYear}
+          onChangeCommitted={this.onSelectedYearChanged}
+        />
       </SliderContainer>
     </SpeechHandler>
   );

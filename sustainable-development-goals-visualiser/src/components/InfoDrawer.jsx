@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import styled from "styled-components";
 import Drawer from "react-drag-drawer";
 import { css } from "emotion";
@@ -6,24 +6,40 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const PADDING = 10; //pixels
 
-const InfoDrawer = props => {
-  const { data, onClose } = props;
-  return (
-    <Drawer
-      open={data ? true : false}
-      onRequestClose={onClose}
-      direction="bottom"
-      modalElementClass={modalStyle}
-      containerElementClass={containerStyle}
-    >
-      <ExpandMoreIconContainer>
-        <ExpandMoreIcon fontSize="large" />
-      </ExpandMoreIconContainer>
-      <Title>{data ? data.title : null}</Title>
-      <ContentContainer>{data ? data.content : null}</ContentContainer>
-    </Drawer>
-  );
-};
+class InfoDrawer extends Component {
+  state = {
+    closing: false
+  };
+
+  onRequestClose = () => {
+    this.setState({ closing: true });
+    const { onClose } = this.props;
+    setTimeout(() => {
+      onClose();
+      this.setState({ closing: false });
+    }, 150);
+  };
+
+  render() {
+    const { data } = this.props;
+    const { closing } = this.state;
+    return (
+      <Drawer
+        open={data && !closing ? true : false}
+        onRequestClose={this.onRequestClose}
+        direction="bottom"
+        modalElementClass={modalStyle}
+        containerElementClass={containerStyle}
+      >
+        <ExpandMoreIconContainer>
+          <ExpandMoreIcon fontSize="large" />
+        </ExpandMoreIconContainer>
+        <Title>{data ? data.title : null}</Title>
+        <ContentContainer>{data ? data.content : null}</ContentContainer>
+      </Drawer>
+    );
+  }
+}
 
 const containerStyle = css`
   height: 100vh;
