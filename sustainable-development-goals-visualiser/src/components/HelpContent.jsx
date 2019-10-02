@@ -98,4 +98,5 @@ const Toggle = styled.div``;
 const List = styled.ol`
   margin-top: ${PADDING}px;
   margin-bottom: ${PADDING}px;
+  margin-right: ${PADDING}px;
 `;
