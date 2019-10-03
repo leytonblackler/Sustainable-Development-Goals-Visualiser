@@ -12,10 +12,10 @@ import { SSL_OP_TLS_ROLLBACK_BUG } from "constants";
 
 const colorScale = scaleLinear()
   .domain([0, 1])
-  .range(["#004400", "#00FF00"]);
+  .range(["#1B5E20", "#00C853"]);
 
-const NO_DATA_FOR_COUNTRY_COLOR = "#888888";
-const DATA_NOT_LOADED_COLOR = "#FF0000";
+const NO_DATA_FOR_COUNTRY_COLOR = "#FFFFFF";
+const DATA_NOT_LOADED_COLOR = "#f44336";
 
 export default class Map extends Component {
   constructor(props) {
@@ -25,21 +25,31 @@ export default class Map extends Component {
     };
   }
 
-  computeFill(geography, metric) {
+  computeCountryStyle(geography, metric) {
     const countryName = geography.properties.admin;
+
+    let style = {
+      fill: NO_DATA_FOR_COUNTRY_COLOR,
+      fillOpacity: 1,
+      stroke: "white",
+      strokeWidth: 0.5,
+      outline: "none"
+    };
 
     //console.log(this.props.currentData)
 
     if (this.props.currentData == null) {
-      return DATA_NOT_LOADED_COLOR;
+      return { ...style, fill: DATA_NOT_LOADED_COLOR };
     }
+
     for (let index = 0; index < this.props.currentData.length; index++) {
       const element = this.props.currentData[index];
       if (element.GeoAreaName == countryName) {
-        return colorScale(element.values);
+        return { ...style, fill: colorScale(element.values) };
       }
     }
-    return NO_DATA_FOR_COUNTRY_COLOR;
+    // No data for country.
+    return { ...style, fillOpacity: 0.5 };
   }
 
   getCurrentMapConfiguration() {
@@ -89,42 +99,24 @@ export default class Map extends Component {
               <ZoomableGroup center={[x, y]} zoom={zoom} disablePanning>
                 <Geographies disableOptimization geography={data}>
                   {(geographies, projection) =>
-                    geographies.map(
-                      (geography, i) =>
-                        geography.properties.name !== "Antarctica" && (
-                          <Geography
-                            key={i}
-                            geography={geography}
-                            projection={projection}
-                            style={{
-                              default: {
-                                fill: this.computeFill(
-                                  geography,
-                                  this.props.metric
-                                ),
-                                fillOpacity: 0.85,
-                                stroke: "white",
-                                strokeWidth: 0.5,
-                                outline: "none"
-                              },
-                              hover: {
-                                fill: "white",
-                                fillOpacity: 0.85,
-                                stroke: "white",
-                                strokeWidth: 0.5,
-                                outline: "none"
-                              },
-                              pressed: {
-                                fill: "white",
-                                fillOpacity: 0.85,
-                                stroke: "white",
-                                strokeWidth: 0.5,
-                                outline: "none"
-                              }
-                            }}
-                          />
-                        )
-                    )
+                    geographies.map((geography, i) => {
+                      const countryStyle = this.computeCountryStyle(
+                        geography,
+                        this.props.metric
+                      );
+                      return geography.properties.name !== "Antarctica" ? (
+                        <Geography
+                          key={i}
+                          geography={geography}
+                          projection={projection}
+                          style={{
+                            default: countryStyle,
+                            hover: countryStyle,
+                            pressed: countryStyle
+                          }}
+                        />
+                      ) : null;
+                    })
                   }
                 </Geographies>
               </ZoomableGroup>
