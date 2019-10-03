@@ -1,42 +1,47 @@
-import React from "react";
+import React, { Component } from "react";
 import MaterialSlider from "@material-ui/core/Slider";
 import styled from "styled-components";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: 300 + theme.spacing(3) * 2,
-    padding: theme.spacing(3)
-  },
-  margin: {
-    height: theme.spacing(3)
+class Slider extends Component {
+  state = {
+    displayedValue: null,
+    changing: false
+  };
+
+  onChange = (event, newValue) => {
+    this.setState({ changing: true, displayedValue: newValue });
+  };
+
+  onChangeCommitted = (event, newValue) => {
+    const { onChangeCommitted } = this.props;
+    this.setState({ changing: false });
+    onChangeCommitted(newValue);
+  };
+
+  render() {
+    const { min, max, value } = this.props;
+    const { changing, displayedValue } = this.state;
+    return (
+      <SliderContainer>
+        <PrettoSlider
+          marks
+          step={1}
+          min={min}
+          max={max}
+          value={changing ? displayedValue : value}
+          onChangeCommitted={this.onChangeCommitted}
+          onChange={this.onChange}
+          valueLabelDisplay="on"
+        />
+        <StartEndLabelsContainer>
+          <YearLabel>{min}</YearLabel>
+          <YearLabel>{max}</YearLabel>
+        </StartEndLabelsContainer>
+      </SliderContainer>
+    );
   }
-}));
-
-const Slider = props => {
-  const classes = useStyles();
-
-  return (
-    <SliderContainer>
-      <PrettoSlider
-        marks
-        valueLabelDisplay="auto"
-        step={1}
-        min={props.min}
-        max={props.max}
-        value={props.value}
-        onChangeCommitted={(event, newValue) =>
-          props.onChangeCommitted(newValue)
-        }
-        valueLabelDisplay="on"
-      />
-      <StartEndLabelsContainer>
-        <YearLabel>{props.min}</YearLabel>
-        <YearLabel>{props.max}</YearLabel>
-      </StartEndLabelsContainer>
-    </SliderContainer>
-  );
-};
+}
 
 export default Slider;
 

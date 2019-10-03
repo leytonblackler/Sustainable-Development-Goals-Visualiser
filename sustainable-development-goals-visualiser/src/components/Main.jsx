@@ -51,7 +51,8 @@ const hammerjsOptions = {
   touchAction: "compute",
   recognizers: {
     pinch: { enable: false },
-    rotate: { enable: true }
+    rotate: { enable: false },
+    pan: { enable: false }
   }
 };
 
@@ -406,7 +407,7 @@ export default class Main extends Component {
       incompatibleBrowserDetected={this.incompatibleBrowserDetected}
     >
       <Hammer
-        {...hammerjsOptions}
+        options={hammerjsOptions}
         onTap={this.onTap}
         onDoubleTap={this.onDoubleTap}
         onPan={this.onPan}
