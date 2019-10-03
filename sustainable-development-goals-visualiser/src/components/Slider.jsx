@@ -90,7 +90,7 @@ const PrettoSlider = withStyles({
     "& *": {
       background: "transparent",
       color: "white",
-      opacity: 0.95,
+      opacity: 1,
       fontFamily: "CircularStd",
       fontSize: "9pt",
       textShadow:

@@ -7,40 +7,39 @@ import {
   Geography
 } from "react-simple-maps";
 import { Motion, spring } from "react-motion";
-import { scaleLinear } from "d3-scale"
+import { scaleLinear } from "d3-scale";
 import { SSL_OP_TLS_ROLLBACK_BUG } from "constants";
 
 const colorScale = scaleLinear()
   .domain([0, 1])
-  .range(["#004400","#00FF00"])
+  .range(["#004400", "#00FF00"]);
 
-const NO_DATA_FOR_COUNTRY_COLOR = '#888888'
-const DATA_NOT_LOADED_COLOR = '#FF0000'
+const NO_DATA_FOR_COUNTRY_COLOR = "#888888";
+const DATA_NOT_LOADED_COLOR = "#FF0000";
 
 export default class Map extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       data: null
-    }
+    };
   }
 
-  computeFill(geography, metric){  
-    const countryName = geography.properties.admin
+  computeFill(geography, metric) {
+    const countryName = geography.properties.admin;
 
     //console.log(this.props.currentData)
 
     if (this.props.currentData == null) {
-      return DATA_NOT_LOADED_COLOR
+      return DATA_NOT_LOADED_COLOR;
     }
     for (let index = 0; index < this.props.currentData.length; index++) {
       const element = this.props.currentData[index];
       if (element.GeoAreaName == countryName) {
-        return colorScale(element.values)
+        return colorScale(element.values);
       }
     }
-    return NO_DATA_FOR_COUNTRY_COLOR
-    
+    return NO_DATA_FOR_COUNTRY_COLOR;
   }
 
   getCurrentMapConfiguration() {
@@ -65,7 +64,7 @@ export default class Map extends Component {
       width: "100vw",
       height: "100vh"
     };
-    const data = "/data/world-50m-with-population.json" 
+    const data = "/data/world-50m-with-population.json";
     return (
       <MainContainer>
         <Motion
@@ -92,14 +91,17 @@ export default class Map extends Component {
                   {(geographies, projection) =>
                     geographies.map(
                       (geography, i) =>
-                        geography.id !== "010" && (
+                        geography.properties.name !== "Antarctica" && (
                           <Geography
                             key={i}
                             geography={geography}
                             projection={projection}
                             style={{
                               default: {
-                                fill: this.computeFill(geography, this.props.metric),
+                                fill: this.computeFill(
+                                  geography,
+                                  this.props.metric
+                                ),
                                 fillOpacity: 0.85,
                                 stroke: "white",
                                 strokeWidth: 0.5,
