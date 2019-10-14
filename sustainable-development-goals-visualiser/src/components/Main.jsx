@@ -39,6 +39,15 @@ const categoryTitleMap = {
   sustainable_cities: { title: "City Sustainability", subtitle: "yeet" },
   biodiversity: { title: "Biodiversity", subtitle: "yeet" }
 };
+const colourMapping = {
+  "no_poverty" : ["#6B6D44", "#F0FF00"],
+  "zero_hunger" : ["#472D3B", "#FF0087"],
+  "quality_education" : ["#CB9E94", "#C42401"],
+  "clean_water" : ["#4C5A6C", "#006EFF"],
+  "internet_access" : ["#004400", "#00FF00"],
+  "sustainable_cities" : ["#603D61", "#F800FF"],
+  "biodiversity" : ["#004400", "#00FF00"] 
+}
 
 const inDeveloperMode = false;
 // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
@@ -75,7 +84,7 @@ export default class Main extends Component {
       generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [],
-      selectedCategory: categories[2],
+      selectedCategory: categories[5],
       selectedYear: "2015",
       currentData: null
     };
@@ -470,14 +479,14 @@ export default class Main extends Component {
                 </button>
                 <button
                   onClick={() => {
-                    this.setState({ metric: categories[4] });
+                    this.setState({ selectedCategory: categories[4] });
                   }}
                 >
                   Water
                 </button>
                 <button
                   onClick={() => {
-                    this.setState({ metric: categories[5] });
+                    this.setState({ selectedCategory: categories[5] });
                   }}
                 >
                   Internet
@@ -488,7 +497,8 @@ export default class Main extends Component {
           <Map
             countryGeolocationData={this.state.countryGeolocationData}
             focusedCountry={this.currentlyFocusedCountry()}
-            metric={this.state.metric}
+            selectedCategory={this.state.selectedCategory}
+            selectedCategoryColours={colourMapping[this.state.selectedCategory]}
             currentData={this.state.currentData}
           />
         </RootContainer>
