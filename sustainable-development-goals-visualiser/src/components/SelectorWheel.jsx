@@ -129,8 +129,18 @@ export default class SelectorWheel extends Component {
   }
 
   render() {
+    const disableHighlight = {
+      WebkitTapHighlightColor: "transparent",
+      WebkitTouchCallout: "none",
+      WebkitUserSelect: "none",
+      KhtmlUserSelect: "none",
+      MozUserSelect: "none",
+      MsUserSelect: "none",
+      UserSelect: "none"
+    };
+
     return (
-      <div>
+      <div style={{ disableHighlight }}>
         {this.props.inDeveloperMode && (
           <button onClick={this.handleOpenModal}>Trigger Modal</button>
         )}

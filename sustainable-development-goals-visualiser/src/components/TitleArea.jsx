@@ -2,10 +2,11 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 
 const TitleArea = props => {
-  const { title } = props;
+  const { title, subtitle } = props;
   return (
     <MainContainer>
-      <Text>{title}</Text>
+      <PrimaryText>{title}</PrimaryText>
+      <SecondaryText>{subtitle}</SecondaryText>
     </MainContainer>
   );
 };
@@ -20,23 +21,31 @@ const fadeIn = keyframes`
 `;
 
 const MainContainer = styled.div`
-  // background-color: #ff9800;
   position: fixed;
   top: 15vh;
   width: 100vw;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   animation: ${fadeIn} 0.5s ease-in;
 `;
 
-const Text = styled.span`
+const PrimaryText = styled.span`
   text-align: center;
   opacity: 0.85;
   color: white;
   font-size: 16pt;
   font-weight: bold;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+`;
+
+const SecondaryText = styled.span`
+  text-align: center;
+  opacity: 0.85;
+  color: white;
+  font-size: 12pt;
+  font-weight: medium;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 `;
 

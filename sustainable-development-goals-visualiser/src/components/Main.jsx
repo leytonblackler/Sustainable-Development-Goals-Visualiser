@@ -30,7 +30,17 @@ const categories = [
   "biodiversity"
 ];
 
-const inDeveloperMode = true;
+const categoryTitleMap = {
+  no_poverty: { title: "No Poverty", subtitle: "yeet" },
+  zero_hunger: { title: "Zero Hunger", subtitle: "yeet" },
+  quality_education: { title: "Quality Education", subtitle: "yeet" },
+  clean_water: { title: "Clean Water", subtitle: "yeet" },
+  internet_access: { title: "Internet Access", subtitle: "yeet" },
+  sustainable_cities: { title: "City Sustainability", subtitle: "yeet" },
+  biodiversity: { title: "Biodiversity", subtitle: "yeet" }
+};
+
+const inDeveloperMode = false;
 // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
 
 const GeneralStatus = {
@@ -319,28 +329,6 @@ export default class Main extends Component {
     }
   };
 
-  currentTitleText = () => {
-    const { generalStatus, currentCountries } = this.state;
-
-    switch (generalStatus) {
-      case GeneralStatus.DEFAULT:
-        return "Sustainable Development Goals Visualiser";
-      case GeneralStatus.COMPARING:
-        return (
-          "Comparing " +
-          currentCountries[0].name +
-          " and " +
-          currentCountries[1].name
-        );
-      case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
-        return "Showing info for " + currentCountries[0].name;
-      case GeneralStatus.SHOWING_FOCUSED_COUNTRY:
-        return currentCountries[0].name;
-      default:
-        return null;
-    }
-  };
-
   currentDrawerData = () => {
     const { generalStatus, currentCountries, category } = this.state;
 
@@ -393,6 +381,13 @@ export default class Main extends Component {
     this.processData();
   };
 
+  renderTitleArea = () => {
+    const currentTitleDetails = categoryTitleMap[this.state.selectedCategory];
+    const { title, subtitle } = currentTitleDetails;
+    console.log(title + " " + subtitle);
+    return <TitleArea title={title} subtitle={subtitle} />;
+  };
+
   renderMainContent = () => (
     <SpeechHandler
       status={this.state.speechStatus}
@@ -430,7 +425,8 @@ export default class Main extends Component {
       >
         <RootContainer>
           <HelpButton onClick={this.onHelpButtonPressed} />
-          <TitleArea title={this.currentTitleText()} />
+          {this.renderTitleArea()}
+
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <SelectorWheel
             inDeveloperMode={inDeveloperMode}
