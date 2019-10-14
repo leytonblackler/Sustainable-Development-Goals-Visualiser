@@ -31,13 +31,34 @@ const categories = [
 ];
 
 const categoryTitleMap = {
-  no_poverty: { title: "No Poverty", subtitle: "yeet" },
-  zero_hunger: { title: "Zero Hunger", subtitle: "yeet" },
-  quality_education: { title: "Quality Education", subtitle: "yeet" },
-  clean_water: { title: "Clean Water", subtitle: "yeet" },
-  internet_access: { title: "Internet Access", subtitle: "yeet" },
-  sustainable_cities: { title: "City Sustainability", subtitle: "yeet" },
-  biodiversity: { title: "Biodiversity", subtitle: "yeet" }
+  no_poverty: {
+    title: "No Poverty",
+    subtitle: "Percentage of population with an income lower than the international poverty line"
+  },
+  zero_hunger: {
+    title: "Zero Hunger",
+    subtitle: "Percentage of the population who are classified as undernourished"
+  },
+  quality_education: {
+    title: "Quality Education",
+    subtitle: "Percentage of population achieving a basic level of proficiency in literacy skills"
+  },
+  clean_water: {
+    title: "Clean Water",
+    subtitle: "Percentage of population using safely managed drinking water services."
+  },
+  internet_access: {
+    title: "Internet Access",
+    subtitle: "Percentage of the population that used the internet in the last three months"
+  },
+  sustainable_cities: {
+    title: "City Sustainability",
+    subtitle: "Number of deaths and missing persons attributed to disasters per 100,000 population"
+  },
+  biodiversity: {
+    title: "Biodiversity",
+    subtitle: "Percentage of land that is degraded"
+  }
 };
 
 const inDeveloperMode = false;
