@@ -54,7 +54,7 @@ const SliderContainer = styled.div`
 const StartEndLabelsContainer = styled.div`
   width: calc(80vw + 10px + 20px - 3px);
   margin-left: -20px;
-  height: 20px;
+  height: 10px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

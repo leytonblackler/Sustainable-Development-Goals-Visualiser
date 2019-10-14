@@ -18,6 +18,7 @@ import SelectorWheel from "./SelectorWheel";
 import Slider from "./Slider";
 import { HelpButton } from "./HelpButton";
 import { HelpContent } from "./HelpContent";
+import Legend from "./Legend";
 
 // TODO: this is duplicated in here and SelectorWheel
 const categories = [
@@ -494,6 +495,9 @@ export default class Main extends Component {
         </RootContainer>
       </Hammer>
       <BottomOverlayContainer>
+        <LegendContainer>
+          <Legend />
+        </LegendContainer>
         <SliderContainer>
           <Slider
             label="Year"
@@ -503,7 +507,6 @@ export default class Main extends Component {
             onChangeCommitted={this.onSelectedYearChanged}
           />
         </SliderContainer>
-        <LegendContainer>legund go her</LegendContainer>
       </BottomOverlayContainer>
     </SpeechHandler>
   );
@@ -555,5 +558,5 @@ const LegendContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-bottom: 40px;
 `;
