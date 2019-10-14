@@ -49,8 +49,6 @@ const SliderContainer = styled.div`
   width: 80vw;
   color: "#52af77";
   border: "2px solid currentColor";
-  position: absolute;
-  bottom: 5%;
 `;
 
 const StartEndLabelsContainer = styled.div`

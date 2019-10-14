@@ -493,15 +493,18 @@ export default class Main extends Component {
           />
         </RootContainer>
       </Hammer>
-      <SliderContainer>
-        <Slider
-          label="Year"
-          min={2000}
-          max={2017}
-          value={this.state.selectedYear}
-          onChangeCommitted={this.onSelectedYearChanged}
-        />
-      </SliderContainer>
+      <BottomOverlayContainer>
+        <SliderContainer>
+          <Slider
+            label="Year"
+            min={2000}
+            max={2017}
+            value={this.state.selectedYear}
+            onChangeCommitted={this.onSelectedYearChanged}
+          />
+        </SliderContainer>
+        <LegendContainer>legund go her</LegendContainer>
+      </BottomOverlayContainer>
     </SpeechHandler>
   );
 
@@ -531,8 +534,26 @@ const RootContainer = styled.div`
   height: 100%;
 `;
 
-const SliderContainer = styled.div`
+const BottomOverlayContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   width: 100%;
+  height: auto !important;
+  position: fixed;
+  bottom: 3%;
+`;
+
+const SliderContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+`;
+
+const LegendContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 `;
