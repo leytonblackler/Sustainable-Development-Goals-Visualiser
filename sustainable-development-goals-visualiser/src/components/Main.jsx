@@ -350,7 +350,14 @@ export default class Main extends Component {
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
         return {
           title: "Info for " + currentCountries[0].name,
-          content: <SingleInfoPanel country={currentCountries[0]} />
+          content: (
+            <SingleInfoPanel
+              country={currentCountries[0]}
+              selectedYear={this.state.selectedYear}
+              categories={categories}
+              categoryTitleMap={categoryTitleMap}
+              data={this.state.unData} />
+          )
         };
       case GeneralStatus.SHOWING_HELP:
         return {
