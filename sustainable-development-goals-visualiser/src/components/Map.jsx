@@ -10,10 +10,6 @@ import { Motion, spring } from "react-motion";
 import { scaleLinear } from "d3-scale";
 import { SSL_OP_TLS_ROLLBACK_BUG } from "constants";
 
-const colorScale = scaleLinear()
-  .domain([0, 1])
-  .range(["#1B5E20", "#00C853"]);
-
 const NO_DATA_FOR_COUNTRY_COLOR = "#FFFFFF";
 const DATA_NOT_LOADED_COLOR = "#f44336";
 
@@ -25,7 +21,7 @@ export default class Map extends Component {
     };
   }
 
-  computeCountryStyle(geography, metric) {
+  computeCountryStyle(geography, selectedCategoryColors) {
     const countryName = geography.properties.admin;
 
     let style = {
@@ -41,6 +37,10 @@ export default class Map extends Component {
     if (this.props.currentData == null) {
       return { ...style, fill: DATA_NOT_LOADED_COLOR };
     }
+
+    const colorScale = scaleLinear()
+          .domain([0, 1])
+          .range([selectedCategoryColors[0], selectedCategoryColors[1]])
 
     for (let index = 0; index < this.props.currentData.length; index++) {
       const element = this.props.currentData[index];
@@ -102,7 +102,7 @@ export default class Map extends Component {
                     geographies.map((geography, i) => {
                       const countryStyle = this.computeCountryStyle(
                         geography,
-                        this.props.metric
+                        this.props.selectedCategoryColors
                       );
                       return geography.properties.name !== "Antarctica" ? (
                         <Geography

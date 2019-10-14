@@ -18,6 +18,7 @@ import SelectorWheel from "./SelectorWheel";
 import Slider from "./Slider";
 import { HelpButton } from "./HelpButton";
 import { HelpContent } from "./HelpContent";
+import Legend from "./Legend";
 
 // TODO: this is duplicated in here and SelectorWheel
 const categories = [
@@ -60,6 +61,15 @@ const categoryTitleMap = {
     subtitle: "Percentage of land that is degraded"
   }
 };
+const colorMapping = {
+  no_poverty: ["#6B6D44", "#F0FF00"],
+  zero_hunger: ["#472D3B", "#FF0087"],
+  quality_education: ["#CB9E94", "#C42401"],
+  clean_water: ["#4C5A6C", "#006EFF"],
+  internet_access: ["#004400", "#00FF00"],
+  sustainable_cities: ["#603D61", "#F800FF"],
+  biodiversity: ["#004400", "#00FF00"]
+};
 
 const inDeveloperMode = false;
 // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
@@ -96,7 +106,7 @@ export default class Main extends Component {
       generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [],
-      selectedCategory: categories[2],
+      selectedCategory: categories[5],
       selectedYear: "2015",
       currentData: null
     };
@@ -491,14 +501,14 @@ export default class Main extends Component {
                 </button>
                 <button
                   onClick={() => {
-                    this.setState({ metric: categories[4] });
+                    this.setState({ selectedCategory: categories[4] });
                   }}
                 >
                   Water
                 </button>
                 <button
                   onClick={() => {
-                    this.setState({ metric: categories[5] });
+                    this.setState({ selectedCategory: categories[5] });
                   }}
                 >
                   Internet
@@ -509,20 +519,29 @@ export default class Main extends Component {
           <Map
             countryGeolocationData={this.state.countryGeolocationData}
             focusedCountry={this.currentlyFocusedCountry()}
-            metric={this.state.metric}
+            selectedCategory={this.state.selectedCategory}
+            selectedCategoryColors={colorMapping[this.state.selectedCategory]}
             currentData={this.state.currentData}
           />
         </RootContainer>
       </Hammer>
-      <SliderContainer>
-        <Slider
-          label="Year"
-          min={2000}
-          max={2017}
-          value={this.state.selectedYear}
-          onChangeCommitted={this.onSelectedYearChanged}
-        />
-      </SliderContainer>
+      <BottomOverlayContainer>
+        <LegendContainer>
+          <Legend
+            minColor={colorMapping[this.state.selectedCategory][0]}
+            maxColor={colorMapping[this.state.selectedCategory][1]}
+          />
+        </LegendContainer>
+        <SliderContainer>
+          <Slider
+            label="Year"
+            min={2000}
+            max={2017}
+            value={this.state.selectedYear}
+            onChangeCommitted={this.onSelectedYearChanged}
+          />
+        </SliderContainer>
+      </BottomOverlayContainer>
     </SpeechHandler>
   );
 
@@ -552,8 +571,26 @@ const RootContainer = styled.div`
   height: 100%;
 `;
 
-const SliderContainer = styled.div`
+const BottomOverlayContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   width: 100%;
+  height: auto !important;
+  position: fixed;
+  bottom: 3%;
+`;
+
+const SliderContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+`;
+
+const LegendContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
 `;
