@@ -30,7 +30,7 @@ const categories = [
   "biodiversity"
 ];
 
-const inDeveloperMode = false;
+const inDeveloperMode = true;
 // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
 
 const GeneralStatus = {
@@ -51,8 +51,7 @@ const hammerjsOptions = {
   touchAction: "compute",
   recognizers: {
     pinch: { enable: false },
-    rotate: { enable: false },
-    pan: { enable: false }
+    rotate: { enable: false }
   }
 };
 
@@ -438,6 +437,7 @@ export default class Main extends Component {
             openModalHandler={event => (this.onPress = event)}
             closeModalHandler={event => (this.onPressUp = event)}
             setSelectedSegment={this.setSelectedCategory}
+            className="wheel"
           ></SelectorWheel>
           <InfoDrawer
             data={this.currentDrawerData()}
