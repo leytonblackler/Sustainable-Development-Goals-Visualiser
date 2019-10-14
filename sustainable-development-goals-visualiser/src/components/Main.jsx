@@ -18,6 +18,7 @@ import SelectorWheel from "./SelectorWheel";
 import Slider from "./Slider";
 import { HelpButton } from "./HelpButton";
 import { HelpContent } from "./HelpContent";
+import Legend from "./Legend";
 
 // TODO: this is duplicated in here and SelectorWheel
 const categories = [
@@ -31,13 +32,43 @@ const categories = [
 ];
 
 const categoryTitleMap = {
-  no_poverty: { title: "No Poverty", subtitle: "yeet" },
-  zero_hunger: { title: "Zero Hunger", subtitle: "yeet" },
-  quality_education: { title: "Quality Education", subtitle: "yeet" },
-  clean_water: { title: "Clean Water", subtitle: "yeet" },
-  internet_access: { title: "Internet Access", subtitle: "yeet" },
-  sustainable_cities: { title: "City Sustainability", subtitle: "yeet" },
-  biodiversity: { title: "Biodiversity", subtitle: "yeet" }
+  no_poverty: {
+    title: "No Poverty",
+    subtitle: "Percentage of population with an income lower than the international poverty line"
+  },
+  zero_hunger: {
+    title: "Zero Hunger",
+    subtitle: "Percentage of the population who are classified as undernourished"
+  },
+  quality_education: {
+    title: "Quality Education",
+    subtitle: "Percentage of population achieving a basic level of proficiency in literacy skills"
+  },
+  clean_water: {
+    title: "Clean Water",
+    subtitle: "Percentage of population using safely managed drinking water services."
+  },
+  internet_access: {
+    title: "Internet Access",
+    subtitle: "Percentage of the population that used the internet in the last three months"
+  },
+  sustainable_cities: {
+    title: "City Sustainability",
+    subtitle: "Number of deaths and missing persons attributed to disasters per 100,000 population"
+  },
+  biodiversity: {
+    title: "Biodiversity",
+    subtitle: "Percentage of land that is degraded"
+  }
+};
+const colorMapping = {
+  no_poverty: ["#6B6D44", "#F0FF00"],
+  zero_hunger: ["#472D3B", "#FF0087"],
+  quality_education: ["#CB9E94", "#C42401"],
+  clean_water: ["#4C5A6C", "#006EFF"],
+  internet_access: ["#004400", "#00FF00"],
+  sustainable_cities: ["#603D61", "#F800FF"],
+  biodiversity: ["#004400", "#00FF00"]
 };
 
 const inDeveloperMode = false;
@@ -61,8 +92,7 @@ const hammerjsOptions = {
   touchAction: "compute",
   recognizers: {
     pinch: { enable: false },
-    rotate: { enable: false },
-    pan: { enable: false }
+    rotate: { enable: false }
   }
 };
 
@@ -76,7 +106,7 @@ export default class Main extends Component {
       generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [],
-      selectedCategory: categories[2],
+      selectedCategory: categories[5],
       selectedYear: "2015",
       currentData: null
     };
@@ -441,6 +471,7 @@ export default class Main extends Component {
             openModalHandler={event => (this.onPress = event)}
             closeModalHandler={event => (this.onPressUp = event)}
             setSelectedSegment={this.setSelectedCategory}
+            className="wheel"
           ></SelectorWheel>
           <InfoDrawer
             data={this.currentDrawerData()}
@@ -477,14 +508,14 @@ export default class Main extends Component {
                 </button>
                 <button
                   onClick={() => {
-                    this.setState({ metric: categories[4] });
+                    this.setState({ selectedCategory: categories[4] });
                   }}
                 >
                   Water
                 </button>
                 <button
                   onClick={() => {
-                    this.setState({ metric: categories[5] });
+                    this.setState({ selectedCategory: categories[5] });
                   }}
                 >
                   Internet
@@ -495,20 +526,29 @@ export default class Main extends Component {
           <Map
             countryGeolocationData={this.state.countryGeolocationData}
             focusedCountry={this.currentlyFocusedCountry()}
-            metric={this.state.metric}
+            selectedCategory={this.state.selectedCategory}
+            selectedCategoryColors={colorMapping[this.state.selectedCategory]}
             currentData={this.state.currentData}
           />
         </RootContainer>
       </Hammer>
-      <SliderContainer>
-        <Slider
-          label="Year"
-          min={2000}
-          max={2017}
-          value={this.state.selectedYear}
-          onChangeCommitted={this.onSelectedYearChanged}
-        />
-      </SliderContainer>
+      <BottomOverlayContainer>
+        <LegendContainer>
+          <Legend
+            minColor={colorMapping[this.state.selectedCategory][0]}
+            maxColor={colorMapping[this.state.selectedCategory][1]}
+          />
+        </LegendContainer>
+        <SliderContainer>
+          <Slider
+            label="Year"
+            min={2000}
+            max={2017}
+            value={this.state.selectedYear}
+            onChangeCommitted={this.onSelectedYearChanged}
+          />
+        </SliderContainer>
+      </BottomOverlayContainer>
     </SpeechHandler>
   );
 
@@ -538,8 +578,26 @@ const RootContainer = styled.div`
   height: 100%;
 `;
 
-const SliderContainer = styled.div`
+const BottomOverlayContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   width: 100%;
+  height: auto !important;
+  position: fixed;
+  bottom: 3%;
+`;
+
+const SliderContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+`;
+
+const LegendContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
 `;

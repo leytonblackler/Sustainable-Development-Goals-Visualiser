@@ -1,4 +1,4 @@
-.Overlay {
+.wheel-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -6,7 +6,7 @@
   bottom: 0;
   background-color: rgba(255, 255, 255, 0.3);
 }
-.Modal {
+.wheel-modal {
   position: absolute;
   top: 40px;
   left: 40px;
@@ -19,4 +19,20 @@
   pointer-events: none;
   width: 16px;
   height: 16px;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+     -moz-user-select: none; /* Old versions of Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+          user-select: none; /* Non-prefixed version, currently
+                                supported by Chrome, Opera and Firefox */
+}
+.wheel {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+     -moz-user-select: none; /* Old versions of Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+          user-select: none; /* Non-prefixed version, currently
+                                supported by Chrome, Opera and Firefox */
 }
