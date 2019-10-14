@@ -40,15 +40,15 @@ const categoryTitleMap = {
   sustainable_cities: { title: "City Sustainability", subtitle: "yeet" },
   biodiversity: { title: "Biodiversity", subtitle: "yeet" }
 };
-const colourMapping = {
-  "no_poverty" : ["#6B6D44", "#F0FF00"],
-  "zero_hunger" : ["#472D3B", "#FF0087"],
-  "quality_education" : ["#CB9E94", "#C42401"],
-  "clean_water" : ["#4C5A6C", "#006EFF"],
-  "internet_access" : ["#004400", "#00FF00"],
-  "sustainable_cities" : ["#603D61", "#F800FF"],
-  "biodiversity" : ["#004400", "#00FF00"] 
-}
+const colorMapping = {
+  no_poverty: ["#6B6D44", "#F0FF00"],
+  zero_hunger: ["#472D3B", "#FF0087"],
+  quality_education: ["#CB9E94", "#C42401"],
+  clean_water: ["#4C5A6C", "#006EFF"],
+  internet_access: ["#004400", "#00FF00"],
+  sustainable_cities: ["#603D61", "#F800FF"],
+  biodiversity: ["#004400", "#00FF00"]
+};
 
 const inDeveloperMode = false;
 // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
@@ -499,14 +499,17 @@ export default class Main extends Component {
             countryGeolocationData={this.state.countryGeolocationData}
             focusedCountry={this.currentlyFocusedCountry()}
             selectedCategory={this.state.selectedCategory}
-            selectedCategoryColours={colourMapping[this.state.selectedCategory]}
+            selectedCategoryColors={colorMapping[this.state.selectedCategory]}
             currentData={this.state.currentData}
           />
         </RootContainer>
       </Hammer>
       <BottomOverlayContainer>
         <LegendContainer>
-          <Legend />
+          <Legend
+            minColor={colorMapping[this.state.selectedCategory][0]}
+            maxColor={colorMapping[this.state.selectedCategory][1]}
+          />
         </LegendContainer>
         <SliderContainer>
           <Slider

@@ -21,7 +21,7 @@ export default class Map extends Component {
     };
   }
 
-  computeCountryStyle(geography, selectedCategoryColours) {
+  computeCountryStyle(geography, selectedCategoryColors) {
     const countryName = geography.properties.admin;
 
     let style = {
@@ -40,7 +40,7 @@ export default class Map extends Component {
 
     const colorScale = scaleLinear()
           .domain([0, 1])
-          .range([selectedCategoryColours[0], selectedCategoryColours[1]])
+          .range([selectedCategoryColors[0], selectedCategoryColors[1]])
 
     for (let index = 0; index < this.props.currentData.length; index++) {
       const element = this.props.currentData[index];
@@ -102,7 +102,7 @@ export default class Map extends Component {
                     geographies.map((geography, i) => {
                       const countryStyle = this.computeCountryStyle(
                         geography,
-                        this.props.selectedCategoryColours
+                        this.props.selectedCategoryColors
                       );
                       return geography.properties.name !== "Antarctica" ? (
                         <Geography

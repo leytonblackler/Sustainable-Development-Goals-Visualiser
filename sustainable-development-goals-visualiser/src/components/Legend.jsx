@@ -2,9 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Legend = props => {
-  //   const { minColor, maxColor } = props;
-  const minColor = "#FF0000";
-  const maxColor = "#00FF00";
+  const { minColor, maxColor } = props;
   return (
     <MainContainer>
       <Bar
