@@ -18,6 +18,7 @@ import SelectorWheel from "./SelectorWheel";
 import Slider from "./Slider";
 import { HelpButton } from "./HelpButton";
 import { HelpContent } from "./HelpContent";
+import Legend from "./Legend";
 
 // TODO: this is duplicated in here and SelectorWheel
 const categories = [
@@ -29,6 +30,46 @@ const categories = [
   "sustainable_cities",
   "biodiversity"
 ];
+
+const categoryTitleMap = {
+  no_poverty: {
+    title: "No Poverty",
+    subtitle: "Percentage of population with an income lower than the international poverty line"
+  },
+  zero_hunger: {
+    title: "Zero Hunger",
+    subtitle: "Percentage of the population who are classified as undernourished"
+  },
+  quality_education: {
+    title: "Quality Education",
+    subtitle: "Percentage of population achieving a basic level of proficiency in literacy skills"
+  },
+  clean_water: {
+    title: "Clean Water",
+    subtitle: "Percentage of population using safely managed drinking water services."
+  },
+  internet_access: {
+    title: "Internet Access",
+    subtitle: "Percentage of the population that used the internet in the last three months"
+  },
+  sustainable_cities: {
+    title: "City Sustainability",
+    subtitle: "Number of deaths and missing persons attributed to disasters per 100,000 population"
+  },
+  biodiversity: {
+    title: "Biodiversity",
+    subtitle: "Percentage of land that is degraded"
+  }
+};
+const colorMapping = {
+  no_poverty: ["#550091", "#bb66f7"],
+  zero_hunger: ["#7a096d", "#e06fd3"],
+  quality_education: ["#8a2355", "#f089bb"],
+  clean_water: ["#933842", "#f99ea8"],
+  internet_access: ["#984b31", "#feb197"],
+  sustainable_cities: ["#995d1f", "#ffc385"],
+  biodiversity: ["#996e00", "#ffd466"]
+};
 
 const inDeveloperMode = false;
 // !process.env.NODE_ENV || (process.env.NODE_ENV === "development" && false);
@@ -51,8 +92,7 @@ const hammerjsOptions = {
   touchAction: "compute",
   recognizers: {
     pinch: { enable: false },
-    rotate: { enable: false },
-    pan: { enable: false }
+    rotate: { enable: false }
   }
 };
 
@@ -333,28 +373,6 @@ export default class Main extends Component {
     }
   };
 
-  currentTitleText = () => {
-    const { generalStatus, currentCountries } = this.state;
-
-    switch (generalStatus) {
-      case GeneralStatus.DEFAULT:
-        return "Sustainable Development Goals Visualiser";
-      case GeneralStatus.COMPARING:
-        return (
-          "Comparing " +
-          currentCountries[0].name +
-          " and " +
-          currentCountries[1].name
-        );
-      case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
-        return "Showing info for " + currentCountries[0].name;
-      case GeneralStatus.SHOWING_FOCUSED_COUNTRY:
-        return currentCountries[0].name;
-      default:
-        return null;
-    }
-  };
-
   currentDrawerData = () => {
     const { generalStatus, currentCountries, category } = this.state;
 
@@ -376,7 +394,15 @@ export default class Main extends Component {
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
         return {
           title: "Info for " + currentCountries[0].name,
-          content: <SingleInfoPanel country={currentCountries[0]} />
+          content: (
+            <SingleInfoPanel
+              country={currentCountries[0].name}
+              selectedYear={this.state.selectedYear}
+              categories={categories}
+              categoryTitleMap={categoryTitleMap}
+              colorMapping={colorMapping}
+              data={this.state.unData} />
+          )
         };
       case GeneralStatus.SHOWING_HELP:
         return {
@@ -406,6 +432,13 @@ export default class Main extends Component {
   onSelectedYearChanged = value => {
     this.setState({ selectedYear: value });
     this.processData();
+  };
+
+  renderTitleArea = () => {
+    const currentTitleDetails = categoryTitleMap[this.state.selectedCategory];
+    const { title, subtitle } = currentTitleDetails;
+    console.log(title + " " + subtitle);
+    return <TitleArea title={title} subtitle={subtitle} />;
   };
 
   renderMainContent = () => (
@@ -445,13 +478,15 @@ export default class Main extends Component {
       >
         <RootContainer>
           <HelpButton onClick={this.onHelpButtonPressed} />
-          <TitleArea title={this.currentTitleText()} />
+          {this.renderTitleArea()}
+
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <SelectorWheel
             inDeveloperMode={inDeveloperMode}
             openModalHandler={event => (this.onPress = event)}
             closeModalHandler={event => (this.onPressUp = event)}
             setSelectedSegment={this.setSelectedCategory}
+            className="wheel"
           ></SelectorWheel>
           <InfoDrawer
             data={this.currentDrawerData()}
@@ -488,14 +523,14 @@ export default class Main extends Component {
                 </button>
                 <button
                   onClick={() => {
-                    this.setState({ metric: categories[4] });
+                    this.setState({ selectedCategory: categories[4] });
                   }}
                 >
                   Water
                 </button>
                 <button
                   onClick={() => {
-                    this.setState({ metric: categories[5] });
+                    this.setState({ selectedCategory: categories[5] });
                   }}
                 >
                   Internet
@@ -506,20 +541,29 @@ export default class Main extends Component {
           <Map
             countryGeolocationData={this.state.countryGeolocationData}
             focusedCountry={this.currentlyFocusedCountry()}
-            metric={this.state.metric}
+            selectedCategory={this.state.selectedCategory}
+            selectedCategoryColors={colorMapping[this.state.selectedCategory]}
             currentData={this.state.currentData}
           />
         </RootContainer>
       </Hammer>
-      <SliderContainer>
-        <Slider
-          label="Year"
-          min={2000}
-          max={2017}
-          value={this.state.selectedYear}
-          onChangeCommitted={this.onSelectedYearChanged}
-        />
-      </SliderContainer>
+      <BottomOverlayContainer>
+        <LegendContainer>
+          <Legend
+            minColor={colorMapping[this.state.selectedCategory][0]}
+            maxColor={colorMapping[this.state.selectedCategory][1]}
+          />
+        </LegendContainer>
+        <SliderContainer>
+          <Slider
+            label="Year"
+            min={2000}
+            max={2017}
+            value={this.state.selectedYear}
+            onChangeCommitted={this.onSelectedYearChanged}
+          />
+        </SliderContainer>
+      </BottomOverlayContainer>
     </SpeechHandler>
   );
 
@@ -549,8 +593,26 @@ const RootContainer = styled.div`
   height: 100%;
 `;
 
-const SliderContainer = styled.div`
+const BottomOverlayContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   width: 100%;
+  height: auto !important;
+  position: fixed;
+  bottom: 3%;
+`;
+
+const SliderContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+`;
+
+const LegendContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
 `;

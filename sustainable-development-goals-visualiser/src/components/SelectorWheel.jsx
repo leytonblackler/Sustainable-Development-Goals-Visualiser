@@ -53,15 +53,15 @@ const data = {
 
 let originalDoughnutDraw = Chart.controllers.doughnut.prototype.draw;
 Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
-  draw: function(ease) {
+  draw: function (ease) {
     // Call super method first
     originalDoughnutDraw.apply(this, arguments);
     let chart = this.chart;
     // icon positions are retrieved from an array of tooltips
     // (because chart.js automatically places tooltips in the centre of segments)
     chart.icons = [];
-    chart.config.data.datasets.forEach(function(dataset, i) {
-      chart.getDatasetMeta(i).data.forEach(function(sector, j) {
+    chart.config.data.datasets.forEach(function (dataset, i) {
+      chart.getDatasetMeta(i).data.forEach(function (sector, j) {
         chart.icons.push(
           new Chart.Tooltip(
             {
@@ -129,8 +129,18 @@ export default class SelectorWheel extends Component {
   }
 
   render() {
+    const disableHighlight = {
+      WebkitTapHighlightColor: "transparent",
+      WebkitTouchCallout: "none",
+      WebkitUserSelect: "none",
+      KhtmlUserSelect: "none",
+      MozUserSelect: "none",
+      MsUserSelect: "none",
+      UserSelect: "none"
+    };
+
     return (
-      <div>
+      <div style={{ disableHighlight }}>
         {this.props.inDeveloperMode && (
           <button onClick={this.handleOpenModal}>Trigger Modal</button>
         )}
@@ -139,8 +149,8 @@ export default class SelectorWheel extends Component {
           contentLabel="Selector Wheel"
           onRequestClose={this.handleCloseModal}
           shouldCloseOnOverlayClick={true}
-          className="Modal"
-          overlayClassName="Overlay"
+          className="wheel-modal"
+          overlayClassName="wheel-overlay"
           shouldFocusAfterRender={false}
         >
           <Doughnut
