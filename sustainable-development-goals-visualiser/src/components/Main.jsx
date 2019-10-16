@@ -62,13 +62,13 @@ const categoryTitleMap = {
   }
 };
 const colorMapping = {
-  no_poverty : ["#550091", "#bb66f7"],
-  zero_hunger : ["#7a096d", "#e06fd3"],
-  quality_education : ["#8a2355", "#f089bb"],
-  clean_water : ["#933842", "#f99ea8"],
-  internet_access : ["#984b31", "#feb197"],
-  sustainable_cities : ["#995d1f", "#ffc385"],
-  biodiversity : ["#996e00", "#ffd466"]
+  no_poverty: ["#550091", "#bb66f7"],
+  zero_hunger: ["#7a096d", "#e06fd3"],
+  quality_education: ["#8a2355", "#f089bb"],
+  clean_water: ["#933842", "#f99ea8"],
+  internet_access: ["#984b31", "#feb197"],
+  sustainable_cities: ["#995d1f", "#ffc385"],
+  biodiversity: ["#996e00", "#ffd466"]
 };
 
 const inDeveloperMode = false;
@@ -103,9 +103,16 @@ export default class Main extends Component {
       loaderShownForMinimumTime: false,
       countryGeolocationData: null,
       unData: null,
-      generalStatus: GeneralStatus.DEFAULT,
+      generalStatus: GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO,
       speechStatus: SpeechStatus.INACTIVE,
-      currentCountries: [],
+      currentCountries: [
+        {
+          country: "NZ",
+          latitude: "-40.900557",
+          longitude: "174.885971",
+          name: "New Zealand"
+        }
+      ],
       selectedCategory: categories[2],
       selectedYear: "2015",
       currentData: null
