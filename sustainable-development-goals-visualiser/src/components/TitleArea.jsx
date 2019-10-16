@@ -38,6 +38,8 @@ const PrimaryText = styled.span`
   font-size: 16pt;
   font-weight: bold;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  margin-left: 20px;
+  margin-right: 20px;
 `;
 
 const SecondaryText = styled.span`
@@ -47,6 +49,8 @@ const SecondaryText = styled.span`
   font-size: 12pt;
   font-weight: medium;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  margin-left: 20px;
+  margin-right: 20px;
 `;
 
 export default TitleArea;
