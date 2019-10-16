@@ -13,7 +13,7 @@ const DoughnutChart = props => {
             backgroundColor: ['cyan', 'lightgrey']
         }]
     };
-
+    
     return <Doughnut data={data} />
 }
 

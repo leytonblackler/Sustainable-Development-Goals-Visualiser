@@ -63,10 +63,23 @@ export default class Main extends Component {
       loaderShownForMinimumTime: false,
       countryGeolocationData: null,
       unData: null,
-      generalStatus: GeneralStatus.DEFAULT,
+      generalStatus: GeneralStatus.COMPARING,
       speechStatus: SpeechStatus.INACTIVE,
-      currentCountries: [],
-      selectedCategory: categories[2],
+      currentCountries: [
+        {
+        country: "NZ",
+        latitude: "-40.900557",
+        longitude: "174.885971",
+        name: "New Zealand"
+      },
+      {
+        country: "IN",
+        latitude: "20.593684",
+        longitude: "78.96288",
+        name: "India"
+      }
+    ],
+      selectedCategory: categories[4],
       selectedYear: "2015",
       currentData: null
     };
@@ -356,6 +369,7 @@ export default class Main extends Component {
               category={category}
               firstCountry={firstCountry}
               secondCountry={secondCountry}
+              data={this.state.currentData}
             />
           )
         };
