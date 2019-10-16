@@ -386,6 +386,7 @@ export default class Main extends Component {
               selectedYear={this.state.selectedYear}
               categories={categories}
               categoryTitleMap={categoryTitleMap}
+              colorMapping={colorMapping}
               data={this.state.unData} />
           )
         };

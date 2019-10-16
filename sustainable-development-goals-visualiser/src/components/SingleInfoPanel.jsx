@@ -1,15 +1,17 @@
 import React from "react";
 import styled from "styled-components";
+import ProgressBar from "./ProgressBar";
 
 const SingleInfoPanel = props => {
-    const { country, selectedYear, categories, categoryTitleMap, data } = props;
+    const { country, selectedYear, categories, categoryTitleMap, colorMapping, data } = props;
     let processedData = processData(selectedYear, country, data);
     return (
         <MainContainer>
             {categories.map(category => {
+                let progressColor = colorMapping[category][1];
                 let categoryTitle = categoryTitleMap[category].title;
-                let percentage = getValue(category, processedData) * 100;
-                return renderCategoryInfoPanel(categoryTitle, percentage);
+                let percentage = (getValue(category, processedData) * 100).toFixed(2);
+                return renderCategoryInfoPanel(categoryTitle, percentage, progressColor);
             })
             }
         </MainContainer>
@@ -34,10 +36,13 @@ const processData = (selectedYear, country, data) => {
     return processedData;
 }
 
-const renderCategoryInfoPanel = (categoryTitle, percentage) => {
+const renderCategoryInfoPanel = (categoryTitle, percentage, progressColor) => {
+    let percentageFormatted = isNaN(percentage) ? Number(0).toFixed(2) : percentage
+
     return (
         <CategoryContainer>
-            {categoryTitle} {percentage ? percentage : 0}%
+            {categoryTitle} {percentageFormatted}%
+            <ProgressBar value={percentageFormatted} progressColor={progressColor} />
         </CategoryContainer>
     );
 }
