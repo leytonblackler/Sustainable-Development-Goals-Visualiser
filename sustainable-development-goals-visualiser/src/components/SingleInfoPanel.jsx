@@ -3,43 +3,42 @@ import styled from "styled-components";
 
 const SingleInfoPanel = props => {
     const { country, selectedYear, categories, categoryTitleMap, data } = props;
-    let processedData = processData(selectedYear, country, data)
-    console.log(processedData)
+    let processedData = processData(selectedYear, country, data);
     return (
         <MainContainer>
             {categories.map(category => {
-                let categoryTitle = categoryTitleMap[category].title
-                return renderCategoryInfoPanel(categoryTitle)
+                let categoryTitle = categoryTitleMap[category].title;
+                let percentage = getValue(category, processedData) * 100;
+                return renderCategoryInfoPanel(categoryTitle, percentage);
             })
             }
         </MainContainer>
     );
 };
 
-const processData = (selectedYear, country, data) => {
-    let timeData = data.filter(row => row["TimePeriod"] === selectedYear)
-
-    console.log("Time Data: ", timeData)
-
-    let geoAreaNameData = data.filter(row => (row["GeoAreaName"] === country))
-    console.log("Country: ", country)
-    console.log(String(country) === "New Zealand")
-    console.log("Geo area name Data: ", geoAreaNameData)
-
-    // let processedData = data.filter(
-    //     row => row["TimePeriod"] === selectedYear.toString()
-    // ).filter(
-    //     row => row["GeoAreaName"] === country.name
-    // );
-
-    return []//processedData;
+const getValue = (category, processedData) => {
+    for (let row of processedData) {
+        if (row["SeriesCode"] === category) {
+            return row["values"];
+        }
+    }
 }
 
-const renderCategoryInfoPanel = categoryTitle => {
+const processData = (selectedYear, country, data) => {
+    let processedData = data.filter(
+        row => row["TimePeriod"] === selectedYear
+    ).filter(
+        row => row["GeoAreaName"] === country
+    );
+
+    return processedData;
+}
+
+const renderCategoryInfoPanel = (categoryTitle, percentage) => {
     return (
-        <CategoryTitleContainer>
-            {categoryTitle}
-        </CategoryTitleContainer>
+        <CategoryContainer>
+            {categoryTitle} {percentage ? percentage : 0}%
+        </CategoryContainer>
     );
 }
 
@@ -50,15 +49,15 @@ const MainContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  //background-color: magenta;
 `;
 
-const CategoryTitleContainer = styled.div`
+const CategoryContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   width: 100%;
-  background-color: red;
+  //background-color: orange;
 `;
 
 export default SingleInfoPanel;
