@@ -17,15 +17,22 @@ const SingleInfoPanel = props => {
 };
 
 const processData = (selectedYear, country, data) => {
-    let processedData = []
+    let timeData = data.filter(row => row["TimePeriod"] === selectedYear)
 
-    processedData = data.filter(
-        row => row["TimePeriod"] === selectedYear
-    ).filter(
-        row => row["GeoAreaName"] === country.name
-    );
+    console.log("Time Data: ", timeData)
 
-    return processedData;
+    let geoAreaNameData = data.filter(row => (row["GeoAreaName"] === country))
+    console.log("Country: ", country)
+    console.log(String(country) === "New Zealand")
+    console.log("Geo area name Data: ", geoAreaNameData)
+
+    // let processedData = data.filter(
+    //     row => row["TimePeriod"] === selectedYear.toString()
+    // ).filter(
+    //     row => row["GeoAreaName"] === country.name
+    // );
+
+    return []//processedData;
 }
 
 const renderCategoryInfoPanel = categoryTitle => {

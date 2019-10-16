@@ -382,7 +382,7 @@ export default class Main extends Component {
           title: "Info for " + currentCountries[0].name,
           content: (
             <SingleInfoPanel
-              country={currentCountries[0]}
+              country={currentCountries[0].name}
               selectedYear={this.state.selectedYear}
               categories={categories}
               categoryTitleMap={categoryTitleMap}
