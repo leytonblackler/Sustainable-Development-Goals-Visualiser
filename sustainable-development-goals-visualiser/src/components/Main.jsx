@@ -68,13 +68,13 @@ const categoryTitleMap = {
   }
 };
 const colorMapping = {
-  no_poverty: ["#6B6D44", "#F0FF00"],
-  zero_hunger: ["#472D3B", "#FF0087"],
-  quality_education: ["#CB9E94", "#C42401"],
-  clean_water: ["#4C5A6C", "#006EFF"],
-  internet_access: ["#004400", "#00FF00"],
-  sustainable_cities: ["#603D61", "#F800FF"],
-  biodiversity: ["#004400", "#00FF00"]
+  no_poverty : ["#550091", "#bb66f7"],
+  zero_hunger : ["#7a096d", "#e06fd3"],
+  quality_education : ["#8a2355", "#f089bb"],
+  clean_water : ["#933842", "#f99ea8"],
+  internet_access : ["#984b31", "#feb197"],
+  sustainable_cities : ["#995d1f", "#ffc385"],
+  biodiversity : ["#996e00", "#ffd466"]
 };
 
 const inDeveloperMode = false;
@@ -112,7 +112,7 @@ export default class Main extends Component {
       generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [],
-      selectedCategory: categories[5],
+      selectedCategory: categories[2],
       selectedYear: "2015",
       currentData: null
     };
@@ -386,7 +386,14 @@ export default class Main extends Component {
       case GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO:
         return {
           title: "Info for " + currentCountries[0].name,
-          content: <SingleInfoPanel country={currentCountries[0]} />
+          content: (
+            <SingleInfoPanel
+              country={currentCountries[0].name}
+              selectedYear={this.state.selectedYear}
+              categories={categories}
+              categoryTitleMap={categoryTitleMap}
+              data={this.state.unData} />
+          )
         };
       case GeneralStatus.SHOWING_HELP:
         return {

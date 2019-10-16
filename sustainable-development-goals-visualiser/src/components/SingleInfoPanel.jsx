@@ -1,26 +1,46 @@
 import React from "react";
 import styled from "styled-components";
 
-import DoughnutChart from "./DoughnutChart"
-
 const SingleInfoPanel = props => {
-  const { country, categories } = props;
-
-  return (
-    <MainContainer>
-    </MainContainer>
-  );
+    const { country, selectedYear, categories, categoryTitleMap, data } = props;
+    let processedData = processData(selectedYear, country, data)
+    console.log(processedData)
+    return (
+        <MainContainer>
+            {categories.map(category => {
+                let categoryTitle = categoryTitleMap[category].title
+                return renderCategoryInfoPanel(categoryTitle)
+            })
+            }
+        </MainContainer>
+    );
 };
 
-const CountryInfoPanel = props => {
-  const { country, data } = props;
-  return (
-    <CountryContainer>
-      <ChartContainer>
-        <DoughnutChart countryData={data} />
-      </ChartContainer>
-    </CountryContainer>
-  );
+const processData = (selectedYear, country, data) => {
+    let timeData = data.filter(row => row["TimePeriod"] === selectedYear)
+
+    console.log("Time Data: ", timeData)
+
+    let geoAreaNameData = data.filter(row => (row["GeoAreaName"] === country))
+    console.log("Country: ", country)
+    console.log(String(country) === "New Zealand")
+    console.log("Geo area name Data: ", geoAreaNameData)
+
+    // let processedData = data.filter(
+    //     row => row["TimePeriod"] === selectedYear.toString()
+    // ).filter(
+    //     row => row["GeoAreaName"] === country.name
+    // );
+
+    return []//processedData;
+}
+
+const renderCategoryInfoPanel = categoryTitle => {
+    return (
+        <CategoryTitleContainer>
+            {categoryTitle}
+        </CategoryTitleContainer>
+    );
 }
 
 const MainContainer = styled.div`
@@ -32,30 +52,13 @@ const MainContainer = styled.div`
   height: 100%;
 `;
 
-const TitleContainer = styled.div`
+const CategoryTitleContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 10%;
   background-color: red;
-`;
-
-const CountryContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 45%;
-  // background-color: magenta;
-`;
-
-const ChartContainer = styled.div`
-  align-items: center;
-  width: 100%;
-  // background-color: orange;
 `;
 
 export default SingleInfoPanel;
