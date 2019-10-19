@@ -250,6 +250,7 @@ export default class Main extends Component {
       let rads = Math.atan2(-1 * dx, dy); // -1 * dx makes 0 degrees at top
       var index = Math.floor(segments / 2 + ((rads * segments) / (Math.PI * 2)));
       if (this.state.selectedCategory != categories[index]) {
+        this.highlightSegment(index);
         this.setState({ selectedCategory: categories[index] });
         this.renderTitleArea();
         this.processData();
@@ -517,7 +518,7 @@ export default class Main extends Component {
             inDeveloperMode={inDeveloperMode}
             openModalHandler={event => (this.openWheel = event)}
             closeModalHandler={event => (this.closeWheel = event)}
-            setSelectedSegment={this.setSelectedCategory}
+            highlightSegment={event => (this.highlightSegment = event)}
             className="wheel"
           ></SelectorWheel>
           <InfoDrawer
