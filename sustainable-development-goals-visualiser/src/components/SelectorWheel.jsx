@@ -138,10 +138,10 @@ export default class SelectorWheel extends Component {
         isOpen={this.state.showModal}
         contentLabel="Selector Wheel"
         onRequestClose={this.handleCloseModal}
-        // shouldCloseOnOverlayClick={true}
+        shouldCloseOnOverlayClick={true}
         className="wheel-modal"
         overlayClassName="wheel-overlay"
-        shouldFocusAfterRender={true}
+        shouldFocusAfterRender={false}
       >
         <Doughnut
           data={data}

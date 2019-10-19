@@ -172,11 +172,17 @@ export default class Main extends Component {
 
   // press events with movements get turned into pan events
   onPanEnd = event => {
-    console.log("onPanEnd");
+    console.log(event);
+    console.log(window.innerHeight)
     this.onPressUp();
   };
   onPan = event => {
-    console.log("onPan");
+    let segments = categories.length;
+    let dx = event.center.x - (window.innerWidth / 2);
+    let dy = event.center.y - (window.innerHeight / 2)
+    let rads = Math.atan2(-1 * dx, dy);
+    var selected = Math.floor(segments / 2 + ((rads * segments) / (Math.PI * 2)));
+    this.setSelectedCategory(selected);
   };
   onPanCancel = event => {
     console.log("onPanCancel");
