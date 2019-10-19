@@ -252,7 +252,7 @@ export default class Main extends Component {
       if (this.state.selectedCategory != categories[index]) {
         this.highlightSegment(index);
         this.setState({ selectedCategory: categories[index] });
-        this.renderTitleArea();
+        this.render();
         this.processData();
       }
     }
