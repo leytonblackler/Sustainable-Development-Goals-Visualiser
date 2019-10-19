@@ -5,6 +5,8 @@
   right: 0;
   bottom: 0;
   background-color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  /* background-color: red; */
 }
 .wheel-modal {
   position: absolute;
@@ -12,7 +14,7 @@
   left: 40px;
   right: 40px;
   bottom: 40px;
-  background-color: transparent;
+  pointer-events: none;
 }
 .wheel-icon {
   position: absolute;
@@ -28,11 +30,5 @@
                                 supported by Chrome, Opera and Firefox */
 }
 .wheel {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-   -khtml-user-select: none; /* Konqueror HTML */
-     -moz-user-select: none; /* Old versions of Firefox */
-      -ms-user-select: none; /* Internet Explorer/Edge */
-          user-select: none; /* Non-prefixed version, currently
-                                supported by Chrome, Opera and Firefox */
+  pointer-events: none;
 }

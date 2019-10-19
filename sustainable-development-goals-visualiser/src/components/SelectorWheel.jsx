@@ -115,66 +115,55 @@ export default class SelectorWheel extends Component {
   }
 
   handleOpenModal() {
-    for (let i = 0; i < iconElements.length; i++) {
-      iconElements[i].style.display = "block";
+    if (this.state.showModal === false) {
+      for (let i = 0; i < iconElements.length; i++) {
+        iconElements[i].style.display = "block";
+      }
+      this.setState({ showModal: true });
     }
-    this.setState({ showModal: true });
   }
 
   handleCloseModal() {
-    for (let i = 0; i < iconElements.length; i++) {
-      iconElements[i].style.display = "none";
+    if (this.state.showModal === true) {
+      for (let i = 0; i < iconElements.length; i++) {
+        iconElements[i].style.display = "none";
+      }
+      this.setState({ showModal: false });
     }
-    this.setState({ showModal: false });
   }
 
   render() {
-    const disableHighlight = {
-      WebkitTapHighlightColor: "transparent",
-      WebkitTouchCallout: "none",
-      WebkitUserSelect: "none",
-      KhtmlUserSelect: "none",
-      MozUserSelect: "none",
-      MsUserSelect: "none",
-      UserSelect: "none"
-    };
-
     return (
-      <div style={{ disableHighlight }}>
-        {this.props.inDeveloperMode && (
-          <button onClick={this.handleOpenModal}>Trigger Modal</button>
-        )}
-        <ReactModal
-          isOpen={this.state.showModal}
-          contentLabel="Selector Wheel"
-          onRequestClose={this.handleCloseModal}
-          shouldCloseOnOverlayClick={true}
-          className="wheel-modal"
-          overlayClassName="wheel-overlay"
-          shouldFocusAfterRender={false}
-        >
-          <Doughnut
-            data={data}
-            legend={{ display: false }}
-            style={{ width: "100%", height: "100%" }}
-            options={{
-              animation: {
-                animateRotate: false,
-                animateScale: true,
-                duration: 300
-              },
-              tooltips: {
-                enabled: false,
-                // this calls a function and passes the highlighted segment
-                custom: event => {
-                  this.props.setSelectedSegment(event.dataPoints[0].index);
-                }
-              },
-              maintainAspectRatio: false
-            }}
-          />
-        </ReactModal>
-      </div>
+      <ReactModal
+        isOpen={this.state.showModal}
+        contentLabel="Selector Wheel"
+        onRequestClose={this.handleCloseModal}
+        // shouldCloseOnOverlayClick={true}
+        className="wheel-modal"
+        overlayClassName="wheel-overlay"
+        shouldFocusAfterRender={true}
+      >
+        <Doughnut
+          data={data}
+          legend={{ display: false }}
+          style={{ width: "100%", height: "100%" }}
+          options={{
+            animation: {
+              animateRotate: false,
+              animateScale: true,
+              duration: 300
+            },
+            tooltips: {
+              enabled: false,
+              // this calls a function and passes the highlighted segment
+              custom: event => {
+                this.props.setSelectedSegment(event.dataPoints[0].index);
+              }
+            },
+            maintainAspectRatio: false
+          }}
+        />
+      </ReactModal>
     );
   }
 }

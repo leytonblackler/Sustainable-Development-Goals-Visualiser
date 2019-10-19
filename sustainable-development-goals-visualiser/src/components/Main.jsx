@@ -93,6 +93,9 @@ const hammerjsOptions = {
   recognizers: {
     pinch: { enable: false },
     rotate: { enable: false }
+  },
+  pan: {
+    direction: 'DIRECTION_ALL'
   }
 };
 
@@ -107,18 +110,18 @@ export default class Main extends Component {
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [
         {
-        country: "NZ",
-        latitude: "-40.900557",
-        longitude: "174.885971",
-        name: "New Zealand"
-      },
-      {
-        country: "IN",
-        latitude: "20.593684",
-        longitude: "78.96288",
-        name: "India"
-      }
-    ],
+          country: "NZ",
+          latitude: "-40.900557",
+          longitude: "174.885971",
+          name: "New Zealand"
+        },
+        {
+          country: "IN",
+          latitude: "20.593684",
+          longitude: "78.96288",
+          name: "India"
+        }
+      ],
       selectedCategory: categories[4],
       selectedYear: "2015",
       currentData: null
@@ -167,19 +170,10 @@ export default class Main extends Component {
     });
   };
 
-  // onPress gets mapped to opening selector wheel
-  // onPressUp gets mapped to closing selector wheel when no selection has been made
-  // onPanEnd generally means a selection has been made
+  // press events with movements get turned into pan events
   onPanEnd = event => {
     console.log("onPanEnd");
     this.onPressUp();
-  };
-
-  onTap = event => {
-    console.log("onTap");
-  };
-  onDoubleTap = event => {
-    console.log("onDoubleTap");
   };
   onPan = event => {
     console.log("onPan");
@@ -189,6 +183,13 @@ export default class Main extends Component {
   };
   onPanStart = event => {
     console.log("onPanStart");
+  };
+
+  onTap = event => {
+    console.log("onTap");
+  };
+  onDoubleTap = event => {
+    console.log("onDoubleTap");
   };
   onPinchStart = event => {
     console.log("onPinchStart");
@@ -454,6 +455,7 @@ export default class Main extends Component {
       incompatibleBrowserDetected={this.incompatibleBrowserDetected}
     >
       <Hammer
+        direction={"DIRECTION_ALL"}
         options={hammerjsOptions}
         onTap={this.onTap}
         onDoubleTap={this.onDoubleTap}
