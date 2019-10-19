@@ -124,7 +124,8 @@ export default class Main extends Component {
       ],
       selectedCategory: categories[4],
       selectedYear: "2015",
-      currentData: null
+      currentData: null,
+      showingWheel: false
     };
     setTimeout(
       () => this.setState({ loaderShownForMinimumTime: true }),
@@ -169,20 +170,24 @@ export default class Main extends Component {
       speechStatus: SpeechStatus.WAITING_FOR_ACTION
     });
   };
-
-  // press events with movements get turned into pan events
-  onPanEnd = event => {
-    console.log(event);
-    console.log(window.innerHeight)
-    this.onPressUp();
-  };
+  onPress = event => {
+    console.log("onPress");
+    this.setWheelOpen(true);
+    this.setSelectedCategory(event.center);
+  }
+  onPressUp = event => {
+    console.log("onPressUp");
+    this.setSelectedCategory(event.center);
+    this.setWheelOpen(false);
+  }
+  // pan doesn't open wheel but does set category
   onPan = event => {
-    let segments = categories.length;
-    let dx = event.center.x - (window.innerWidth / 2);
-    let dy = event.center.y - (window.innerHeight / 2)
-    let rads = Math.atan2(-1 * dx, dy);
-    var selected = Math.floor(segments / 2 + ((rads * segments) / (Math.PI * 2)));
-    this.setSelectedCategory(selected);
+    this.setSelectedCategory(event.center);
+  };
+  // a press that turns into a pan will only fire onPanEnd
+  onPanEnd = event => {
+    this.setSelectedCategory(event.center);
+    this.setWheelOpen(false);
   };
   onPanCancel = event => {
     console.log("onPanCancel");
@@ -190,7 +195,6 @@ export default class Main extends Component {
   onPanStart = event => {
     console.log("onPanStart");
   };
-
   onTap = event => {
     console.log("onTap");
   };
@@ -226,6 +230,31 @@ export default class Main extends Component {
   };
   onSwipe = event => {
     console.log("onSwipe");
+  };
+
+  // b: true to set wheel open, false to set wheel closed
+  setWheelOpen(b) {
+    // if b does not match current wheel state, update it 
+    if (b !== this.state.showingWheel) {
+      this.setState({ showingWheel: b })
+      b ? this.openWheel() : this.closeWheel();
+    }
+  }
+
+  // takes pointer position: {x: num, y: num}
+  setSelectedCategory = pos => {
+    if (this.state.showingWheel) {
+      let segments = categories.length;
+      let dx = pos.x - (window.innerWidth / 2);
+      let dy = pos.y - (window.innerHeight / 2)
+      let rads = Math.atan2(-1 * dx, dy); // -1 * dx makes 0 degrees at top
+      var index = Math.floor(segments / 2 + ((rads * segments) / (Math.PI * 2)));
+      if (this.state.selectedCategory != categories[index]) {
+        this.setState({ selectedCategory: categories[index] });
+        this.renderTitleArea();
+        this.processData();
+      }
+    }
   };
 
   onCompareTriggerSpoken = () => {
@@ -431,11 +460,6 @@ export default class Main extends Component {
     this.setState({ currentData: selectedYearData });
   };
 
-  setSelectedCategory = index => {
-    this.setState({ selectedCategory: categories[index] });
-    this.processData();
-  };
-
   onSelectedYearChanged = value => {
     this.setState({ selectedYear: value });
     this.processData();
@@ -491,8 +515,8 @@ export default class Main extends Component {
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <SelectorWheel
             inDeveloperMode={inDeveloperMode}
-            openModalHandler={event => (this.onPress = event)}
-            closeModalHandler={event => (this.onPressUp = event)}
+            openModalHandler={event => (this.openWheel = event)}
+            closeModalHandler={event => (this.closeWheel = event)}
             setSelectedSegment={this.setSelectedCategory}
             className="wheel"
           ></SelectorWheel>
