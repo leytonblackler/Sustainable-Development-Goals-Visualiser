@@ -425,6 +425,7 @@ export default class Main extends Component {
               firstCountry={firstCountry}
               secondCountry={secondCountry}
               data={this.state.currentData}
+              colour={colorMapping[this.state.selectedCategory]}
             />
           )
         };

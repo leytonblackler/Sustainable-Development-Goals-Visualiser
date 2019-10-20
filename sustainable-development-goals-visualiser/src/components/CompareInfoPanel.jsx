@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import DoughnutChart from "./DoughnutChart"
 import { Bar } from 'react-chartjs-2';
+import { scaleLinear } from "d3-scale";
 
 
 const CompareInfoPanel = props => {
@@ -26,17 +27,21 @@ const CompareInfoPanel = props => {
 
   return (
     <MainContainer>
-      <h2>{category}</h2>
       <ComparisonInfoPanel  
                             countries={[firstCountry, secondCountry]}
                             data1={firstCountryData}
-                            data2={secondCountryData} />
+                            data2={secondCountryData} 
+                            selectedCategoryColors={props.colour}/>
     </MainContainer>
   );
 };
 
 const ComparisonInfoPanel = props => {
-  const {countries, data1, data2} = props;
+  const {countries, data1, data2, selectedCategoryColors} = props;
+
+  const colorScale = scaleLinear()
+          .domain([0, 1])
+          .range([selectedCategoryColors[0], selectedCategoryColors[1]])
 
   const dataSet = {
     labels: [countries[0].name, countries[1].name],
@@ -45,7 +50,7 @@ const ComparisonInfoPanel = props => {
         // label: 'My First dataset',
         // fill: false,
         // lineTension: 0.1,
-        backgroundColor: 'rgba(75,192,192,0.4)',
+        backgroundColor: [colorScale(data1), colorScale(data2)],
         borderColor: 'rgba(75,192,192,1)',
         borderCapStyle: 'butt',
         borderDash: [],
@@ -92,9 +97,9 @@ const ComparisonInfoPanel = props => {
     }
 }
   return (
-    <div style={{height: '100%'}}>
+    <div style={{height: '100%', 'text-align': 'center'}}>
       <Bar data={dataSet} options={options}/>
-      <h3>{countries[0].name} vs {countries[1].name}</h3>
+      <h4>{countries[0].name} vs {countries[1].name}</h4>
     </div>
   );
 }
