@@ -6,8 +6,8 @@ const Legend = props => {
   return (
     <MainContainer>
       <StartEndLabelsContainer>
-        <PercentageLabel style={{ marginLeft: 10 }}>0%</PercentageLabel>
-        <PercentageLabel style={{ marginRight: -4 }}>100%</PercentageLabel>
+        <PercentageLabel style={{ marginLeft: 10 }}>Lowest</PercentageLabel>
+        <PercentageLabel style={{ marginRight: -4 }}>Highest</PercentageLabel>
       </StartEndLabelsContainer>
       <Bar
         style={{

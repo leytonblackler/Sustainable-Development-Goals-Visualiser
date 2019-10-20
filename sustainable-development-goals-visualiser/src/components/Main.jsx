@@ -35,42 +35,42 @@ const categoryTitleMap = {
   no_poverty: {
     title: "No Poverty",
     subtitle:
-      "Percentage of population with an income lower than the international poverty line"
+      "Normalised percentage of population with an income lower than the international poverty line"
   },
   zero_hunger: {
     title: "Zero Hunger",
     subtitle:
-      "Percentage of the population who are classified as undernourished"
+      "Normalised percentage of the population who are classified as undernourished"
   },
   quality_education: {
     title: "Quality Education",
     subtitle:
-      "Percentage of population achieving a basic level of proficiency in literacy skills"
+      "Normalised percentage of population achieving a basic level of proficiency in literacy skills"
   },
   clean_water: {
     title: "Clean Water",
     subtitle:
-      "Percentage of population using safely managed drinking water services."
+      "Normalised percentage of population using safely managed drinking water services."
   },
   internet_access: {
     title: "Internet Access",
     subtitle:
-      "Percentage of the population that used the internet in the last three months"
+      "Normalised percentage of the population that did not use the internet"
   },
   sustainable_cities: {
     title: "City Sustainability",
     subtitle:
-      "Number of deaths and missing persons attributed to disasters per 100,000 population"
+      "Normalised number of deaths and missing persons attributed to disasters per 100,000 population"
   },
   biodiversity: {
     title: "Biodiversity",
-    subtitle: "Percentage of land that is degraded"
+    subtitle: "Normalised percentage of land that is degraded"
   }
 };
 const colorMapping = {
   no_poverty: ["#550091", "#bb66f7"],
   zero_hunger: ["#7a096d", "#e06fd3"],
-  quality_education: ["#8a2355", "#f089bb"],
+  quality_education: ["#8a2355","#f089bb"],
   clean_water: ["#933842", "#f99ea8"],
   internet_access: ["#984b31", "#feb197"],
   sustainable_cities: ["#995d1f", "#ffc385"],
