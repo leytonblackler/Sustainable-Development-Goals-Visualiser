@@ -33,7 +33,7 @@ const MainContainer = styled.div`
 
 const PrimaryText = styled.span`
   text-align: center;
-  opacity: 0.85;
+  opacity: 0.9;
   color: white;
   font-size: 16pt;
   font-weight: bold;
@@ -44,7 +44,7 @@ const PrimaryText = styled.span`
 
 const SecondaryText = styled.span`
   text-align: center;
-  opacity: 0.85;
+  opacity: 0.9;
   color: white;
   font-size: 12pt;
   font-weight: medium;

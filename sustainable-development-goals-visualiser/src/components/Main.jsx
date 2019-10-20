@@ -101,7 +101,7 @@ const hammerjsOptions = {
     rotate: { enable: false }
   },
   pan: {
-    direction: 'DIRECTION_ALL'
+    direction: "DIRECTION_ALL"
   }
 };
 
@@ -180,12 +180,12 @@ export default class Main extends Component {
     console.log("onPress");
     this.setWheelOpen(true);
     this.setSelectedCategory(event.center);
-  }
+  };
   onPressUp = event => {
     console.log("onPressUp");
     this.setSelectedCategory(event.center);
     this.setWheelOpen(false);
-  }
+  };
   // pan doesn't open wheel but does set category
   onPan = event => {
     this.setSelectedCategory(event.center);
@@ -240,9 +240,9 @@ export default class Main extends Component {
 
   // b: true to set wheel open, false to set wheel closed
   setWheelOpen(b) {
-    // if b does not match current wheel state, update it 
+    // if b does not match current wheel state, update it
     if (b !== this.state.showingWheel) {
-      this.setState({ showingWheel: b })
+      this.setState({ showingWheel: b });
       b ? this.openWheel() : this.closeWheel();
     }
   }
@@ -251,10 +251,10 @@ export default class Main extends Component {
   setSelectedCategory = pos => {
     if (this.state.showingWheel) {
       let segments = categories.length;
-      let dx = pos.x - (window.innerWidth / 2);
-      let dy = pos.y - (window.innerHeight / 2)
+      let dx = pos.x - window.innerWidth / 2;
+      let dy = pos.y - window.innerHeight / 2;
       let rads = Math.atan2(-1 * dx, dy); // -1 * dx makes 0 degrees at top
-      var index = Math.floor(segments / 2 + ((rads * segments) / (Math.PI * 2)));
+      var index = Math.floor(segments / 2 + (rads * segments) / (Math.PI * 2));
       if (this.state.selectedCategory != categories[index]) {
         this.highlightSegment(index);
         this.setState({ selectedCategory: categories[index] });
@@ -445,7 +445,8 @@ export default class Main extends Component {
               categories={categories}
               categoryTitleMap={categoryTitleMap}
               colorMapping={colorMapping}
-              data={this.state.unData} />
+              data={this.state.unData}
+            />
           )
         };
       case GeneralStatus.SHOWING_HELP:
@@ -641,6 +642,7 @@ const BottomOverlayContainer = styled.div`
   height: auto !important;
   position: fixed;
   bottom: 3%;
+  left: 3px;
 `;
 
 const SliderContainer = styled.div`
