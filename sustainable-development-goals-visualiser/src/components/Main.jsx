@@ -99,6 +99,9 @@ const hammerjsOptions = {
   recognizers: {
     pinch: { enable: false },
     rotate: { enable: false }
+  },
+  pan: {
+    direction: 'DIRECTION_ALL'
   }
 };
 
@@ -109,19 +112,26 @@ export default class Main extends Component {
       loaderShownForMinimumTime: false,
       countryGeolocationData: null,
       unData: null,
-      generalStatus: GeneralStatus.SHOWING_SINGLE_COUNTRY_INFO,
+      generalStatus: GeneralStatus.COMPARING,
       speechStatus: SpeechStatus.INACTIVE,
       currentCountries: [
         {
           country: "NZ",
           latitude: "-40.900557",
           longitude: "174.885971",
-          name: "New Zealand"
+          name: "New Zealand"
+        },
+        {
+          country: "IN",
+          latitude: "20.593684",
+          longitude: "78.96288",
+          name: "India"
         }
       ],
-      selectedCategory: categories[2],
+      selectedCategory: categories[4],
       selectedYear: "2015",
-      currentData: null
+      currentData: null,
+      showingWheel: false
     };
     setTimeout(
       () => this.setState({ loaderShownForMinimumTime: true }),
@@ -166,29 +176,36 @@ export default class Main extends Component {
       speechStatus: SpeechStatus.WAITING_FOR_ACTION
     });
   };
-
-  // onPress gets mapped to opening selector wheel
-  // onPressUp gets mapped to closing selector wheel when no selection has been made
-  // onPanEnd generally means a selection has been made
-  onPanEnd = event => {
-    console.log("onPanEnd");
-    this.onPressUp();
-  };
-
-  onTap = event => {
-    console.log("onTap");
-  };
-  onDoubleTap = event => {
-    console.log("onDoubleTap");
-  };
+  onPress = event => {
+    console.log("onPress");
+    this.setWheelOpen(true);
+    this.setSelectedCategory(event.center);
+  }
+  onPressUp = event => {
+    console.log("onPressUp");
+    this.setSelectedCategory(event.center);
+    this.setWheelOpen(false);
+  }
+  // pan doesn't open wheel but does set category
   onPan = event => {
-    console.log("onPan");
+    this.setSelectedCategory(event.center);
+  };
+  // a press that turns into a pan will only fire onPanEnd
+  onPanEnd = event => {
+    this.setSelectedCategory(event.center);
+    this.setWheelOpen(false);
   };
   onPanCancel = event => {
     console.log("onPanCancel");
   };
   onPanStart = event => {
     console.log("onPanStart");
+  };
+  onTap = event => {
+    console.log("onTap");
+  };
+  onDoubleTap = event => {
+    console.log("onDoubleTap");
   };
   onPinchStart = event => {
     console.log("onPinchStart");
@@ -219,6 +236,32 @@ export default class Main extends Component {
   };
   onSwipe = event => {
     console.log("onSwipe");
+  };
+
+  // b: true to set wheel open, false to set wheel closed
+  setWheelOpen(b) {
+    // if b does not match current wheel state, update it 
+    if (b !== this.state.showingWheel) {
+      this.setState({ showingWheel: b })
+      b ? this.openWheel() : this.closeWheel();
+    }
+  }
+
+  // takes pointer position: {x: num, y: num}
+  setSelectedCategory = pos => {
+    if (this.state.showingWheel) {
+      let segments = categories.length;
+      let dx = pos.x - (window.innerWidth / 2);
+      let dy = pos.y - (window.innerHeight / 2)
+      let rads = Math.atan2(-1 * dx, dy); // -1 * dx makes 0 degrees at top
+      var index = Math.floor(segments / 2 + ((rads * segments) / (Math.PI * 2)));
+      if (this.state.selectedCategory != categories[index]) {
+        this.highlightSegment(index);
+        this.setState({ selectedCategory: categories[index] });
+        this.render();
+        this.processData();
+      }
+    }
   };
 
   onCompareTriggerSpoken = () => {
@@ -387,6 +430,8 @@ export default class Main extends Component {
               category={category}
               firstCountry={firstCountry}
               secondCountry={secondCountry}
+              data={this.state.currentData}
+              colour={colorMapping[this.state.selectedCategory]}
             />
           )
         };
@@ -399,6 +444,7 @@ export default class Main extends Component {
               selectedYear={this.state.selectedYear}
               categories={categories}
               categoryTitleMap={categoryTitleMap}
+              colorMapping={colorMapping}
               data={this.state.unData} />
           )
         };
@@ -420,11 +466,6 @@ export default class Main extends Component {
       row => row["TimePeriod"] === this.state.selectedYear.toString()
     );
     this.setState({ currentData: selectedYearData });
-  };
-
-  setSelectedCategory = index => {
-    this.setState({ selectedCategory: categories[index] });
-    this.processData();
   };
 
   onSelectedYearChanged = value => {
@@ -452,6 +493,7 @@ export default class Main extends Component {
       incompatibleBrowserDetected={this.incompatibleBrowserDetected}
     >
       <Hammer
+        direction={"DIRECTION_ALL"}
         options={hammerjsOptions}
         onTap={this.onTap}
         onDoubleTap={this.onDoubleTap}
@@ -481,9 +523,9 @@ export default class Main extends Component {
           <NotificationBar message={this.currentNotificationBarMessage()} />
           <SelectorWheel
             inDeveloperMode={inDeveloperMode}
-            openModalHandler={event => (this.onPress = event)}
-            closeModalHandler={event => (this.onPressUp = event)}
-            setSelectedSegment={this.setSelectedCategory}
+            openModalHandler={event => (this.openWheel = event)}
+            closeModalHandler={event => (this.closeWheel = event)}
+            highlightSegment={event => (this.highlightSegment = event)}
             className="wheel"
           ></SelectorWheel>
           <InfoDrawer

@@ -14,6 +14,7 @@ const categories = [
   "biodiversity"
 ];
 // build array of icon svg elements
+const unselectedOpacity = 0.5;
 const iconElements = [];
 for (let i = 0; i < categories.length; i++) {
   let icon = document.createElement("img");
@@ -26,7 +27,7 @@ for (let i = 0; i < categories.length; i++) {
   document.body.appendChild(icon);
   icon.classList.remove("above", "below", "no-transform");
   icon.classList.add("no-transform");
-  icon.style.opacity = 1;
+  icon.style.opacity = unselectedOpacity;
   icon.style.position = "absolute";
   icon.style.pointerEvents = "none";
   icon.style.zIndex = 1000;
@@ -107,74 +108,69 @@ export default class SelectorWheel extends Component {
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.highlightSegment = this.highlightSegment.bind(this);
   }
 
   componentDidMount() {
     this.props.openModalHandler(this.handleOpenModal);
     this.props.closeModalHandler(this.handleCloseModal);
+    this.props.highlightSegment(this.highlightSegment);
   }
 
   handleOpenModal() {
-    for (let i = 0; i < iconElements.length; i++) {
-      iconElements[i].style.display = "block";
+    if (this.state.showModal === false) {
+      for (let i = 0; i < iconElements.length; i++) {
+        iconElements[i].style.display = "block";
+      }
+      this.setState({ showModal: true });
     }
-    this.setState({ showModal: true });
   }
 
   handleCloseModal() {
-    for (let i = 0; i < iconElements.length; i++) {
-      iconElements[i].style.display = "none";
+    if (this.state.showModal === true) {
+      for (let i = 0; i < iconElements.length; i++) {
+        iconElements[i].style.display = "none";
+      }
+      this.setState({ showModal: false });
     }
-    this.setState({ showModal: false });
+  }
+
+  highlightSegment(index) {
+    for (let i = 0; i < iconElements.length; i++) {
+      let newOpacity;
+      i == index ? newOpacity = 1 : newOpacity = unselectedOpacity;
+      iconElements[i].style.opacity = newOpacity;
+    }
   }
 
   render() {
-    const disableHighlight = {
-      WebkitTapHighlightColor: "transparent",
-      WebkitTouchCallout: "none",
-      WebkitUserSelect: "none",
-      KhtmlUserSelect: "none",
-      MozUserSelect: "none",
-      MsUserSelect: "none",
-      UserSelect: "none"
-    };
-
     return (
-      <div style={{ disableHighlight }}>
-        {this.props.inDeveloperMode && (
-          <button onClick={this.handleOpenModal}>Trigger Modal</button>
-        )}
-        <ReactModal
-          isOpen={this.state.showModal}
-          contentLabel="Selector Wheel"
-          onRequestClose={this.handleCloseModal}
-          shouldCloseOnOverlayClick={true}
-          className="wheel-modal"
-          overlayClassName="wheel-overlay"
-          shouldFocusAfterRender={false}
-        >
-          <Doughnut
-            data={data}
-            legend={{ display: false }}
-            style={{ width: "100%", height: "100%" }}
-            options={{
-              animation: {
-                animateRotate: false,
-                animateScale: true,
-                duration: 300
-              },
-              tooltips: {
-                enabled: false,
-                // this calls a function and passes the highlighted segment
-                custom: event => {
-                  this.props.setSelectedSegment(event.dataPoints[0].index);
-                }
-              },
-              maintainAspectRatio: false
-            }}
-          />
-        </ReactModal>
-      </div>
+      <ReactModal
+        isOpen={this.state.showModal}
+        contentLabel="Selector Wheel"
+        onRequestClose={this.handleCloseModal}
+        shouldCloseOnOverlayClick={true}
+        className="wheel-modal"
+        overlayClassName="wheel-overlay"
+        shouldFocusAfterRender={false}
+      >
+        <Doughnut
+          data={data}
+          legend={{ display: false }}
+          style={{ width: "100%", height: "100%" }}
+          options={{
+            animation: {
+              animateRotate: false,
+              animateScale: true,
+              duration: 300
+            },
+            tooltips: {
+              enabled: false
+            },
+            maintainAspectRatio: false
+          }}
+        />
+      </ReactModal>
     );
   }
 }
