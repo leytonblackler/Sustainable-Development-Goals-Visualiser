@@ -112,22 +112,9 @@ export default class Main extends Component {
       loaderShownForMinimumTime: false,
       countryGeolocationData: null,
       unData: null,
-      generalStatus: GeneralStatus.COMPARING,
+      generalStatus: GeneralStatus.DEFAULT,
       speechStatus: SpeechStatus.INACTIVE,
-      currentCountries: [
-        {
-          country: "NZ",
-          latitude: "-40.900557",
-          longitude: "174.885971",
-          name: "New Zealand"
-        },
-        {
-          country: "IN",
-          latitude: "20.593684",
-          longitude: "78.96288",
-          name: "India"
-        }
-      ],
+      currentCountries: [],
       selectedCategory: categories[4],
       selectedYear: "2015",
       currentData: null,
