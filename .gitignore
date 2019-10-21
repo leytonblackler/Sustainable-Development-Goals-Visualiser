@@ -5,3 +5,4 @@ sustain
 /.idea
 package-lock.json
 sustainable-development-goals-visualiser/.idea/workspace.xml
+./yarn.lock

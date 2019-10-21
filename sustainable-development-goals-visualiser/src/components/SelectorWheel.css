@@ -6,7 +6,6 @@
   bottom: 0;
   background-color: rgba(255, 255, 255, 0.3);
   pointer-events: none;
-  /* background-color: red; */
 }
 .wheel-modal {
   position: absolute;
