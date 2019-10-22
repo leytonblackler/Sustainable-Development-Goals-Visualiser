@@ -8,7 +8,6 @@ import {
 } from "react-simple-maps";
 import { Motion, spring } from "react-motion";
 import { scaleLinear } from "d3-scale";
-import { SSL_OP_TLS_ROLLBACK_BUG } from "constants";
 
 const NO_DATA_FOR_COUNTRY_COLOR = "#FFFFFF";
 const DATA_NOT_LOADED_COLOR = "#f44336";
@@ -39,12 +38,12 @@ export default class Map extends Component {
     }
 
     const colorScale = scaleLinear()
-          .domain([0, 1])
-          .range([selectedCategoryColors[0], selectedCategoryColors[1]])
+      .domain([0, 1])
+      .range([selectedCategoryColors[0], selectedCategoryColors[1]])
 
     for (let index = 0; index < this.props.currentData.length; index++) {
       const element = this.props.currentData[index];
-      if (element.GeoAreaName == countryName) {
+      if (element.GeoAreaName === countryName) {
         return { ...style, fill: colorScale(element.values) };
       }
     }
@@ -56,16 +55,16 @@ export default class Map extends Component {
     const { focusedCountry } = this.props;
     return this.props.focusedCountry
       ? {
-          zoom: 4,
-          center: [
-            Number(focusedCountry.longitude),
-            Number(focusedCountry.latitude)
-          ]
-        }
+        zoom: 4,
+        center: [
+          Number(focusedCountry.longitude),
+          Number(focusedCountry.latitude)
+        ]
+      }
       : {
-          zoom: 1,
-          center: [0, 20]
-        };
+        zoom: 1,
+        center: [0, 20]
+      };
   }
 
   render() {

@@ -20,7 +20,6 @@ import { HelpButton } from "./HelpButton";
 import { HelpContent } from "./HelpContent";
 import Legend from "./Legend";
 
-// TODO: this is duplicated in here and SelectorWheel
 const categories = [
   "no_poverty",
   "zero_hunger",
@@ -70,7 +69,7 @@ const categoryTitleMap = {
 const colorMapping = {
   no_poverty: ["#550091", "#bb66f7"],
   zero_hunger: ["#7a096d", "#e06fd3"],
-  quality_education: ["#8a2355","#f089bb"],
+  quality_education: ["#8a2355", "#f089bb"],
   clean_water: ["#933842", "#f99ea8"],
   internet_access: ["#984b31", "#feb197"],
   sustainable_cities: ["#995d1f", "#ffc385"],
@@ -182,48 +181,6 @@ export default class Main extends Component {
     this.setSelectedCategory(event.center);
     this.setWheelOpen(false);
   };
-  onPanCancel = event => {
-    console.log("onPanCancel");
-  };
-  onPanStart = event => {
-    console.log("onPanStart");
-  };
-  onTap = event => {
-    console.log("onTap");
-  };
-  onDoubleTap = event => {
-    console.log("onDoubleTap");
-  };
-  onPinchStart = event => {
-    console.log("onPinchStart");
-  };
-  onPinchEnd = event => {
-    console.log("onPinchEnd");
-  };
-  onPinchIn = event => {
-    console.log("onPinchIn", event);
-  };
-  onPinchOut = event => {
-    console.log("onPinchOut", event);
-  };
-  onRotate = event => {
-    console.log("onRotate");
-  };
-  onRotateCancel = event => {
-    console.log("onRotateCancel");
-  };
-  onRotateEnd = event => {
-    console.log("onRotateEnd");
-  };
-  onRotateMove = event => {
-    console.log("onRotateMove");
-  };
-  onRotateStart = event => {
-    console.log("onRotateStart");
-  };
-  onSwipe = event => {
-    console.log("onSwipe");
-  };
 
   // b: true to set wheel open, false to set wheel closed
   setWheelOpen(b) {
@@ -242,7 +199,7 @@ export default class Main extends Component {
       let dy = pos.y - window.innerHeight / 2;
       let rads = Math.atan2(-1 * dx, dy); // -1 * dx makes 0 degrees at top
       var index = Math.floor(segments / 2 + (rads * segments) / (Math.PI * 2));
-      if (this.state.selectedCategory != categories[index]) {
+      if (this.state.selectedCategory !== categories[index]) {
         this.highlightSegment(index);
         this.setState({ selectedCategory: categories[index] });
         this.render();
@@ -365,7 +322,7 @@ export default class Main extends Component {
   };
 
   incompatibleBrowserDetected = () => {
-    window.location = "https://www.google.com/chrome/";
+    alert('Sorry, this app uses the Google voice API which only works with Chrome.');
     this.setState({ incompatibleBrowser: true });
   };
 
@@ -464,7 +421,6 @@ export default class Main extends Component {
   renderTitleArea = () => {
     const currentTitleDetails = categoryTitleMap[this.state.selectedCategory];
     const { title, subtitle } = currentTitleDetails;
-    console.log(title + " " + subtitle);
     return <TitleArea title={title} subtitle={subtitle} />;
   };
 
@@ -483,26 +439,10 @@ export default class Main extends Component {
       <Hammer
         direction={"DIRECTION_ALL"}
         options={hammerjsOptions}
-        onTap={this.onTap}
-        onDoubleTap={this.onDoubleTap}
         onPan={this.onPan}
-        onPanCancel={this.onPanCancel}
+        onPanCancel={this.onPanEnd}
         onPanEnd={this.onPanEnd}
-        onPanStart={this.onPanStart}
-        onPinch={this.onPinch}
-        onPinchCancel={this.onPinchCancel}
-        onPinchEnd={this.onPinchEnd}
-        onPinchIn={this.onPinchIn}
-        onPinchOut={this.onPinchOut}
-        onPinchStart={this.onPinchStart}
         onPress={this.onPress}
-        onPressUp={this.onPressUp}
-        onRotate={this.onRotate}
-        onRotateCancel={this.onRotateCancel}
-        onRotateEnd={this.onRotateEnd}
-        onRotateMove={this.onRotateMove}
-        onRotateStart={this.onRotateStart}
-        onSwipe={this.onSwipe}
       >
         <RootContainer>
           <HelpButton onClick={this.onHelpButtonPressed} />
@@ -606,7 +546,6 @@ export default class Main extends Component {
 
   render() {
     const { incompatibleBrowser } = this.state;
-
     if (incompatibleBrowser) {
       return null;
     } else if (this.dataHasLoaded()) {
@@ -617,10 +556,10 @@ export default class Main extends Component {
   }
 }
 
+// CSS
 const RootContainer = styled.div`
   height: 100% !important;
 `;
-
 const BottomOverlayContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -631,14 +570,12 @@ const BottomOverlayContainer = styled.div`
   bottom: 3%;
   left: 3px;
 `;
-
 const SliderContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
   width: 100%;
 `;
-
 const LegendContainer = styled.div`
   display: flex;
   justify-content: center;

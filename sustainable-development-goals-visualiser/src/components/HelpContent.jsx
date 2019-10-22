@@ -1,9 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
-
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
 
 const PADDING = 10; //pixels
 

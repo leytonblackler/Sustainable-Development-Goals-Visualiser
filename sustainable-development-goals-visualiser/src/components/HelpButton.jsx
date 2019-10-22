@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 import Icon from "@mdi/react";
 import { mdiHelp } from "@mdi/js";

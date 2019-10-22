@@ -155,7 +155,7 @@ export default class SelectorWheel extends Component {
   highlightSegment(index) {
     for (let i = 0; i < iconElements.length; i++) {
       let newOpacity;
-      i == index ? newOpacity = 1 : newOpacity = unselectedOpacity;
+      i === index ? newOpacity = 1 : newOpacity = unselectedOpacity;
       iconElements[i].style.opacity = newOpacity;
     }
   }
