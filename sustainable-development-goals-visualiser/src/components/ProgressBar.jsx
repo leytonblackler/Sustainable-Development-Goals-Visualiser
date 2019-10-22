@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 
+/**
+ * Progress bar component showing a inner bar filled to a certain value
+ */
 class ProgressBar extends Component {
     render() {
         return (
