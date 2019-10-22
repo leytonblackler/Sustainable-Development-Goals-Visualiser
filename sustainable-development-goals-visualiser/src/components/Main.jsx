@@ -153,7 +153,7 @@ export default class Main extends Component {
     // Initialise handling for shake events.
     ShakeHandler(this.onShake.bind(this));
   }
-
+  /** Shake event. Activates microphone. */
   onShake = event => {
     console.log("onShake");
     this.setState({
@@ -162,28 +162,32 @@ export default class Main extends Component {
       speechStatus: SpeechStatus.WAITING_FOR_ACTION
     });
   };
+  /** HammerJS press event (a long press, different from a tap). Opens the wheel. */
   onPress = event => {
     console.log("onPress");
     this.setWheelOpen(true);
     this.setSelectedCategory(event.center);
   };
+  /** HammerJS pressUp event. Used to close the wheel if no selection is made. */
   onPressUp = event => {
     console.log("onPressUp");
     this.setSelectedCategory(event.center);
     this.setWheelOpen(false);
   };
-  // pan doesn't open wheel but does set category
+  /** HammerJS Pan event. Used to set category after wheel is opened. */
   onPan = event => {
     this.setSelectedCategory(event.center);
   };
-  // a press that turns into a pan will only fire onPanEnd
+  /** HammerJS onPanEnd event. Used to close the wheel. */
   onPanEnd = event => {
     this.setSelectedCategory(event.center);
     this.setWheelOpen(false);
   };
-
-  // b: true to set wheel open, false to set wheel closed
-  setWheelOpen(b) {
+  /**
+   * Sets the selector wheel display state. true = open, false = closed.
+   * @param {boolean} b 
+   */
+  setWheelOpen = b => {
     // if b does not match current wheel state, update it
     if (b !== this.state.showingWheel) {
       this.setState({ showingWheel: b });
@@ -191,7 +195,11 @@ export default class Main extends Component {
     }
   }
 
-  // takes pointer position: {x: num, y: num}
+  /**
+   * Takes a press position and uses it to detect which wheel sector is highlighted.
+   * Then updates the state to reflect the categories which was chosen.
+   * @param {x: num, y: num} pos 
+   */
   setSelectedCategory = pos => {
     if (this.state.showingWheel) {
       let segments = categories.length;
@@ -443,6 +451,7 @@ export default class Main extends Component {
         onPanCancel={this.onPanEnd}
         onPanEnd={this.onPanEnd}
         onPress={this.onPress}
+        onPressUp={this.onPressUp}
       >
         <RootContainer>
           <HelpButton onClick={this.onHelpButtonPressed} />
