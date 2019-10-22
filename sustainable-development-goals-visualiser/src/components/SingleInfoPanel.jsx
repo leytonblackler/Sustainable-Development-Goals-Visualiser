@@ -18,6 +18,9 @@ const SingleInfoPanel = props => {
     );
 };
 
+/**
+ * Gets the normalised value for a particular category
+ */
 const getValue = (category, processedData) => {
     for (let row of processedData) {
         if (row["SeriesCode"] === category) {
@@ -26,6 +29,9 @@ const getValue = (category, processedData) => {
     }
 }
 
+/**
+ * Filters the original data according to the selected year and country.
+ */
 const processData = (selectedYear, country, data) => {
     let processedData = data.filter(
         row => row["TimePeriod"] === selectedYear
@@ -36,6 +42,10 @@ const processData = (selectedYear, country, data) => {
     return processedData;
 }
 
+/**
+ * Renders the panel for a particular category. 
+ * Contains a title and a progress bar.
+ */
 const renderCategoryInfoPanel = (categoryTitle, percentage, progressColor) => {
     let percentageFormatted = isNaN(percentage) ? Number(0).toFixed(2) : percentage
 

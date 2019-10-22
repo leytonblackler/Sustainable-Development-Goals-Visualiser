@@ -3,6 +3,10 @@ import MaterialSlider from "@material-ui/core/Slider";
 import styled from "styled-components";
 import { withStyles } from "@material-ui/core/styles";
 
+
+/**This component displays a slider to select the year to view for the UN data. 
+* Upon updating the heatmap will also update.
+*/
 class Slider extends Component {
   state = {
     displayedValue: null,
@@ -13,6 +17,9 @@ class Slider extends Component {
     this.setState({ changing: true, displayedValue: newValue });
   };
 
+  /**
+   * This function disables the heatmap from constantly updating when a gesture is performed.
+   */
   onChangeCommitted = (event, newValue) => {
     const { onChangeCommitted } = this.props;
     this.setState({ changing: false });
@@ -45,6 +52,10 @@ class Slider extends Component {
 
 export default Slider;
 
+
+/**
+ * CSS and styling for the component and containers.
+ */
 const SliderContainer = styled.div`
   width: 80vw;
   color: "#52af77";
