@@ -35,7 +35,7 @@
     "react-window-size": "^1.2.2",
     "shake.js": "^1.2.2",
     "styled-components": "^4.3.2",
-    "yarn": "^1.17.3"
+    "yarn": "^1.22.0"
   },
   "scripts": {
     "start": "react-scripts start",
